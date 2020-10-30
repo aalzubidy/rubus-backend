@@ -1,0 +1,25 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #a8edea;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.verticalLine {
+  width: 60vw;
+  margin: 1% 0;
+  box-shadow: 1px 1px 1px grey;
+  border: 1px solid black;
+}
+
+.centerClass {
+  text-align: center;
+}
+
+.centerClass h1,
+.centerClass form {
+  margin: 3% 0;
+}
