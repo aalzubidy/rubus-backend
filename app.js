@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 // Require
 const express = require("express");
 const methodOverride = require("method-override");
@@ -5,8 +7,10 @@ const expressSanitizer = require("express-sanitizer");
 const bodyParser = require("body-parser");
 const multer = require("multer");
 const path = require('path');
+const cors = require("cors");
 const fs = require('fs');
 const main = require('./src/main.js');
+const db = require('./db/db.js');
 
 // Application Setup
 const app = express();
@@ -21,6 +25,8 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(expressSanitizer());
 app.use(methodOverride("_method"));
+app.use(cors());
+app.use(express.json());
 
 // Multer Configurations to upload file
 var storage = multer.diskStorage({
@@ -46,7 +52,8 @@ var upload = multer({
 // Routes
 
 // Index Route
-app.get("/", function (req, res) {
+app.get("/", async function (req, res) {
+  console.log(await db.query('select * from public."testTable"'));
   res.render("index");
 });
 
