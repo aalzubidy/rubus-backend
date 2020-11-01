@@ -53,7 +53,7 @@ var upload = multer({
 
 // Index Route
 app.get("/", async function (req, res) {
-  console.log(await db.query('select * from users'));
+  console.log(await db.query('select * from testTable'));
   res.render("index");
 });
 
