@@ -57,6 +57,23 @@ app.get("/", async function (req, res) {
   res.render("index");
 });
 
+app.post('/register', async function(req, res){
+  // hash password bycrpt
+  try {
+    const user = req.body.user;
+
+    const results = await db.query('insert into users(email, name, password) values($1, $2, $3)', [user.email, user.name, user.password]);
+
+    if(results){
+      res.send('success');
+    }
+
+  } catch (error) {
+    console.log(error);
+    res.send('issue with registeration')
+  }
+});
+
 // Upload a new file
 app.post("/uploadFile", function (req, res) {
   upload(req, res, function (err) {
