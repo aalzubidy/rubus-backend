@@ -12,6 +12,9 @@ const fs = require('fs');
 const main = require('./src/main.js');
 const db = require('./db/db.js');
 
+// Require routes
+const authorizationRoutes = require('./routes/authorization');
+
 // Application Setup
 const app = express();
 const serverPort = 3030;
@@ -56,6 +59,8 @@ app.get("/", async function (req, res) {
   console.log(await db.query('select * from testTable'));
   res.render("index");
 });
+
+app.use(authorizationRoutes);
 
 // Upload a new file
 app.post("/uploadFile", function (req, res) {
