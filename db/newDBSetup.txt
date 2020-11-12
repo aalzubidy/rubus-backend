@@ -11,166 +11,163 @@ CREATE DATABASE rubus
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1;
 
+ALTER DATABASE rubus
+    SET search_path TO public;
+ALTER ROLE postgres IN DATABASE rubus
+    SET search_path TO public, "$user", public;
+
 GRANT ALL ON DATABASE rubus TO postgres;
 
 GRANT TEMPORARY, CONNECT ON DATABASE rubus TO PUBLIC;
 
 -------------------------------------------------------------------------------------------------
 
--- Table: users
+-- Table: public.convertqueries
 
--- DROP TABLE users;
+-- DROP TABLE public.convertqueries;
 
-CREATE TABLE users
+CREATE TABLE public.convertqueries
 (
     id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-    email text COLLATE pg_catalog."default" NOT NULL,
-    password character varying(300) COLLATE pg_catalog."default" NOT NULL,
-    name character varying(500) COLLATE pg_catalog."default",
-    organization character varying(500) COLLATE pg_catalog."default",
-    "createDate" date NOT NULL,
-    "registerIP" inet,
-    "refreshToken" text COLLATE pg_catalog."default",
-    CONSTRAINT users_id_pk PRIMARY KEY (id)
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE users
-    OWNER to postgres;
-
--------------------------------------------------------------------------------------------------
-
--- Table: convertQueries
-
--- DROP TABLE "convertQueries";
-
-CREATE TABLE convertQueries
-(
-    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-    "inputQuery" text COLLATE pg_catalog."default" NOT NULL,
-    "outputQuery" text COLLATE pg_catalog."default" NOT NULL,
-    "createDate" date NOT NULL,
-    "userId" integer NOT NULL,
+    input_query text COLLATE pg_catalog."default" NOT NULL,
+    output_query text COLLATE pg_catalog."default" NOT NULL,
+    create_date date NOT NULL,
+    user_id integer NOT NULL,
     CONSTRAINT "convertQueries_id_pk" PRIMARY KEY (id),
-    CONSTRAINT "convertQueries_userId_users_id_fk" FOREIGN KEY ("userId")
-        REFERENCES users (id) MATCH SIMPLE
+    CONSTRAINT "convertQueries_userId_users_id_fk" FOREIGN KEY (user_id)
+        REFERENCES public.users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
-WITH (
-    OIDS = FALSE
-)
+
 TABLESPACE pg_default;
 
-ALTER TABLE convertQueries
+ALTER TABLE public.convertqueries
     OWNER to postgres;
 
 -------------------------------------------------------------------------------------------------
 
--- Table: projects
+-- Table: public.convertqueries
 
--- DROP TABLE projects;
+-- DROP TABLE public.convertqueries;
 
-CREATE TABLE projects
+CREATE TABLE public.convertqueries
+(
+    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    input_query text COLLATE pg_catalog."default" NOT NULL,
+    output_query text COLLATE pg_catalog."default" NOT NULL,
+    create_date date NOT NULL,
+    user_id integer NOT NULL,
+    CONSTRAINT "convertQueries_id_pk" PRIMARY KEY (id),
+    CONSTRAINT "convertQueries_userId_users_id_fk" FOREIGN KEY (user_id)
+        REFERENCES public.users (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public.convertqueries
+    OWNER to postgres;
+
+-------------------------------------------------------------------------------------------------
+
+-- Table: public.projects
+
+-- DROP TABLE public.projects;
+
+CREATE TABLE public.projects
 (
     id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
     title character varying(300) COLLATE pg_catalog."default" NOT NULL,
     description text COLLATE pg_catalog."default",
-    "createDate" date NOT NULL,
-    "userId" integer NOT NULL,
+    create_date date NOT NULL,
+    user_id integer NOT NULL,
     CONSTRAINT projects_id_pk PRIMARY KEY (id),
-    CONSTRAINT "projects_userId_users_id_fk" FOREIGN KEY ("userId")
-        REFERENCES users (id) MATCH SIMPLE
+    CONSTRAINT "projects_userId_users_id_fk" FOREIGN KEY (user_id)
+        REFERENCES public.users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
-WITH (
-    OIDS = FALSE
-)
+
 TABLESPACE pg_default;
 
-ALTER TABLE projects
+ALTER TABLE public.projects
     OWNER to postgres;
 
 -------------------------------------------------------------------------------------------------
 
--- Table: projects_users
+-- Table: public.projects_users
 
--- DROP TABLE "projects_users";
+-- DROP TABLE public.projects_users;
 
-CREATE TABLE projects_users
+CREATE TABLE public.projects_users
 (
-    "userId" integer NOT NULL,
-    "projectId" integer NOT NULL,
-    "addedBy" integer NOT NULL,
-    "createDate" date NOT NULL,
-    CONSTRAINT "projects_users_userId_projectId_pk" PRIMARY KEY ("userId", "projectId"),
-    CONSTRAINT "projects_users_projectId_projects_id_fk" FOREIGN KEY ("projectId")
-        REFERENCES projects (id) MATCH SIMPLE
+    user_id integer NOT NULL,
+    project_id integer NOT NULL,
+    added_by integer NOT NULL,
+    create_date date NOT NULL,
+    CONSTRAINT "projects_users_userId_projectId_pk" PRIMARY KEY (user_id, project_id),
+    CONSTRAINT "projects_users_projectId_projects_id_fk" FOREIGN KEY (project_id)
+        REFERENCES public.projects (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
-    CONSTRAINT "projects_users_userId_users_id_fk" FOREIGN KEY ("userId")
-        REFERENCES users (id) MATCH SIMPLE
+    CONSTRAINT "projects_users_userId_users_id_fk" FOREIGN KEY (user_id)
+        REFERENCES public.users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
-WITH (
-    OIDS = FALSE
-)
+
 TABLESPACE pg_default;
 
-ALTER TABLE projects_users
+ALTER TABLE public.projects_users
     OWNER to postgres;
 
 -------------------------------------------------------------------------------------------------
 
--- Table: searchQueries
+-- Table: public.searchqueries
 
--- DROP TABLE "searchQueries";
+-- DROP TABLE public.searchqueries;
 
-CREATE TABLE searchQueries
+CREATE TABLE public.searchqueries
 (
     id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-    "inputQuery" text COLLATE pg_catalog."default" NOT NULL,
+    input_query text COLLATE pg_catalog."default" NOT NULL,
     db character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    "totalResults" bigint NOT NULL,
-    "createDate" date NOT NULL,
-    "userId" integer NOT NULL,
-    "projectId" integer,
+    total_results bigint NOT NULL,
+    create_date date NOT NULL,
+    user_id integer NOT NULL,
+    project_id integer NOT NULL,
     CONSTRAINT "searchQueries_id_pk" PRIMARY KEY (id),
-    CONSTRAINT "searchQueries_projectId_projectss_id_fk" FOREIGN KEY ("projectId")
-        REFERENCES projects (id) MATCH SIMPLE
+    CONSTRAINT "searchQueries_projectId_projectss_id_fk" FOREIGN KEY (project_id)
+        REFERENCES public.projects (id) MATCH SIMPLE
         ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
-    CONSTRAINT "searchQueries_userId_users_id_fk" FOREIGN KEY ("userId")
-        REFERENCES users (id) MATCH SIMPLE
+        ON DELETE NO ACTION,
+    CONSTRAINT "searchQueries_userId_users_id_fk" FOREIGN KEY (user_id)
+        REFERENCES public.users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
-WITH (
-    OIDS = FALSE
-)
+
 TABLESPACE pg_default;
 
-ALTER TABLE searchQueries
+ALTER TABLE public.searchqueries
     OWNER to postgres;
 
 -------------------------------------------------------------------------------------------------
 
--- Table: publications
+-- Table: public.publications
 
--- DROP TABLE publications;
+-- DROP TABLE public.publications;
 
-CREATE TABLE publications
+CREATE TABLE public.publications
 (
     id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
     type character varying(300) COLLATE pg_catalog."default",
     author text COLLATE pg_catalog."default",
     editor text COLLATE pg_catalog."default",
     title text COLLATE pg_catalog."default",
-    "bookTitle" text COLLATE pg_catalog."default",
+    book_title text COLLATE pg_catalog."default",
     year character varying(50) COLLATE pg_catalog."default",
     publisher text COLLATE pg_catalog."default",
     address text COLLATE pg_catalog."default",
@@ -185,66 +182,60 @@ CREATE TABLE publications
     location text COLLATE pg_catalog."default",
     keywords text COLLATE pg_catalog."default",
     month character varying(50) COLLATE pg_catalog."default",
-    "obtainedBibtex" text COLLATE pg_catalog."default",
-    "generatedBibtex" text COLLATE pg_catalog."default",
-    "createDate" date NOT NULL,
+    obtained_bibtex text COLLATE pg_catalog."default",
+    generated_bibtex text COLLATE pg_catalog."default",
+    create_date date NOT NULL,
     CONSTRAINT publications_id_pk PRIMARY KEY (id)
 )
-WITH (
-    OIDS = FALSE
-)
+
 TABLESPACE pg_default;
 
-ALTER TABLE publications
+ALTER TABLE public.publications
     OWNER to postgres;
 
 -------------------------------------------------------------------------------------------------
 
--- Table: publications_users
+-- Table: public.publications_users
 
--- DROP TABLE "publications_users";
+-- DROP TABLE public.publications_users;
 
-CREATE TABLE publications_users
+CREATE TABLE public.publications_users
 (
-    "userId" integer NOT NULL,
-    "publicationId" integer NOT NULL,
+    user_id integer NOT NULL,
+    publication_id integer NOT NULL,
     projects text[] COLLATE pg_catalog."default",
-    CONSTRAINT "publications_users_userId_publicationId_pk" PRIMARY KEY ("userId"),
-    CONSTRAINT "users_publications_publicationId_publications_id_fk" FOREIGN KEY ("publicationId")
-        REFERENCES publications (id) MATCH SIMPLE
+    CONSTRAINT "publications_users_userId_publicationId_pk" PRIMARY KEY (user_id),
+    CONSTRAINT "users_publications_publicationId_publications_id_fk" FOREIGN KEY (publication_id)
+        REFERENCES public.publications (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
-    CONSTRAINT "users_publications_userId_users_id_fk" FOREIGN KEY ("userId")
-        REFERENCES users (id) MATCH SIMPLE
+    CONSTRAINT "users_publications_userId_users_id_fk" FOREIGN KEY (user_id)
+        REFERENCES public.users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
 )
-WITH (
-    OIDS = FALSE
-)
+
 TABLESPACE pg_default;
 
-ALTER TABLE publications_users
+ALTER TABLE public.publications_users
     OWNER to postgres;
 
 -------------------------------------------------------------------------------------------------
 
--- Table: testTable
+-- Table: public.testtable
 
--- DROP TABLE "testTable";
+-- DROP TABLE public.testtable;
 
-CREATE TABLE testTable
+CREATE TABLE public.testtable
 (
     name character varying(100) COLLATE pg_catalog."default" NOT NULL,
     email text[] COLLATE pg_catalog."default",
     CONSTRAINT "testTable_pkey" PRIMARY KEY (name)
 )
-WITH (
-    OIDS = FALSE
-)
+
 TABLESPACE pg_default;
 
-ALTER TABLE testTable
+ALTER TABLE public.testtable
     OWNER to postgres;
 
 -------------------------------------------------------------------------------------------------
