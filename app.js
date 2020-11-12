@@ -11,6 +11,9 @@ const cors = require("cors");
 const fs = require('fs');
 const main = require('./src/main.js');
 const db = require('./db/db.js');
+const bcrypt = require('bcrypt');
+const moment = require('moment');
+const requestIp = require('request-ip');
 
 // Application Setup
 const app = express();
@@ -27,6 +30,9 @@ app.use(expressSanitizer());
 app.use(methodOverride("_method"));
 app.use(cors());
 app.use(express.json());
+app.use(requestIp.mw());
+
+ 
 
 // Multer Configurations to upload file
 var storage = multer.diskStorage({
@@ -49,6 +55,10 @@ var upload = multer({
   }
 }).single("txtFile");
 
+ 
+
+
+
 // Routes
 
 // Index Route
@@ -57,22 +67,22 @@ app.get("/", async function (req, res) {
   res.render("index");
 });
 
-app.post('/register', async function(req, res){
-  // hash password bycrpt
-  try {
-    const user = req.body.user;
+// app.post('/register', async function(req, res){
+//   // hash password bycrpt
+//   try {
+//     const user = req.body.user;
 
-    const results = await db.query('insert into users(email, name, password) values($1, $2, $3)', [user.email, user.name, user.password]);
+//     const results = await db.query('insert into users(email, name, password) values($1, $2, $3)', [user.email, user.name, user.password]);
 
-    if(results){
-      res.send('success');
-    }
+//     if(results){
+//       res.send('success');
+//     }
 
-  } catch (error) {
-    console.log(error);
-    res.send('issue with registeration')
-  }
-});
+//   } catch (error) {
+//     console.log(error);
+//     res.send('issue with registeration')
+//   }
+// });
 
 // Upload a new file
 app.post("/uploadFile", function (req, res) {
@@ -92,6 +102,49 @@ app.post("/uploadFile", function (req, res) {
 app.get("*", function (req, res) {
   res.render("notFound");
 });
+
+//Register route
+app.get('/register', (req, res) => {
+  
+});
+
+app.post('/register', async (req, res) => {
+
+  try {
+    const {
+      password,
+      email,
+      name,
+      organization,
+      register_ip,
+      create_date
+    } = req.body.user;
+    //hashing the password
+    const hash = await bcrypt.hash(password, 12);
+   
+   
+    // IP Middleware
+  //   app.use(function(req, res) {
+  //     //const ip = req.clientIp;
+  //     res.end(ip);
+  // });
+
+   
+    // date
+    const createDate = moment().format('MM/DD/YYYY');
+    
+    //creating a user
+    const results = await db.query('INSERT INTO users(email, password, name, organization, register_ip, create_date) VALUES($1, $2, $3, $4, $5, $6)', [email, hash, name, organization, req.clientIp, createDate]);
+    
+    res.status(201).send(`User added with ID: ${results.insertId}`);
+    console.log(req.body);
+  } catch (err) {
+    throw err
+    console.log(err);
+  }
+
+});
+
 
 // Start server on specified url and port
 app.listen(serverPort, serverUrl, function () {
