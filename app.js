@@ -67,23 +67,6 @@ app.get("/", async function (req, res) {
   res.render("index");
 });
 
-// app.post('/register', async function(req, res){
-//   // hash password bycrpt
-//   try {
-//     const user = req.body.user;
-
-//     const results = await db.query('insert into users(email, name, password) values($1, $2, $3)', [user.email, user.name, user.password]);
-
-//     if(results){
-//       res.send('success');
-//     }
-
-//   } catch (error) {
-//     console.log(error);
-//     res.send('issue with registeration')
-//   }
-// });
-
 // Upload a new file
 app.post("/uploadFile", function (req, res) {
   upload(req, res, function (err) {
@@ -104,12 +87,9 @@ app.get("*", function (req, res) {
 });
 
 //Register route
-app.get('/register', (req, res) => {
-  
-});
 
 app.post('/register', async (req, res) => {
-
+  
   try {
     const {
       password,
@@ -119,28 +99,22 @@ app.post('/register', async (req, res) => {
       register_ip,
       create_date
     } = req.body.user;
+    
     //hashing the password
     const hash = await bcrypt.hash(password, 12);
-   
-   
-    // IP Middleware
-  //   app.use(function(req, res) {
-  //     //const ip = req.clientIp;
-  //     res.end(ip);
-  // });
 
-   
     // date
     const createDate = moment().format('MM/DD/YYYY');
     
     //creating a user
     const results = await db.query('INSERT INTO users(email, password, name, organization, register_ip, create_date) VALUES($1, $2, $3, $4, $5, $6)', [email, hash, name, organization, req.clientIp, createDate]);
+  
+    res.status(201).send('Added a user to DB');
     
-    res.status(201).send(`User added with ID: ${results.insertId}`);
-    console.log(req.body);
   } catch (err) {
-    throw err
-    console.log(err);
+    const userMsg = `Could not register user ${err}`;
+console.log(userMsg);
+res.status(500).send('Invalid email or password');
   }
 
 });
