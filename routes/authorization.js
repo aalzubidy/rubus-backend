@@ -52,7 +52,7 @@ router.post('/login', async (req, res) => {
   } catch (error) {
     const errorMsg = 'Could not login :(';
     console.log(errorMsg, error);
-    res.send(500, errorMsg);
+    res.status(500).send(errorMsg);
   }
 });
 
@@ -73,7 +73,7 @@ router.delete('/logout', async (req, res) => {
     const tokenVerify = await jwt.verify(token, accessTokenSecret);
     const refreshTokenVerify = await jwt.verify(refreshToken, refreshTokenSecret);
 
-    if(tokenVerify.id != refreshTokenVerify.id){
+    if (tokenVerify.id != refreshTokenVerify.id) {
       throw 'Please provide valid token and refresh token'
     }
 
@@ -88,7 +88,7 @@ router.delete('/logout', async (req, res) => {
   } catch (error) {
     const errorMsg = `Could not logout ${error}`;
     console.log(errorMsg);
-    res.send(500, errorMsg);
+    res.status(500).send(errorMsg);
   }
 })
 
@@ -97,14 +97,25 @@ router.delete('/logout', async (req, res) => {
  */
 router.post('/token', async (req, res) => {
   try {
-    const accessResults = await jwt.verify(req.body.accessToken, accessTokenSecret);
-    const refreshResults = await jwt.verify(req.body.refreshToken, refreshTokenSecret);
-    if (accessResults.user.email === refreshResults.user.email) {
-      const queryResults = await db.query('select id, name, email from users where refresh_token=$1', [req.body.refreshToken]);
-      if (queryResults && queryResults.row[0] && (queryResults.row[0].email === accessResults.user.email)) {
-        const user = { id: queryResults.row[0].id, name: queryResults.row[0].name, email: queryResults.row[0].email }
+    // Extract token and refresh token
+    const { token } = req.headers;
+    const { refreshToken } = req.body;
+
+    if (!token || !refreshToken) {
+      throw 'Please provide token and refresh token'
+    }
+
+    // Verify both tokens
+    const tokenVerify = await jwt.verify(token, accessTokenSecret);
+    const refreshTokenVerify = await jwt.verify(refreshToken, refreshTokenSecret);
+
+    // Check the email on both of the tokens
+    if (tokenVerify.email === refreshTokenVerify.email) {
+      const queryResults = await db.query('select email, refresh_token from users where refresh_token=$1', [refreshToken]);
+      if (queryResults && queryResults.rows[0] && (queryResults.rows[0].email === tokenVerify.email)) {
+        const user = { id: refreshTokenVerify.id, name: refreshTokenVerify.name, email: refreshTokenVerify.email }
         const newAccessToken = await jwt.sign(user, accessTokenSecret);
-        res.json({ 'accessToken': newAccessToken, 'refreshToken': req.body.refreshToken });
+        res.json({ 'accessToken': newAccessToken, 'refreshToken': refreshToken });
       } else {
         const dbMsg = 'Could not query and verify user';
         console.log(dbMsg);
@@ -112,16 +123,13 @@ router.post('/token', async (req, res) => {
         throw dbMsg;
       }
     } else {
-      const dbMsg = 'Could not verify tokens';
-      console.log(dbMsg);
-      console.log(dbResults);
-      throw dbMsg;
+      throw 'Could not verify tokens';
     }
   } catch (error) {
     const errorMsg = 'Could not generate a new token from existing refresh token';
     console.log(errorMsg);
     console.log(error);
-    res.send(500, errorMsg);
+    res.status(500).send(errorMsg);
   }
 })
 
