@@ -88,9 +88,7 @@ app.post('/register', async (req, res) => {
       password,
       email,
       name,
-      organization,
-      register_ip,
-      create_date
+      organization
     } = req.body.user;
 
     //hashing the password
