@@ -11,6 +11,9 @@ const cors = require("cors");
 const fs = require('fs');
 const main = require('./src/main.js');
 const db = require('./db/db.js');
+const bcrypt = require('bcrypt');
+const moment = require('moment');
+const requestIp = require('request-ip');
 
 // Application Setup
 const app = express();
@@ -27,6 +30,9 @@ app.use(expressSanitizer());
 app.use(methodOverride("_method"));
 app.use(cors());
 app.use(express.json());
+app.use(requestIp.mw());
+
+ 
 
 // Multer Configurations to upload file
 var storage = multer.diskStorage({
@@ -48,6 +54,10 @@ var upload = multer({
     callback(null, true)
   }
 }).single("txtFile");
+
+ 
+
+
 
 // Routes
 
@@ -75,6 +85,40 @@ app.post("/uploadFile", function (req, res) {
 app.get("*", function (req, res) {
   res.render("notFound");
 });
+
+//Register route
+
+app.post('/register', async (req, res) => {
+  
+  try {
+    const {
+      password,
+      email,
+      name,
+      organization,
+      register_ip,
+      create_date
+    } = req.body.user;
+    
+    //hashing the password
+    const hash = await bcrypt.hash(password, 12);
+
+    // date
+    const createDate = moment().format('MM/DD/YYYY');
+    
+    //creating a user
+    const results = await db.query('INSERT INTO users(email, password, name, organization, register_ip, create_date) VALUES($1, $2, $3, $4, $5, $6)', [email, hash, name, organization, req.clientIp, createDate]);
+  
+    res.status(201).send('Added a user to DB');
+    
+  } catch (err) {
+    const userMsg = `Could not register user ${err}`;
+console.log(userMsg);
+res.status(500).send('Invalid email or password');
+  }
+
+});
+
 
 // Start server on specified url and port
 app.listen(serverPort, serverUrl, function () {
