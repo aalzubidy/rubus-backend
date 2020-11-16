@@ -111,10 +111,13 @@ router.post('/token', async (req, res) => {
 
     // Check the email on both of the tokens
     if (tokenVerify.email === refreshTokenVerify.email) {
+      // Check if this refresh token still active in the database
       const queryResults = await db.query('select email, refresh_token from users where refresh_token=$1', [refreshToken]);
       if (queryResults && queryResults.rows[0] && (queryResults.rows[0].email === tokenVerify.email)) {
+        // Generate a new access token
         const user = { id: refreshTokenVerify.id, name: refreshTokenVerify.name, email: refreshTokenVerify.email }
         const newAccessToken = await jwt.sign(user, accessTokenSecret);
+        // Return new access token and same refresh token
         res.json({ 'accessToken': newAccessToken, 'refreshToken': refreshToken });
       } else {
         const dbMsg = 'Could not query and verify user';
