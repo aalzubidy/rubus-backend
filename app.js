@@ -64,6 +64,7 @@ app.get("/", async function (req, res) {
   res.render("index");
 });
 
+// Authentication routes
 app.use(authorizationRoutes);
 
 // Upload a new file
