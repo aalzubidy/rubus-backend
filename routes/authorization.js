@@ -42,7 +42,7 @@ router.post('/login', async (req, res) => {
 /**
  * @summary Logout and delet the stored refresh token
  */
-app.delete('/logout', async (req, res) => {
+router.delete('/logout', async (req, res) => {
   try {
     const accessResults = await jwt.verify(req.body.accessToken, accessTokenSecret);
     const refreshResults = await jwt.verify(req.body.refreshToken, refreshTokenSecret);
@@ -73,7 +73,7 @@ app.delete('/logout', async (req, res) => {
 /**
  * @summary Get a new access token using existing refresh token
  */
-app.post('/token', async (req, res) => {
+router.post('/token', async (req, res) => {
   try {
     const accessResults = await jwt.verify(req.body.accessToken, accessTokenSecret);
     const refreshResults = await jwt.verify(req.body.refreshToken, refreshTokenSecret);

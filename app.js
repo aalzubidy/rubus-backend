@@ -100,14 +100,13 @@ app.post('/register', async (req, res) => {
     const createDate = moment().format('MM/DD/YYYY');
 
     //creating a user
-    const results = await db.query('INSERT INTO users(email, password, name, organization, register_ip, create_date) VALUES($1, $2, $3, $4, $5, $6)', [email, hash, name, organization, req.clientIp, createDate]);
-
+    await db.query('INSERT INTO users(email, password, name, organization, register_ip, create_date) VALUES($1, $2, $3, $4, $5, $6)', [email, hash, name, organization, req.clientIp, createDate]);
+    
     res.status(201).send('Added a user to DB');
-
   } catch (err) {
     const userMsg = `Could not register user ${err}`;
     console.log(userMsg);
-    res.status(500).send('Invalid email or password');
+    res.status(500).send(userMsg);
   }
 });
 
