@@ -80,15 +80,8 @@ app.post("/uploadFile", function (req, res) {
   });
 });
 
-// Not Found Route
-app.get("*", function (req, res) {
-  res.render("notFound");
-});
-
 //Register route
-
 app.post('/register', async (req, res) => {
-
   try {
     const {
       password,
@@ -115,9 +108,13 @@ app.post('/register', async (req, res) => {
     console.log(userMsg);
     res.status(500).send('Invalid email or password');
   }
-
 });
 
+
+// Not Found Route
+app.get("*", function (req, res) {
+  res.render("notFound");
+});
 
 // Start server on specified url and port
 app.listen(serverPort, serverUrl, function () {
