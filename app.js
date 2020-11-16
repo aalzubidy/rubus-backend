@@ -35,8 +35,6 @@ app.use(cors());
 app.use(express.json());
 app.use(requestIp.mw());
 
- 
-
 // Multer Configurations to upload file
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -57,10 +55,6 @@ var upload = multer({
     callback(null, true)
   }
 }).single("txtFile");
-
- 
-
-
 
 // Routes
 
@@ -94,7 +88,7 @@ app.get("*", function (req, res) {
 //Register route
 
 app.post('/register', async (req, res) => {
-  
+
   try {
     const {
       password,
@@ -104,22 +98,22 @@ app.post('/register', async (req, res) => {
       register_ip,
       create_date
     } = req.body.user;
-    
+
     //hashing the password
     const hash = await bcrypt.hash(password, 12);
 
     // date
     const createDate = moment().format('MM/DD/YYYY');
-    
+
     //creating a user
     const results = await db.query('INSERT INTO users(email, password, name, organization, register_ip, create_date) VALUES($1, $2, $3, $4, $5, $6)', [email, hash, name, organization, req.clientIp, createDate]);
-  
+
     res.status(201).send('Added a user to DB');
-    
+
   } catch (err) {
     const userMsg = `Could not register user ${err}`;
-console.log(userMsg);
-res.status(500).send('Invalid email or password');
+    console.log(userMsg);
+    res.status(500).send('Invalid email or password');
   }
 
 });
