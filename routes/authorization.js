@@ -18,8 +18,7 @@ router.post('/login', async (req, res) => {
     }
 
     // Extract email and password
-    const { email } = req.body;
-    let { password } = req.body;
+    const { email, password } = req.body;
 
     // Query the database to get user information using the email
     let queryResults = await db.query('select id, name, email, password from users where email=$1', [email]);
@@ -77,7 +76,7 @@ router.delete('/logout', async (req, res) => {
       throw 'Please provide valid token and refresh token'
     }
 
-    // Delete refresj token from database
+    // Delete refresh token from database
     const dbResults = await db.query('update users set refresh_token=$1 where refresh_token=$2', [null, refreshToken]);
 
     if (dbResults) {
@@ -116,7 +115,7 @@ router.post('/token', async (req, res) => {
       if (queryResults && queryResults.rows[0] && (queryResults.rows[0].email === tokenVerify.email)) {
         // Generate a new access token
         const user = { id: refreshTokenVerify.id, name: refreshTokenVerify.name, email: refreshTokenVerify.email }
-        const newAccessToken = await jwt.sign(user, accessTokenSecret);
+        const newAccessToken = await jwt.sign(user, accessTokenSecret, { expiresIn: '30m' });
         // Return new access token and same refresh token
         res.json({ 'accessToken': newAccessToken, 'refreshToken': refreshToken });
       } else {
