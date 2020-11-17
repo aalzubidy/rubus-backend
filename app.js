@@ -15,6 +15,9 @@ const bcrypt = require('bcrypt');
 const moment = require('moment');
 const requestIp = require('request-ip');
 
+// Require routes
+const authorizationRoutes = require('./routes/authorization');
+
 // Application Setup
 const app = express();
 const serverPort = 3030;
@@ -31,8 +34,6 @@ app.use(methodOverride("_method"));
 app.use(cors());
 app.use(express.json());
 app.use(requestIp.mw());
-
- 
 
 // Multer Configurations to upload file
 var storage = multer.diskStorage({
@@ -55,10 +56,6 @@ var upload = multer({
   }
 }).single("txtFile");
 
- 
-
-
-
 // Routes
 
 // Index Route
@@ -66,6 +63,9 @@ app.get("/", async function (req, res) {
   console.log(await db.query('select * from testTable'));
   res.render("index");
 });
+
+// Authentication routes
+app.use(authorizationRoutes);
 
 // Upload a new file
 app.post("/uploadFile", function (req, res) {
@@ -81,44 +81,38 @@ app.post("/uploadFile", function (req, res) {
   });
 });
 
-// Not Found Route
-app.get("*", function (req, res) {
-  res.render("notFound");
-});
-
 //Register route
-
 app.post('/register', async (req, res) => {
-  
   try {
     const {
       password,
       email,
       name,
-      organization,
-      register_ip,
-      create_date
+      organization
     } = req.body.user;
-    
+
     //hashing the password
     const hash = await bcrypt.hash(password, 12);
 
     // date
     const createDate = moment().format('MM/DD/YYYY');
-    
+
     //creating a user
-    const results = await db.query('INSERT INTO users(email, password, name, organization, register_ip, create_date) VALUES($1, $2, $3, $4, $5, $6)', [email, hash, name, organization, req.clientIp, createDate]);
-  
-    res.status(201).send('Added a user to DB');
+    await db.query('INSERT INTO users(email, password, name, organization, register_ip, create_date) VALUES($1, $2, $3, $4, $5, $6)', [email, hash, name, organization, req.clientIp, createDate]);
     
+    res.status(201).send('Added a user to DB');
   } catch (err) {
     const userMsg = `Could not register user ${err}`;
-console.log(userMsg);
-res.status(500).send('Invalid email or password');
+    console.log(userMsg);
+    res.status(500).send(userMsg);
   }
-
 });
 
+
+// Not Found Route
+app.get("*", function (req, res) {
+  res.render("notFound");
+});
 
 // Start server on specified url and port
 app.listen(serverPort, serverUrl, function () {
