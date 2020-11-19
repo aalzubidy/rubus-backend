@@ -52,7 +52,7 @@ const getProjects = async function getProjects(user) {
     // Get projects from the database
     let projectsQuery = await db.query('select project_id, added_by, projects_users.create_date, title, description from projects_users, projects where projects_users.user_id=$1 AND projects_users.project_id=projects.id', [id]);
     if (!projectsQuery || !projectsQuery.rows || projectsQuery.rows.length <= 0) {
-      return [];
+      throw { code: 404, message: 'User does not have any projects' };
     }
 
     projectsQuery = projectsQuery.rows;
