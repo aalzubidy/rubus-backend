@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
 const authorizationSrc = require('../src/authorizationSrc');
 
@@ -17,7 +17,6 @@ router.post('/register', async (req, res) => {
     });
   }
 });
-
 
 /**
  * @summary validate user, login and return a token and refresh token
@@ -49,7 +48,7 @@ router.delete('/logout', async (req, res) => {
       error
     });
   }
-})
+});
 
 /**
  * @summary Get a new access token using existing refresh token
@@ -65,6 +64,6 @@ router.post('/token', async (req, res) => {
       error
     });
   }
-})
+});
 
 module.exports = router;

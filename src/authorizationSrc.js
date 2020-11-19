@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
-const db = require('../db/db');
-const bcrypt = require('bcrypt');
 const moment = require('moment');
+const bcrypt = require('bcrypt');
+const db = require('../db/db');
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
@@ -40,11 +40,11 @@ const register = async function register(req) {
     if (error.code) {
       throw error;
     }
-    const userMsg = `Could not register user`;
+    const userMsg = 'Could not register user';
     console.log(userMsg, error);
-    throw { code: 500, message: userMsg }
+    throw { code: 500, message: userMsg };
   }
-}
+};
 
 /**
  * Login to the system
@@ -98,7 +98,7 @@ const login = async function login(req) {
     console.log(errorMsg, error);
     throw { code: 500, message: errorMsg };
   }
-}
+};
 
 /**
  * Logout of the system to the system
@@ -113,7 +113,7 @@ const logout = async function logout(req) {
     const { refreshToken } = req.body;
 
     if (!token || !refreshToken) {
-      throw { code: 400, message: 'Please provide token and refresh token' }
+      throw { code: 400, message: 'Please provide token and refresh token' };
     }
 
     // Verify both tokens
@@ -121,7 +121,7 @@ const logout = async function logout(req) {
     const refreshTokenVerify = await jwt.verify(refreshToken, refreshTokenSecret);
 
     if (tokenVerify.id != refreshTokenVerify.id) {
-      throw { code: 401, message: 'Please provide valid token and refresh token' }
+      throw { code: 401, message: 'Please provide valid token and refresh token' };
     }
 
     // Delete refresh token from database
@@ -130,7 +130,7 @@ const logout = async function logout(req) {
     if (dbResults) {
       return ({ 'results': 'Logged out successful' });
     } else {
-      throw { code: 500, message: 'Could not delete token' }
+      throw { code: 500, message: 'Could not delete token' };
     }
   } catch (error) {
     if (error.code) {
@@ -138,9 +138,9 @@ const logout = async function logout(req) {
     }
     const errorMsg = 'Could not logout';
     console.log(errorMsg, error);
-    throw { code: 500, message: errorMsg }
+    throw { code: 500, message: errorMsg };
   }
-}
+};
 
 /**
  * Get new token from refresh token
@@ -155,7 +155,7 @@ const renewToken = async function renewToken(req) {
     const { refreshToken } = req.body;
 
     if (!token || !refreshToken) {
-      throw { code: 400, message: 'Please provide token and refresh token' }
+      throw { code: 400, message: 'Please provide token and refresh token' };
     }
 
     // Verify both tokens
@@ -168,14 +168,14 @@ const renewToken = async function renewToken(req) {
       const queryResults = await db.query('select email, refresh_token from users where refresh_token=$1', [refreshToken]);
       if (queryResults && queryResults.rows[0] && (queryResults.rows[0].email === tokenVerify.email)) {
         // Generate a new access token
-        const user = { id: refreshTokenVerify.id, name: refreshTokenVerify.name, email: refreshTokenVerify.email }
+        const user = { id: refreshTokenVerify.id, name: refreshTokenVerify.name, email: refreshTokenVerify.email };
         const newAccessToken = await jwt.sign(user, accessTokenSecret, { expiresIn: '30m' });
         // Return new access token and same refresh token
         return ({ 'accessToken': newAccessToken, 'refreshToken': refreshToken });
       } else {
         const dbMsg = 'Could not query and verify user';
-        console.log(dbMsg, dbResults);
-        throw { code: 401, message: dbMsg }
+        console.log(dbMsg, queryResults);
+        throw { code: 401, message: dbMsg };
       }
     } else {
       throw { code: 401, message: 'Could not verify tokens' };
@@ -186,7 +186,7 @@ const renewToken = async function renewToken(req) {
     }
     const errorMsg = 'Could not generate a new token from existing refresh token';
     console.log(errorMsg, error);
-    throw { code: 500, message: errorMsg }
+    throw { code: 500, message: errorMsg };
   }
 };
 

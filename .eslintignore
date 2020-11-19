@@ -1,0 +1,9 @@
+node_modules/*
+.vscode/*
+coverage/*
+.nyc_output/*
+test/*
+public/*
+misc/*
+uploads/*
+testFile.js
