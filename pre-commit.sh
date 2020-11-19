@@ -5,7 +5,7 @@ set -e
 
 printf "%b" "Pre-commit check...\\n"
 
-# npm run lint
+npm run lint
 
 # npm run test:unit
 
