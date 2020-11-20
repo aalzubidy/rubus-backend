@@ -84,4 +84,13 @@ router.get('/projects/:projectId/admin', async (req, res) => {
   callSrcFile('getProjectAdminId', [projectId], req, res);
 });
 
+/**
+ * @summary Update project title and description
+ */
+router.put('/projects/:projectId', async (req, res) => {
+  const { projectId } = req.params;
+  const { title, description } = req.body;
+  callSrcFile('updateProject', [projectId, title, description], req, res);
+});
+
 module.exports = router;

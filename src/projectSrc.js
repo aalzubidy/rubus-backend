@@ -194,10 +194,53 @@ const deleteProject = async function deleteProject(projectId, user) {
   }
 };
 
+/**
+ * Update project title and description projects
+ * @param {string} projectId Project id
+ * @param {string} title Project title
+ * @param {string} description Project description
+ * @param {object} user User information
+ * @returns {object} project
+ * @throws {object} errorCodeAndMsg
+ */
+const updateProject = async function updateProject(projectId, title, description, user) {
+  try {
+    const {
+      id
+    } = user;
+
+    if (!projectId || !title) {
+      throw { code: 400, message: 'Please provide project id and title' };
+    }
+
+    const projectAdminId = await getProjectAdminId(projectId);
+
+    if (projectAdminId != id) {
+      throw { code: 401, message: 'Only admin is authorized to delete and modiy project' };
+    }
+
+    // Update project title and description
+    const updateQuery = await db.query('update projects set title=$1, description=$2 where id=$3', [title, description, projectId]);
+    if (!updateQuery) {
+      throw { code: 500, message: 'Could not update project in the database' };
+    }
+
+    return { 'message': 'Updated project successfully' };
+  } catch (error) {
+    if (error.code) {
+      throw error;
+    }
+    const userMsg = 'Could not updated project project';
+    console.log(userMsg, error);
+    throw { code: 500, message: userMsg };
+  }
+};
+
 module.exports = {
   newProject,
   getProjects,
   getProject,
   deleteProject,
-  getProjectAdminId
+  getProjectAdminId,
+  updateProject
 };
