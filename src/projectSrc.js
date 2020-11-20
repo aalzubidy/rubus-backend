@@ -130,8 +130,56 @@ const getProject = async function getProject(req, user) {
   }
 };
 
+/**
+ * Get user projects
+ * @param {*} req Http request contains project id
+ * @param {object} user User information
+ * @returns {object} project
+ * @throws {object} errorCodeAndMsg
+ */
+const deleteProject = async function deleteProject(req, user) {
+  try {
+    const {
+      id
+    } = user;
+
+    const { projectId } = req.params;
+
+    if (!projectId) {
+      throw { code: 400, message: 'Please provide project id' };
+    }
+
+    // Get project admin
+    let projectQuery = await db.query('select user_id from projects where id=$1', [projectId]);
+    if (!projectQuery || !projectQuery.rows || projectQuery.rows.length <= 0) {
+      throw { code: 404, message: 'Project is not found' };
+    }
+    projectQuery = projectQuery.rows[0];
+
+    if (projectQuery.id != id) {
+      throw { code: 401, message: 'Only admin is authorized to delete and modiy project' };
+    }
+
+    // Delete project
+    const deleteQuery = await db.query('delete from projects where id=$1 AND user_id=$2', [projectId, id]);
+    if (!deleteQuery) {
+      throw { code: 500, message: 'Could not delete project from database' };
+    }
+
+    return { 'message': 'Deleted project successfully' };
+  } catch (error) {
+    if (error.code) {
+      throw error;
+    }
+    const userMsg = 'Could not delete project project';
+    console.log(userMsg, error);
+    throw { code: 500, message: userMsg };
+  }
+};
+
 module.exports = {
   newProject,
   getProjects,
-  getProject
+  getProject,
+  deleteProject
 };

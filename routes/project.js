@@ -4,54 +4,70 @@ const authorizationSrc = require('../src/authorizationSrc');
 const projectSrc = require('../src/projectSrc');
 
 /**
- * @summary Create new project
+ * Custom function to call src file
+ * @param {string} srcFunctionName source file function name
+ * @param {array} parameters Variables to send with the function
+ * @returns {object} response
  */
-router.post('/newProject', async (req, res) => {
+const callSrcFile = async function callSrc(functionName, parameters, req, res) {
+  let userCheckPass = false;
   try {
     const user = await authorizationSrc.verifyToken(req);
-    const data = await projectSrc.newProject(req, user);
+    userCheckPass = true;
+    const data = await projectSrc[functionName].apply(this, [...parameters, user]);
     res.status(200).json({
       data
     });
   } catch (error) {
-    res.status(error.code).json({
-      error
-    });
+    console.log(error);
+    if (error && error.code) {
+      res.status(error.code).json({
+        error
+      });
+    } else if (error && !userCheckPass) {
+      res.status(401).json({
+        error: {
+          code: 401,
+          message: 'Not authorized'
+        }
+      });
+    } else {
+      res.status(500).json({
+        error: {
+          code: 500,
+          message: `Could not process ${req.originalUrl} request`
+        }
+      });
+    }
   }
+};
+
+/**
+ * @summary Create new project
+ */
+router.post('/newProject', async (req, res) => {
+  callSrcFile('newProject', [req], req, res);
 });
 
 /**
  * @summary Get user's projects
  */
 router.get('/projects', async (req, res) => {
-  try {
-    const user = await authorizationSrc.verifyToken(req);
-    const data = await projectSrc.getProjects(user);
-    res.status(200).json({
-      data
-    });
-  } catch (error) {
-    res.status(error.code).json({
-      error
-    });
-  }
+  callSrcFile('getProjects', [], req, res);
 });
 
 /**
  * @summary Get a single project
  */
 router.get('/projects/:projectId', async (req, res) => {
-  try {
-    const user = await authorizationSrc.verifyToken(req);
-    const data = await projectSrc.getProject(req, user);
-    res.status(200).json({
-      data
-    });
-  } catch (error) {
-    res.status(error.code).json({
-      error
-    });
-  }
+  callSrcFile('getProject', [req], req, res);
+});
+
+/**
+ * @summary Delete a single project
+ */
+router.delete('/projects/:projectId', async (req, res) => {
+  callSrcFile('deleteProject', [req], req, res);
 });
 
 module.exports = router;
