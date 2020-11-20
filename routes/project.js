@@ -46,7 +46,11 @@ const callSrcFile = async function callSrc(functionName, parameters, req, res) {
  * @summary Create new project
  */
 router.post('/newProject', async (req, res) => {
-  callSrcFile('newProject', [req], req, res);
+  const {
+    title,
+    description
+  } = req.body;
+  callSrcFile('newProject', [title, description], req, res);
 });
 
 /**
@@ -60,6 +64,7 @@ router.get('/projects', async (req, res) => {
  * @summary Get a single project
  */
 router.get('/projects/:projectId', async (req, res) => {
+  const { projectId } = req.params;
   callSrcFile('getProject', [req], req, res);
 });
 
@@ -67,7 +72,16 @@ router.get('/projects/:projectId', async (req, res) => {
  * @summary Delete a single project
  */
 router.delete('/projects/:projectId', async (req, res) => {
-  callSrcFile('deleteProject', [req], req, res);
+  const { projectId } = req.params;
+  callSrcFile('deleteProject', [projectId], req, res);
+});
+
+/**
+ * @summary Get project admin id
+ */
+router.get('/projects/:projectId/admin', async (req, res) => {
+  const { projectId } = req.params;
+  callSrcFile('getProjectAdminId', [projectId], req, res);
 });
 
 module.exports = router;

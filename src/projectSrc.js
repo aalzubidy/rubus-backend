@@ -3,18 +3,14 @@ const db = require('../db/db');
 
 /**
  * Create new project
- * @param {*} req http request contains project tile and description
+ * @param {string} title Project title
+ * @param {string} description Project description
  * @param {object} user User information
  * @returns {object} newProjectResults
  * @throws {object} errorCodeAndMsg
  */
-const newProject = async function newProject(req, user) {
+const newProject = async function newProject(title, description, user) {
   try {
-    const {
-      title,
-      description
-    } = req.body;
-
     // Check if there is no email or password
     if (!title) {
       throw { code: 400, message: 'Please provide project title' };
@@ -79,18 +75,16 @@ const getProjects = async function getProjects(user) {
 
 /**
  * Get user projects
- * @param {*} req Http request contains project id
+ * @param {string} projectId Project id
  * @param {object} user User information
  * @returns {object} project
  * @throws {object} errorCodeAndMsg
  */
-const getProject = async function getProject(req, user) {
+const getProject = async function getProject(projectId, user) {
   try {
     const {
       id
     } = user;
-
-    const { projectId } = req.params;
 
     if (!projectId) {
       throw { code: 400, message: 'Please provide project id' };
@@ -131,20 +125,13 @@ const getProject = async function getProject(req, user) {
 };
 
 /**
- * Get user projects
- * @param {*} req Http request contains project id
- * @param {object} user User information
- * @returns {object} project
+ * Get project's admin id
+ * @param {string} projectId Project id
+ * @returns {string} adminId
  * @throws {object} errorCodeAndMsg
  */
-const deleteProject = async function deleteProject(req, user) {
+const getProjectAdminId = async function getProjectAdminId(projectId, user) {
   try {
-    const {
-      id
-    } = user;
-
-    const { projectId } = req.params;
-
     if (!projectId) {
       throw { code: 400, message: 'Please provide project id' };
     }
@@ -156,7 +143,37 @@ const deleteProject = async function deleteProject(req, user) {
     }
     projectQuery = projectQuery.rows[0];
 
-    if (projectQuery.id != id) {
+    return { adminId: projectQuery };
+  } catch (error) {
+    if (error.code) {
+      throw error;
+    }
+    const userMsg = 'Could not get project admin id';
+    console.log(userMsg, error);
+    throw { code: 500, message: userMsg };
+  }
+};
+
+/**
+ * Get user projects
+ * @param {string} projectId Project id
+ * @param {object} user User information
+ * @returns {object} project
+ * @throws {object} errorCodeAndMsg
+ */
+const deleteProject = async function deleteProject(projectId, user) {
+  try {
+    const {
+      id
+    } = user;
+
+    if (!projectId) {
+      throw { code: 400, message: 'Please provide project id' };
+    }
+
+    const projectAdminId = await getProjectAdminId(projectId);
+
+    if (projectAdminId != id) {
       throw { code: 401, message: 'Only admin is authorized to delete and modiy project' };
     }
 
@@ -181,5 +198,6 @@ module.exports = {
   newProject,
   getProjects,
   getProject,
-  deleteProject
+  deleteProject,
+  getProjectAdminId
 };
