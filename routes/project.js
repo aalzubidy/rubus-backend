@@ -98,7 +98,15 @@ router.put('/projects/:projectId', async (req, res) => {
  */
 router.put('/projects/addUsers', async (req, res) => {
   const { projectId, projectUsers } = req.body;
-  callSrcFile('updateProject', [projectId, projectUsers], req, res);
+  callSrcFile('addProjectUsers', [projectId, projectUsers], req, res);
+});
+
+/**
+ * @summary Remove project's user(s)
+ */
+router.put('/projects/removeUsers', async (req, res) => {
+  const { projectId, projectUsers } = req.body;
+  callSrcFile('removeProjectUsers', [projectId, projectUsers], req, res);
 });
 
 module.exports = router;

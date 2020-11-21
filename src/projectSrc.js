@@ -283,6 +283,51 @@ const addProjectUsers = async function addProjectUsers(projectId, projectUsers, 
   }
 };
 
+/**
+ * Remove user(s) to a project
+ * @param {string} projectId Project id
+ * @param {array} projectUsers Users to remove from the project
+ * @param {object} user User information
+ * @returns {object} updateResults
+ * @throws {object} errorCodeAndMsg
+ */
+const removeProjectUsers = async function removeProjectUsers(projectId, projectUsers, user) {
+  const deletedUsers = [];
+  try {
+    const {
+      id,
+      email
+    } = user;
+
+    if (!projectId || !projectUsers || projectUsers.length <= 0) {
+      throw { code: 400, message: 'Please provide project id and users to add' };
+    }
+
+    const projectAdminId = await getProjectAdminId(projectId);
+
+    if (projectAdminId != id || !(email === projectUsers[0] && projectUsers.length === 1)) {
+      throw { code: 401, message: 'Only admin and self user are authorized to remove user(s)' };
+    }
+
+    // Add users to project
+    projectUsers.forEach(async (pUserEmail) => {
+      const deleteQuery = await db.query('delete from projects_users where user_id=(select id from users where email=$1), project_id=$2', [pUserEmail, projectId]);
+      if (deleteQuery) {
+        deletedUsers.push(pUserEmail);
+      }
+    });
+
+    return { 'message': 'Delete all requested users successfully', deletedUsers };
+  } catch (error) {
+    if (error.code) {
+      throw error;
+    }
+    const userMsg = 'Could not delete one or more users';
+    console.log(userMsg, error);
+    throw { code: 500, message: userMsg, deletedUsers };
+  }
+};
+
 module.exports = {
   newProject,
   getProjects,
@@ -290,5 +335,6 @@ module.exports = {
   deleteProject,
   getProjectAdminId,
   updateProject,
-  addProjectUsers
+  addProjectUsers,
+  removeProjectUsers
 };
