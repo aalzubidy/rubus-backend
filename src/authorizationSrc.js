@@ -190,9 +190,41 @@ const renewToken = async function renewToken(req) {
   }
 };
 
+/**
+ * Verify token and return user information
+ * @param {object} req http request contains access token
+ * @returns {object} user information from token
+ * @throws {string} errorMsg
+ */
+const verifyToken = async function verifyToken(req) {
+  try {
+    const { token } = req.headers;
+
+    if (!token) {
+      throw { code: 400, messages: 'Token required' };
+    }
+
+    const results = await jwt.verify(token, accessTokenSecret);
+
+    if (!results) {
+      throw { code: 401, messages: 'Access denied' };
+    }
+
+    return (results);
+  } catch (error) {
+    if (error.code) {
+      throw error;
+    }
+    const errorMsg = 'Could not verify token';
+    console.log(errorMsg, error);
+    throw { code: 500, message: errorMsg };
+  }
+};
+
 module.exports = {
   register,
   login,
   logout,
-  renewToken
+  renewToken,
+  verifyToken
 };
