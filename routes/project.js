@@ -45,7 +45,7 @@ const callSrcFile = async function callSrc(functionName, parameters, req, res) {
 /**
  * @summary Create new project
  */
-router.post('/newProject', async (req, res) => {
+router.post('/projects/new', async (req, res) => {
   const {
     title,
     description
@@ -65,15 +65,7 @@ router.get('/projects', async (req, res) => {
  */
 router.get('/projects/:projectId', async (req, res) => {
   const { projectId } = req.params;
-  callSrcFile('getProject', [req], req, res);
-});
-
-/**
- * @summary Delete a single project
- */
-router.delete('/projects/:projectId', async (req, res) => {
-  const { projectId } = req.params;
-  callSrcFile('deleteProject', [projectId], req, res);
+  callSrcFile('getProject', [projectId], req, res);
 });
 
 /**
@@ -82,6 +74,14 @@ router.delete('/projects/:projectId', async (req, res) => {
 router.get('/projects/:projectId/admin', async (req, res) => {
   const { projectId } = req.params;
   callSrcFile('getProjectAdminId', [projectId], req, res);
+});
+
+/**
+ * @summary Delete a single project
+ */
+router.delete('/projects/:projectId', async (req, res) => {
+  const { projectId } = req.params;
+  callSrcFile('deleteProject', [projectId], req, res);
 });
 
 /**
@@ -96,16 +96,18 @@ router.put('/projects/:projectId', async (req, res) => {
 /**
  * @summary Add project's user(s)
  */
-router.put('/projects/addUsers', async (req, res) => {
-  const { projectId, projectUsers } = req.body;
+router.put('/projects/:projectId/addUsers', async (req, res) => {
+  const { projectId } = req.params;
+  const { projectUsers } = req.body;
   callSrcFile('addProjectUsers', [projectId, projectUsers], req, res);
 });
 
 /**
  * @summary Remove project's user(s)
  */
-router.put('/projects/removeUsers', async (req, res) => {
-  const { projectId, projectUsers } = req.body;
+router.delete('/projects/:projectId/removeUsers', async (req, res) => {
+  const { projectId } = req.params;
+  const { projectUsers } = req.body;
   callSrcFile('removeProjectUsers', [projectId, projectUsers], req, res);
 });
 
