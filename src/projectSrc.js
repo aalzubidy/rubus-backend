@@ -16,7 +16,7 @@ const newProject = async function newProject(title, description, user) {
       throw { code: 400, message: 'Please provide project title' };
     }
 
-    // Generate create date
+    // Get date
     const createDate = moment().format('MM/DD/YYYY');
 
     // Create a user in the database
@@ -236,11 +236,59 @@ const updateProject = async function updateProject(projectId, title, description
   }
 };
 
+/**
+ * Add user(s) to a project
+ * @param {string} projectId Project id
+ * @param {array} projectUsers Users to add to the project
+ * @param {object} user User information
+ * @returns {object} updateResults
+ * @throws {object} errorCodeAndMsg
+ */
+const addProjectUsers = async function addProjectUsers(projectId, projectUsers, user) {
+  const insertedUsers = [];
+  try {
+    const {
+      id
+    } = user;
+
+    if (!projectId || !projectUsers || projectUsers.length <= 0) {
+      throw { code: 400, message: 'Please provide project id and users to add' };
+    }
+
+    const projectAdminId = await getProjectAdminId(projectId);
+
+    if (projectAdminId != id) {
+      throw { code: 401, message: 'Only admin is authorized to add users' };
+    }
+
+    // Get date
+    const createDate = moment().format('MM/DD/YYYY');
+
+    // Add users to project
+    projectUsers.forEach(async (pUserEmail) => {
+      const insertQuery = await db.query('insert into projects_users values((select id from users where email=$1),$2,$3,$4)', [pUserEmail, projectId, id, createDate]);
+      if (insertQuery) {
+        insertedUsers.push(pUserEmail);
+      }
+    });
+
+    return { 'message': 'Added all users successfully', insertedUsers };
+  } catch (error) {
+    if (error.code) {
+      throw error;
+    }
+    const userMsg = 'Could not add one or more users';
+    console.log(userMsg, error);
+    throw { code: 500, message: userMsg, insertedUsers };
+  }
+};
+
 module.exports = {
   newProject,
   getProjects,
   getProject,
   deleteProject,
   getProjectAdminId,
-  updateProject
+  updateProject,
+  addProjectUsers
 };
