@@ -67,7 +67,7 @@ const getProjects = async function getProjects(user) {
     if (error.code) {
       throw error;
     }
-    const userMsg = 'Could not create project';
+    const userMsg = 'Could not get projects';
     console.log(userMsg, error);
     throw { code: 500, message: userMsg };
   }
