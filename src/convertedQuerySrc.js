@@ -12,7 +12,7 @@ const db = require('../db/db');
 const storeConvertedQuery = async function storeConvertedQuery(inputQuery, outputQuery, user) {
   try {
     // Check if there is no email or password
-    if (!inputQuery || outputQuery) {
+    if (!inputQuery || !outputQuery) {
       throw { code: 400, message: 'Please provide a query and its conversion' };
     }
 
@@ -51,7 +51,7 @@ const getConvertedQueries = async function getConvertedQueries(user) {
       throw { code: 404, message: 'User does not have any stored converted queries' };
     }
 
-    return convertedQueries;
+    return convertedQueries.rows;
   } catch (error) {
     if (error.code) {
       throw error;
@@ -81,7 +81,7 @@ const getConvertedQuery = async function getConvertedQuery(queryId, user) {
       throw { code: 404, message: 'Could not find user converted query' };
     }
 
-    return convertedQuery;
+    return convertedQuery.rows;
   } catch (error) {
     if (error.code) {
       throw error;
@@ -111,7 +111,7 @@ const deleteConvertedQuery = async function deleteConvertedQuery(queryId, user) 
       throw { code: 404, message: 'Could not delete user converted query' };
     }
 
-    return convertedQuery;
+    return {'message': 'Deleted succesfully'};
   } catch (error) {
     if (error.code) {
       throw error;
