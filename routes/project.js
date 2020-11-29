@@ -96,7 +96,7 @@ router.put('/projects/:projectId', async (req, res) => {
 /**
  * @summary Add project's user(s)
  */
-router.put('/projects/:projectId/addUsers', async (req, res) => {
+router.post('/projects/:projectId/addUsers', async (req, res) => {
   const { projectId } = req.params;
   const { projectUsers } = req.body;
   callSrcFile('addProjectUsers', [projectId, projectUsers], req, res);
