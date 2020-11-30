@@ -56,26 +56,34 @@ router.post('/searchQuery/new', async (req, res) => {
 });
 
 /**
- * @summary Get user's converted queries
+ * @summary Get user's search queries
  */
 router.get('/searchQuery', async (req, res) => {
   callSrcFile('getSearchQueries', [], req, res);
 });
 
-// /**
-//  * @summary Get a single converted query
-//  */
-// router.get('/convertedQuery/:queryId', async (req, res) => {
-//   const { queryId } = req.params;
-//   callSrcFile('getConvertedQuery', [queryId], req, res);
-// });
+/**
+ * @summary Get project's search queries
+ */
+router.get('/searchQuery/project/:projectId', async (req, res) => {
+  const { projectId } = req.params;
+  callSrcFile('getProjectSearchQueries', [projectId], req, res);
+});
 
-// /**
-//  * @summary Delete a single converted query
-//  */
-// router.delete('/convertedQuery/:queryId', async (req, res) => {
-//   const { queryId } = req.params;
-//   callSrcFile('deleteConvertedQuery', [queryId], req, res);
-// });
+/**
+ * @summary Get a single search query
+ */
+router.get('/searchQuery/:queryId/project/:projectId', async (req, res) => {
+  const { queryId, projectId } = req.params;
+  callSrcFile('getSearchQuery', [queryId, projectId], req, res);
+});
+
+/**
+ * @summary Delete a single search query
+ */
+router.delete('/convertedQuery/:queryId', async (req, res) => {
+  const { queryId, projectId } = req.params;
+  callSrcFile('deleteSearchQuery', [queryId, projectId], req, res);
+});
 
 module.exports = router;

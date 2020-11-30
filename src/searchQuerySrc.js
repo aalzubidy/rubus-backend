@@ -21,7 +21,7 @@ const storeSearchQuery = async function storeSearchQuery(inputQuery, dbName, tot
     // Get date
     const createDate = moment().format('MM/DD/YYYY');
 
-    // Create a user in the database
+    // Insert a search query in the database
     await db.query('INSERT INTO searchQueries(input_query, db, total_results, project_id, user_id, create_date) VALUES($1, $2, $3, $4, $5, $6)', [inputQuery.trim(), db.trim(), totalResults, projectId, user.id, createDate]);
 
     return { message: 'Search query stored successfully' };
@@ -47,8 +47,8 @@ const getSearchQueries = async function getSearchQueries(user) {
       id
     } = user;
 
-    // Get converted queryies from the database
-    const searchQueries = await db.query('select * from convertQueries where user_id=$1', [id]);
+    // Get search queries from the database
+    const searchQueries = await db.query('select * from searchQueries where user_id=$1', [id]);
     if (!searchQueries || !searchQueries.rows || searchQueries.rows.length <= 0) {
       throw { code: 404, message: 'User does not have any stored search queries' };
     }
@@ -64,69 +64,102 @@ const getSearchQueries = async function getSearchQueries(user) {
   }
 };
 
-// /**
-//  * Get a single converted query
-//  * @param {string} queryId Converted query id
-//  * @param {object} user User information
-//  * @returns {object} convertedQuery
-//  * @throws {object} errorCodeAndMsg
-//  */
-// const getConvertedQuery = async function getConvertedQuery(queryId, user) {
-//   try {
-//     const {
-//       id
-//     } = user;
+/**
+ * Get project search queries
+ * @param {object} user User information
+ * @param {string} projectId Project Id
+ * @returns {array} searchQueries list of project search queries
+ * @throws {object} errorCodeAndMsg
+ */
+const getProjectSearchQueries = async function getProjectSearchQueries(projectId, user) {
+  try {
+    const {
+      id
+    } = user;
 
-//     // Get converted queryies from the database
-//     const convertedQuery = await db.query('select * from convertQueries where user_id=$1 and id=$2', [id, queryId]);
-//     if (!convertedQuery || !convertedQuery.rows || convertedQuery.rows.length <= 0) {
-//       throw { code: 404, message: 'Could not find user converted query' };
-//     }
+    // Get project search queryies from the database
+    const searchQueries = await db.query('select * from searchQueries where project_id=$1', [projectId]);
+    if (!searchQueries || !searchQueries.rows || searchQueries.rows.length <= 0) {
+      throw { code: 404, message: 'Project does not have any stored search queries' };
+    }
 
-//     return convertedQuery.rows;
-//   } catch (error) {
-//     if (error.code) {
-//       throw error;
-//     }
-//     const userMsg = 'Could not get converted query';
-//     console.log(userMsg, error);
-//     throw { code: 500, message: userMsg };
-//   }
-// };
+    return searchQueries.rows;
+  } catch (error) {
+    if (error.code) {
+      throw error;
+    }
+    const userMsg = 'Could not get project search queries';
+    console.log(userMsg, error);
+    throw { code: 500, message: userMsg };
+  }
+};
 
-// /**
-//  * Delete a single converted query
-//  * @param {string} queryId Converted query id
-//  * @param {object} user User information
-//  * @returns {object} deleteConvertQueryResults
-//  * @throws {object} errorCodeAndMsg
-//  */
-// const deleteConvertedQuery = async function deleteConvertedQuery(queryId, user) {
-//   try {
-//     const {
-//       id
-//     } = user;
+/**
+ * Get a single search query
+ * @param {string} queryId Search query id
+ * @param {string} projectId Project id
+ * @param {object} user User information
+ * @returns {object} searchQuery
+ * @throws {object} errorCodeAndMsg
+ */
+const getSearchQuery = async function getSearchQuery(queryId, projectId, user) {
+  try {
+    const {
+      id
+    } = user;
 
-//     // Get converted queryies from the database
-//     const convertedQuery = await db.query('delete from convertQueries where user_id=$1 and id=$2', [id, queryId]);
-//     if (!convertedQuery) {
-//       throw { code: 404, message: 'Could not delete user converted query' };
-//     }
+    // Get search query from the database
+    const searchQuery = await db.query('select * from searchQueries where id=$1 and project_id=$2', [queryId, projectId]);
+    if (!searchQuery || !searchQuery.rows || searchQuery.rows.length <= 0) {
+      throw { code: 404, message: 'Could not find user search query' };
+    }
 
-//     return {'message': 'Deleted succesfully'};
-//   } catch (error) {
-//     if (error.code) {
-//       throw error;
-//     }
-//     const userMsg = 'Could not delete converted query';
-//     console.log(userMsg, error);
-//     throw { code: 500, message: userMsg };
-//   }
-// };
+    return searchQuery.rows;
+  } catch (error) {
+    if (error.code) {
+      throw error;
+    }
+    const userMsg = 'Could not get search query';
+    console.log(userMsg, error);
+    throw { code: 500, message: userMsg };
+  }
+};
+
+/**
+ * Delete a single search query
+ * @param {string} queryId Search query id
+ * @param {string} projectId Project id
+ * @param {object} user User information
+ * @returns {object} deleteSearchQueryResults
+ * @throws {object} errorCodeAndMsg
+ */
+const deleteSearchQuery = async function deleteSearchQuery(queryId, projectId, user) {
+  try {
+    const {
+      id
+    } = user;
+
+    // Delete search query from the database
+    const searchQuery = await db.query('delete from searchQueries where id=$1 and project_id=$2', [queryId, projectId]);
+    if (!searchQuery) {
+      throw { code: 404, message: 'Could not delete search query' };
+    }
+
+    return {'message': 'Deleted search query succesfully'};
+  } catch (error) {
+    if (error.code) {
+      throw error;
+    }
+    const userMsg = 'Could not delete search query';
+    console.log(userMsg, error);
+    throw { code: 500, message: userMsg };
+  }
+};
 
 module.exports = {
   storeSearchQuery,
   getSearchQueries,
-  // getConvertedQuery,
-  // deleteConvertedQuery
+  getProjectSearchQueries,
+  getSearchQuery,
+  deleteSearchQuery
 };
