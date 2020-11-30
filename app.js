@@ -14,6 +14,7 @@ const requestIp = require('request-ip');
 const authorizationRoutes = require('./routes/authorization');
 const projectRoutes = require('./routes/project');
 const convertedQueryRoutes = require('./routes/convertedQuery');
+const searchQueryRoutes = require('./routes/searchQuery');
 
 // Application Setup
 const app = express();
@@ -68,6 +69,9 @@ app.use(projectRoutes);
 
 // Converted Query routes
 app.use(convertedQueryRoutes);
+
+// Search Query routes
+app.use(searchQueryRoutes);
 
 // Upload a new file
 app.post('/uploadFile', function (req, res) {

@@ -19,7 +19,7 @@ const storeConvertedQuery = async function storeConvertedQuery(inputQuery, outpu
     // Get date
     const createDate = moment().format('MM/DD/YYYY');
 
-    // Create a user in the database
+    // Insert a converted query in the database
     await db.query('INSERT INTO convertQueries(input_query, output_query, user_id, create_date) VALUES($1, $2, $3, $4)', [inputQuery.trim(), outputQuery.trim(), user.id, createDate]);
 
     return { message: 'Query stored successfully' };
@@ -45,7 +45,7 @@ const getConvertedQueries = async function getConvertedQueries(user) {
       id
     } = user;
 
-    // Get converted queryies from the database
+    // Get converted queries from the database
     const convertedQueries = await db.query('select * from convertQueries where user_id=$1', [id]);
     if (!convertedQueries || !convertedQueries.rows || convertedQueries.rows.length <= 0) {
       throw { code: 404, message: 'User does not have any stored converted queries' };
@@ -75,7 +75,7 @@ const getConvertedQuery = async function getConvertedQuery(queryId, user) {
       id
     } = user;
 
-    // Get converted queryies from the database
+    // Get converted query from the database
     const convertedQuery = await db.query('select * from convertQueries where user_id=$1 and id=$2', [id, queryId]);
     if (!convertedQuery || !convertedQuery.rows || convertedQuery.rows.length <= 0) {
       throw { code: 404, message: 'Could not find user converted query' };
@@ -105,7 +105,7 @@ const deleteConvertedQuery = async function deleteConvertedQuery(queryId, user) 
       id
     } = user;
 
-    // Get converted queryies from the database
+    // Delete converted query from the database
     const convertedQuery = await db.query('delete from convertQueries where user_id=$1 and id=$2', [id, queryId]);
     if (!convertedQuery) {
       throw { code: 404, message: 'Could not delete user converted query' };
