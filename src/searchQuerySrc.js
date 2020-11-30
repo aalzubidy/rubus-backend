@@ -35,34 +35,34 @@ const storeSearchQuery = async function storeSearchQuery(inputQuery, dbName, tot
   }
 };
 
-// /**
-//  * Get user converted queries
-//  * @param {object} user User information
-//  * @returns {array} convertedQueries list of converted queries
-//  * @throws {object} errorCodeAndMsg
-//  */
-// const getConvertedQueries = async function getConvertedQueries(user) {
-//   try {
-//     const {
-//       id
-//     } = user;
+/**
+ * Get user search queries
+ * @param {object} user User information
+ * @returns {array} searchQueries list of search queries
+ * @throws {object} errorCodeAndMsg
+ */
+const getSearchQueries = async function getSearchQueries(user) {
+  try {
+    const {
+      id
+    } = user;
 
-//     // Get converted queryies from the database
-//     const convertedQueries = await db.query('select * from convertQueries where user_id=$1', [id]);
-//     if (!convertedQueries || !convertedQueries.rows || convertedQueries.rows.length <= 0) {
-//       throw { code: 404, message: 'User does not have any stored converted queries' };
-//     }
+    // Get converted queryies from the database
+    const searchQueries = await db.query('select * from convertQueries where user_id=$1', [id]);
+    if (!searchQueries || !searchQueries.rows || searchQueries.rows.length <= 0) {
+      throw { code: 404, message: 'User does not have any stored search queries' };
+    }
 
-//     return convertedQueries.rows;
-//   } catch (error) {
-//     if (error.code) {
-//       throw error;
-//     }
-//     const userMsg = 'Could not get converted queries';
-//     console.log(userMsg, error);
-//     throw { code: 500, message: userMsg };
-//   }
-// };
+    return searchQueries.rows;
+  } catch (error) {
+    if (error.code) {
+      throw error;
+    }
+    const userMsg = 'Could not get search queries';
+    console.log(userMsg, error);
+    throw { code: 500, message: userMsg };
+  }
+};
 
 // /**
 //  * Get a single converted query
@@ -126,7 +126,7 @@ const storeSearchQuery = async function storeSearchQuery(inputQuery, dbName, tot
 
 module.exports = {
   storeSearchQuery,
-  // getConvertedQueries,
+  getSearchQueries,
   // getConvertedQuery,
   // deleteConvertedQuery
 };

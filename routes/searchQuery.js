@@ -55,12 +55,12 @@ router.post('/searchQuery/new', async (req, res) => {
   callSrcFile('storeSearchQuery', [inputQuery, dbName, totalResults, projectId], req, res);
 });
 
-// /**
-//  * @summary Get user's converted queries
-//  */
-// router.get('/convertedQuery', async (req, res) => {
-//   callSrcFile('getConvertedQueries', [], req, res);
-// });
+/**
+ * @summary Get user's converted queries
+ */
+router.get('/searchQuery', async (req, res) => {
+  callSrcFile('getSearchQueries', [], req, res);
+});
 
 // /**
 //  * @summary Get a single converted query
