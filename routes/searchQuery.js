@@ -81,7 +81,7 @@ router.get('/searchQuery/:queryId/project/:projectId', async (req, res) => {
 /**
  * @summary Delete a single search query
  */
-router.delete('/convertedQuery/:queryId', async (req, res) => {
+router.delete('/searchQuery/:queryId/project/:projectId', async (req, res) => {
   const { queryId, projectId } = req.params;
   callSrcFile('deleteSearchQuery', [queryId, projectId], req, res);
 });
