@@ -1,0 +1,104 @@
+<li class="search__item issue-item-container">
+   <div class="issue-item-checkbox-container"><label class="checkbox--primary"><input name="10.1145/1507195.1507212" class="issue-Item__checkbox" type="checkbox"><span></span></label></div>
+   <div class="issue-item issue-item--search clearfix">
+      <div class="issue-item__citation">
+         <div class="issue-heading">research-article</div>
+         
+         
+         
+         <div class="publisher-badge"><img class="simple-tooltip__block--b" src="/specs/products/acm/releasedAssets/images/acm-badge-20X20.png" alt="Published By ACM" title="Published By ACM" data-title="Published By ACM"><span class="visibility-hidden">Published By ACM</span></div>
+         <div class="badges"></div>
+      </div>
+      <div class="issue-item__content">
+         <div class="issue-item__content-right">
+            <h5 class="issue-item__title"><span class="hlFld-Title"><a href="/doi/10.1145/1507195.1507212"><span onclick="highlight()" class="single_highlight_class">Testing</span> polymorphism in object oriented systems for improving <span onclick="highlight()" class="single_highlight_class">software</span> <span onclick="highlight()" class="single_highlight_class">quality</span></a></span></h5>
+            <ul class="rlist--inline loa truncate-list" aria-label="authors" data-lines="1">
+               <li><a href="/profile/81440602993" title="Dinesh Kumar Saini"><img class="author-picture" src="/pb-assets/icons/DOs/default-profile-1543932446943.svg" alt="Dinesh Kumar Saini profile image"/><span>Dinesh Kumar Saini</span></a></li>
+            </ul>
+            <div class="issue-item__detail"><a href="/toc/sigsoft/2009/34/2" title="ACM SIGSOFT Software Engineering Notes"><span class="epub-section__title">ACM SIGSOFT Software Engineering Notes, Volume 34, Issue 2</span></a><span class="dot-separator"><span>February 2009, </span><span>pp 1–5</span></span><span><a href="https://doi.org/10.1145/1507195.1507212" class="issue-item__doi dot-separator">https://doi.org/10.1145/1507195.1507212</a></span></div>
+            <div class="issue-item__abstract truncate-text" data-lines="4">
+               
+               <p>With object-oriented approaches, testing should center on objects, classes, generic
+                  classes and super classes, inheritance and polymorphism, instead of subprograms. In
+                  object-oriented software test, the feature of inheritance and polymorphism produces
+                  ...
+               </p>
+            </div>
+            <div class="issue-item__footer clearfix">
+               <div class="issue-item__footer-wrapper clearfix">
+                  <div class="issue-item__footer-info pull-left">
+                     <ul class="rlist--inline">
+                        <li class="metric-holder">
+                           <div class="tooltip" tabindex="0">
+                              <ul class="rlist--inline padding-0">
+                                 <li><span class="citation"><i class="icon-quote"></i><span>1</span></span></li>
+                                 
+                                 <li><span class="metric"><i class="icon-metric"></i><span>625</span></span></li>
+                                 
+                              </ul>
+                              <div class="tooltip__body footer-metric-holder"><span class="arrow"></span><div class="left-bordered-title">Metrics</div>
+                                 <div class="citation">Total Citations<span class="bold">1</span></div>
+                                 
+                                 <div class="metric">Total Downloads<span class="bold">625</span></div>
+                                 <div class="info">Last 12 Months<span class="bold">21</span></div>
+                                 <div class="info">Last 6 weeks<span class="bold">4</span></div>
+                                 
+                              </div>
+                           </div>
+                        </li>
+                        <li class="highlights-holder">
+                           <div class="accordion"><a href="#" data-content-target="#accordion-content10114515071951507212" title="Show Highlights" aria-expanded="false" class="accordion__control"><i aria-hidden="true" class="icon-format_color_text"></i><span>Highlights</span><i aria-hidden="true" class="icon-section_arrow_d"></i></a></div>
+                        </li>
+                     </ul>
+                     <div class="accordion">
+                        <div id="accordion-content10114515071951507212" class="accordion__content" style=""><span class="hlFld-Abstract"></span><div class="abstract-text"><h6>Abstract</h6><p>In object-oriented  <span onclick="highlight()" class="single_highlight_class">software</span>  <span onclick="highlight()" class="single_highlight_class">test</span>, the feature of inheritance and polymorphism produces the new obstacle during dynamic  <span onclick="highlight()" class="single_highlight_class">testing</span>.</p><p>I propose a  <span onclick="highlight()" class="single_highlight_class">testers</span> perspective method to assess the polymorphism in design stage. This way it also provides useful information for developer to probe into the fault that is hidden from  <span onclick="highlight()" class="single_highlight_class">test</span> in early stage. Thus it will help in improving the  <span onclick="highlight()" class="single_highlight_class">quality</span> of object oriented  <span onclick="highlight()" class="single_highlight_class">software</span>.</p> </div><div class="full-text"><h6>Full Text</h6><p><span onclick="highlight()" class="single_highlight_class">Testing</span> Polymorphism in Object Oriented Systems for Improving  <span onclick="highlight()" class="single_highlight_class">software</span>  <span onclick="highlight()" class="single_highlight_class">Quality</span> Dinesh Kumar Saini Faculty of Computing and Information Technology, Sohar University, P.O.</p><p>In object-oriented  <span onclick="highlight()" class="single_highlight_class">software</span>  <span onclick="highlight()" class="single_highlight_class">test</span>, the feature of inheritance and polymorphism produces the new obstacle during dynamic  <span onclick="highlight()" class="single_highlight_class">testing</span>.</p><p>Thus it will help in improving the  <span onclick="highlight()" class="single_highlight_class">quality</span> of object oriented  <span onclick="highlight()" class="single_highlight_class">software</span>. Keywords: Object Orientated Systems, Polymorphism, Inheritance,  <span onclick="highlight()" class="single_highlight_class">Software</span>  <span onclick="highlight()" class="single_highlight_class">Testing</span>,  <span onclick="highlight()" class="single_highlight_class">Quality</span>.</p> </div><div class="keywords-text"><h6>Keywords</h6><p><span onclick="highlight()" class="single_highlight_class">quality</span></p> </div><div class="Subject"><h6>Subject</h6><p><span onclick="highlight()" class="single_highlight_class">Quality</span> assurance</p><p><span onclick="highlight()" class="single_highlight_class">Software</span> defect analysis</p><p><span onclick="highlight()" class="single_highlight_class">Software</span>  <span onclick="highlight()" class="single_highlight_class">testing</span> and debugging</p> </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="issue-item__footer-links pull-right">
+                     <ul class="rlist--inline left dot-separator">
+                        <li><a class="btn--icon simple-tooltip__block--b" href="#" data-title="Export Citation" data-toggle="modal" data-target="#exportCitation"><i class="icon-quote"></i><span class="visibility-hidden">Export Citations</span><input type="hidden" name="doiVal" value="10.1145/1507195.1507212"></a></li>
+                        <li><a href="/" role="menuitem" data-title="Save to Binder" data-db-target-for="save-to-binder-d1875670e2" data-link="/action/binderList?doi=10.1145/1507195.1507212" class="btn--icon simple-tooltip__block--b saveToBinders"><i aria-hidden="true" class="icon-add-folder"></i><span class="visibility-hidden">Save to Binder</span></a><div data-db-target-of="save-to-binder-d1875670e2">
+                              <div class="saveToBinders-list"><input type="hidden" name="doiVal" value="10.1145/1507195.1507212"><h5>Save to Binder</h5>
+                                 <div class="binder-list-alerts"></div>
+                                 <div class="saveToBinders-list__container">
+                                    <ul class="rlist saveToBinders-list__items">
+                                       <div class="loader"><img src="/specs/products/acm/releasedAssets/images/loader.gif"></div>
+                                    </ul>
+                                 </div>
+                                 <div class="binder__create"><a class="show-binder-form toggle-binder-form" data-action="show" href="/action/showMyBinders" title="Create a New Binder"><i class="icon-plus-light"></i>
+                                       Create a New Binder
+                                       </a><div class="binder-create-form binder__create-mini-form">
+                                       <div class="input-group input-group--gray-bg"><label>Name</label><div class="input-group__field-container--right-icon"><input type="text" placeholder="My new Binder" name="binderName" data-maxchar="256" class="binder-create-form__name charCount__text form-control"><span class="input-group-addon input-group-addon--right"><span class="charLimit"></span></span></div>
+                                       </div>
+                                       <div>
+                                          <ul class="rlist--inline binder__create-btns-container">
+                                             <li><button class="toggle-binder-form btn btn--border-less btn transparent binder__create-cancel" type="reset" value="Cancel" data-action="hide">Cancel
+                                                   </button></li>
+                                             <li class="pull-right"><button class="btn btn--no-margin blue big binder__create-submit binder-create-form__create" type="submit" value="Create Binder" disabled data-append-newbinder-link="/action/createBinder"><i class="icon-plus-light" aria-hidden="true"></i>
+                                                   Create
+                                                   </button></li>
+                                          </ul>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                     
+                     
+                     <ul class="rlist--inline right dot-separator">
+                        <li><a href="/doi/pdf/10.1145/1507195.1507212" title="Get Access" class="get-access"><i class="icon-get-access"></i><span>Get Access</span></a></li>
+                     </ul>
+                     
+                     <ul class="rlist--inline right">
+                        
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</li>

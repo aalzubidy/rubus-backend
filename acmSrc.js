@@ -1,4 +1,6 @@
 const axios = require('axios');
+const cheerio = require('cheerio');
+let $ = null;
 
 const test = async function test() {
   let cookieString = await axios('https://dl.acm.org/');
@@ -9,13 +11,23 @@ const test = async function test() {
       'Cookie': cookieString
     }
   });
-  console.log(results.data);
+  $ = cheerio.load(results.data);
+  // console.log($('.issue-item__title').text());
+
+  $('.issue-item-container').each((i, item)=>{
+    const htmlItem = cheerio.load(item); 
+    const title = htmlItem('.issue-item__title').text();
+    
+    console.log(i,title);
+  });
+
+  // $('.issue-item__title').each((i, item)=>{
+  //   try {
+  //     console.log(item);
+  //   } catch (error) {
+  //     console.log('next');
+  //   }
+  // });
 };
 
 test();
-
-
-// const cheerio = require('cheerio')
-// const $ = cheerio.load('<h2 class="title">Hello world</h2>')
-
-// const titleText = $('h2.title').text();
