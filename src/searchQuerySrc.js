@@ -22,7 +22,7 @@ const storeSearchQuery = async function storeSearchQuery(inputQuery, dbName, tot
     const createDate = moment().format('MM/DD/YYYY');
 
     // Insert a search query in the database
-    await db.query('INSERT INTO searchQueries(input_query, db, total_results, project_id, user_id, create_date) VALUES($1, $2, $3, $4, $5, $6)', [inputQuery.trim(), db.trim(), totalResults, projectId, user.id, createDate]);
+    await db.query('INSERT into search_queries(input_query, db, total_results, project_id, user_id, create_date) VALUES($1, $2, $3, $4, $5, $6)', [inputQuery.trim(), db.trim(), totalResults, projectId, user.id, createDate]);
 
     return { message: 'Search query stored successfully' };
   } catch (error) {
@@ -48,7 +48,7 @@ const getSearchQueries = async function getSearchQueries(user) {
     } = user;
 
     // Get search queries from the database
-    const searchQueries = await db.query('select * from searchQueries where user_id=$1', [id]);
+    const searchQueries = await db.query('select * from search_queries where user_id=$1', [id]);
     if (!searchQueries || !searchQueries.rows || searchQueries.rows.length <= 0) {
       throw { code: 404, message: 'User does not have any stored search queries' };
     }
@@ -78,7 +78,7 @@ const getProjectSearchQueries = async function getProjectSearchQueries(projectId
     } = user;
 
     // Get project search queryies from the database
-    const searchQueries = await db.query('select * from searchQueries where project_id=$1', [projectId]);
+    const searchQueries = await db.query('select * from search_queries where project_id=$1', [projectId]);
     if (!searchQueries || !searchQueries.rows || searchQueries.rows.length <= 0) {
       throw { code: 404, message: 'Project does not have any stored search queries' };
     }
@@ -109,7 +109,7 @@ const getSearchQuery = async function getSearchQuery(queryId, projectId, user) {
     } = user;
 
     // Get search query from the database
-    const searchQuery = await db.query('select * from searchQueries where id=$1 and project_id=$2', [queryId, projectId]);
+    const searchQuery = await db.query('select * from search_queries where id=$1 and project_id=$2', [queryId, projectId]);
     if (!searchQuery || !searchQuery.rows || searchQuery.rows.length <= 0) {
       throw { code: 404, message: 'Could not find user search query' };
     }
@@ -140,7 +140,7 @@ const deleteSearchQuery = async function deleteSearchQuery(queryId, projectId, u
     } = user;
 
     // Delete search query from the database
-    const searchQuery = await db.query('delete from searchQueries where id=$1 and project_id=$2', [queryId, projectId]);
+    const searchQuery = await db.query('delete from search_queries where id=$1 and project_id=$2', [queryId, projectId]);
     if (!searchQuery) {
       throw { code: 404, message: 'Could not delete search query' };
     }
