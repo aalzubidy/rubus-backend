@@ -13,6 +13,7 @@ const requestIp = require('request-ip');
 // Require routes
 const authorizationRoutes = require('./routes/authorization');
 const projectRoutes = require('./routes/project');
+const userRoutes = require('./routes/userModify');
 
 // Application Setup
 const app = express();
@@ -61,6 +62,9 @@ app.get('/', async function (req, res) {
 
 // Authentication routes
 app.use(authorizationRoutes);
+
+// user routes
+app.use(userRoutes);
 
 // Project routes
 app.use(projectRoutes);
