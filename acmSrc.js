@@ -3772,6 +3772,10 @@ const getURLSearchArticles = async function getURLSearchArticles(token) {
   console.log({ info, articles, dois });
 };
 
+const buildBibtex = async function buildBibtex(bibtexRequest){
+  // To-Do
+};
+
 const getBibtexRequest = async function getBibtexRequest(token) {
   const results = await axios.get('https://dl.acm.org/action/doSearch?AllField=Software+AND+%28Quality+OR+Testing%29+NOT+Mobile', {
     headers: {
