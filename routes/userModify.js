@@ -35,25 +35,22 @@ const callSrcFile = async function callSrc(functionName, parameters, req, res) {
     }
   }
 };
-router.put('/users/:userid', async (req, res) => {
-  const {
-    userid
-  } = req.params;
+
+router.put('/users', async (req, res) => {
   const {
     name,
     email,
-    organization,
-    password
+    organization
   } = req.body;
-
-  callSrcFile('updateUser', [userid, name, email, organization, password], req, res);
+  callSrcFile('updateUser', [name, email, organization], req, res);
 });
 
-router.delete('/users/:userid/removeUser', async (req, res) => {
+router.put('/users/password', async (req, res) => {
   const {
-    userid
-  } = req.params;
-  callSrcFile('removeUser', [userid], req, res);
+    oldPassword,
+    newPassword
+  } = req.body;
+  callSrcFile('changeUserPassword', [oldPassword, newPassword], req, res);
 });
 
 module.exports = router;
