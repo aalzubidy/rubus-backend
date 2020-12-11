@@ -3692,6 +3692,7 @@ const testItem = ` <!DOCTYPE html>
 const axios = require('axios');
 const { html } = require('cheerio');
 const cheerio = require('cheerio');
+const FormData = require('form-data');
 let $ = null;
 
 const getToken = async function getToken() {
@@ -3772,17 +3773,32 @@ const getURLSearchArticles = async function getURLSearchArticles(token) {
   console.log({ info, articles, dois });
 };
 
-const buildBibtex = async function buildBibtex(bibtexRequest){
+const buildBibtex = async function buildBibtex(bibtexRequest) {
   // To-Do
 };
 
-const getBibtexRequest = async function getBibtexRequest(token) {
-  const results = await axios.get('https://dl.acm.org/action/doSearch?AllField=Software+AND+%28Quality+OR+Testing%29+NOT+Mobile', {
+const getBibtexRequest = async function getBibtexRequest(dois, token) {
+//   const token = await getToken();
+
+  const bibtexFormData = new FormData();
+  bibtexFormData.append('format', 'bibTex');
+  bibtexFormData.append('targetFile', 'custom-bibtex');
+  bibtexFormData.append('dois', dois.toString());
+
+  const restCallConfig = {
+    method: 'post',
+    url: 'https://dl.acm.org/action/exportCiteProcCitation',
     headers: {
-      'Cookie': token
-    }
-  });
-  console.log(results.data);
+      'Cookie': token,
+      ...bibtexFormData.getHeaders()
+    },
+    data: bibtexFormData
+  };
+
+  const results = await axios(restCallConfig);
+
+  console.log(results.data.items);
 };
 
 // getURLSearchArticles('123');
+getBibtexRequest(['10.1145/1507195.1507212'], '123');
