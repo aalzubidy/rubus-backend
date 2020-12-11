@@ -58,7 +58,7 @@ const changeUserPassword = async function changeUserPassword(oldPassword, newPas
       currentPassword = currentPassword.rows[0].password;
     }
 
-    const oldPasswordCheck = bcrypt.compare(oldPassword, currentPassword);
+    const oldPasswordCheck = await bcrypt.compare(oldPassword, currentPassword);
 
     if (!oldPasswordCheck) {
       throw {
@@ -67,7 +67,7 @@ const changeUserPassword = async function changeUserPassword(oldPassword, newPas
       };
     }
 
-    const newPasswordHash = await bcrypt(newPassword, 12);
+    const newPasswordHash = await bcrypt.hash(newPassword, 12);
 
     // Update password
     const updateQuery = await db.query('update users set password=$1 where id=$2', [newPasswordHash, id]);
