@@ -1,0 +1,58 @@
+[{
+  "10.1145/1219092.1219093": {
+    "id": "10.1145/1219092.1219093",
+    "type": "ARTICLE",
+    "author": [{
+      "family": "Cohen",
+      "given": "Sara"
+    }, {
+      "family": "Nutt",
+      "given": "Werner"
+    }, {
+      "family": "Sagiv",
+      "given": "Yehoshua"
+    }],
+    "issued": {
+      "date-parts": [
+        [2007, 4, 1]
+      ]
+    },
+    "abstract": "Equivalence of aggregate queries is investigated for the class of conjunctive queries with comparisons and the aggregate operators count, count-distinct, min, max, and sum. Essentially, this class contains unnested SQL queries with the above aggregate operators, with a where clause consisting of a conjunction of comparisons, and without a having clause. The comparisons are either interpreted over a domain with a dense order (like the rationals) or with a discrete order (like the integers). Characterizations of equivalence differ for the two cases. For queries with either max or min, equivalence is characterized in terms of dominance mappings, which can be viewed as a generalization of containment mappings. For queries with the count-distinct operator, a sufficient condition for equivalence is given in terms of equivalence of conjunctive queries under set semantics. For some special cases, it is shown that this condition is also necessary. For conjunctive queries with comparisons but without aggregation, equivalence under bag-set semantics is characterized in terms of isomorphism. This characterization essentially remains the same also for queries with the count operator. Moreover, this characterization also applies to queries with the sum operator if the queries have either constants or comparisons, but not both. In the general case (i.e., both comparisons and constants), the characterization of the equivalence of queries with the sum operator is more elaborate. All the characterizations given in the paper are decidable in polynomial space.",
+    "call-number": "10.1145/1219092.1219093",
+    "container-title": "J. ACM",
+    "DOI": "10.1145/1219092.1219093",
+    "ISSN": "0004-5411",
+    "issue": "2",
+    "keyword": "query equivalence, Aggregation, bag-set semantics, Datalog",
+    "number-of-pages": "50",
+    "page": "5–es",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "source": "April 2007",
+    "title": "Deciding equivalences among conjunctive aggregate queries",
+    "URL": "https://doi.org/10.1145/1219092.1219093",
+    "volume": "54"
+  }
+}]
+
+@article{10.1145/1219092.1219093,
+  author = {Cohen, Sara and Nutt, Werner and Sagiv, Yehoshua},
+  title = {Deciding Equivalences among Conjunctive Aggregate Queries},
+  year = {2007},
+  issue_date = {April 2007},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  volume = {54},
+  number = {2},
+  issn = {0004-5411},
+  url = {https://doi.org/10.1145/1219092.1219093},
+  doi = {10.1145/1219092.1219093},
+  abstract = {Equivalence of aggregate queries is investigated for the class of conjunctive queries with comparisons and the aggregate operators count, count-distinct, min, max, and sum. Essentially, this class contains unnested SQL queries with the above aggregate operators, with a where clause consisting of a conjunction of comparisons, and without a having clause. The comparisons are either interpreted over a domain with a dense order (like the rationals) or with a discrete order (like the integers). Characterizations of equivalence differ for the two cases. For queries with either max or min, equivalence is characterized in terms of dominance mappings, which can be viewed as a generalization of containment mappings. For queries with the count-distinct operator, a sufficient condition for equivalence is given in terms of equivalence of conjunctive queries under set semantics. For some special cases, it is shown that this condition is also necessary. For conjunctive queries with comparisons but without aggregation, equivalence under bag-set semantics is characterized in terms of isomorphism. This characterization essentially remains the same also for queries with the count operator. Moreover, this characterization also applies to queries with the sum operator if the queries have either constants or comparisons, but not both. In the general case (i.e., both comparisons and constants), the characterization of the equivalence of queries with the sum operator is more elaborate. All the characterizations given in the paper are decidable in polynomial space.},
+  journal = {J. ACM},
+  month = apr,
+  pages = {5–es},
+  numpages = {50},
+  keywords = {Datalog, Aggregation, bag-set semantics, query equivalence}
+  }
+  
+  

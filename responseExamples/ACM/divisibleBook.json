@@ -1,0 +1,50 @@
+[{
+  "10.1145/3015783": {
+    "id": "10.1145/3015783",
+    "type": "BOOK",
+    "editor": [{
+      "family": "Oviatt",
+      "given": "Sharon"
+    }, {
+      "family": "Schuller",
+      "given": "Björn"
+    }, {
+      "family": "Cohen",
+      "given": "Philip R."
+    }, {
+      "family": "Sonntag",
+      "given": "Daniel"
+    }, {
+      "family": "Potamianos",
+      "given": "Gerasimos"
+    }, {
+      "family": "Krüger",
+      "given": "Antonio"
+    }],
+    "issued": {
+      "date-parts": [
+        [2017]
+      ]
+    },
+    "abstract": " The Handbook of Multimodal-Multisensor Interfaces provides the first authoritative resource on what has become the dominant paradigm for new computer interfaces-user input involving new media (speech, multi-touch, gestures, writing) embedded in multimodal-multisensor interfaces. These interfaces support smartphones, wearables, in-vehicle, robotic, and many other applications that are now highly competitive commercially.   This edited collection is written by international experts and pioneers in the field. It provides a textbook for students, and a reference and technology roadmap for professionals working in this rapidly emerging area.    Volume 1 of the handbook presents relevant theory and neuroscience foundations for guiding the development of high-performance systems. Additional chapters discuss approaches to user modeling, interface design that supports user choice, synergistic combination of modalities with sensors, and blending of multimodal input and output. They also highlight an in-depth look at the most common multimodal-multisensor combinations- for example, touch and pen input, haptic and non-speech audio output, and speech co-processed with visible lip movements, gaze, gestures, or pen input. A common theme throughout is support for mobility and individual differences among users-including the world's rapidly growing population of seniors.    These handbook chapters provide walk-through examples and video illustrations of different system designs and their interactive use. Common terms are defined, and information on practical resources is provided (e.g., software tools, data resources) for hands-on project work to develop and evaluate multimodal-multisensor systems. In the final chapter, experts exchange views on a timely and controversial challenge topic, and how they believe multimodal-multisensor interfaces should be designed in the future to most effectively advance human performance. ",
+    "call-number": "10.1145/3015783",
+    "container-title": "ACM Books",
+    "DOI": "10.1145/3015783",
+    "ISBN": "9781970001679",
+    "publisher": "Association for Computing Machinery and Morgan & Claypool",
+    "title": "The Handbook of Multimodal-Multisensor Interfaces: Foundations, User Modeling, and Common Modality Combinations - Volume 1",
+    "volume": "14"
+  }
+}]
+
+@book{10.1145/3015783,
+    editor = {Oviatt, Sharon and Schuller, Bj\"{o}rn and Cohen, Philip R. and Sonntag, Daniel and Potamianos, Gerasimos and Kr\"{u}ger, Antonio},
+    title = {The Handbook of Multimodal-Multisensor Interfaces: Foundations, User Modeling, and Common Modality Combinations - Volume 1},
+    year = {2017},
+    isbn = {9781970001679},
+    publisher = {Association for Computing Machinery and Morgan & Claypool},
+    volume = {14},
+    abstract = { The Handbook of Multimodal-Multisensor Interfaces provides the first authoritative resource on what has become the dominant paradigm for new computer interfaces-user input involving new media (speech, multi-touch, gestures, writing) embedded in multimodal-multisensor interfaces. These interfaces support smartphones, wearables, in-vehicle, robotic, and many other applications that are now highly competitive commercially. This edited collection is written by international experts and pioneers in the field. It provides a textbook for students, and a reference and technology roadmap for professionals working in this rapidly emerging area. Volume 1 of the handbook presents relevant theory and neuroscience foundations for guiding the development of high-performance systems. Additional chapters discuss approaches to user modeling, interface design that supports user choice, synergistic combination of modalities with sensors, and blending of multimodal input and output. They also highlight an in-depth look at the most common multimodal-multisensor combinations- for example, touch and pen input, haptic and non-speech audio output, and speech co-processed with visible lip movements, gaze, gestures, or pen input. A common theme throughout is support for mobility and individual differences among users-including the world's rapidly growing population of seniors. These handbook chapters provide walk-through examples and video illustrations of different system designs and their interactive use. Common terms are defined, and information on practical resources is provided (e.g., software tools, data resources) for hands-on project work to develop and evaluate multimodal-multisensor systems. In the final chapter, experts exchange views on a timely and controversial challenge topic, and how they believe multimodal-multisensor interfaces should be designed in the future to most effectively advance human performance. }
+    }
+    
+    

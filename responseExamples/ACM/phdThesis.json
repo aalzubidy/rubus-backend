@@ -1,0 +1,39 @@
+[{
+  "10.5555/911891": {
+    "id": "10.5555/911891",
+    "type": "THESIS",
+    "author": [{
+      "family": "Clarkson",
+      "given": "Kenneth Lee"
+    }],
+    "editor": [{
+      "family": "Yao",
+      "given": "Andrew C."
+    }],
+    "issued": {
+      "date-parts": [
+        [1985]
+      ]
+    },
+    "abstract": "This dissertation reports a variety of new algorithms for solving closest-point problems. The input to these algorithms is a set or sets of points in d-dimensional space, with an associated L(,p) metric. The problems considered are: (1) The all nearest neighbors problem. For point set A, find the nearest neighbors in A of each point in A. (2) The nearest foreign neighbor problem. For point sets A and B, find the closest point in B to each point in A. (3) The geometric minimum spanning tree problem. For point set A, find the minimum spanning tree for the complete weighted undirected graph associated with A, where the vertices of the graph correspond to the points of A, and the weight of an edge is the distance between the points defining the edge. These problems arise in routing, statistical classification, data compression, and other areas. Obvious algorithms for them require a running time quadratic in n, the number of points in the input. In many cases they can be solved with algorithms requiring O(nlog('O(1)) n) time.In this work, approximation algorithms for some cases of these problems have been found. For example, for the minimum spanning tree problem with the L(,1) metric, an algorithm has been devised that requires O(nlog('d)(1/p)) time to find a spanning tree with weight within 1 + p of the minimum. Several other algorithms have been found with time bounds dependent on log(1/p) for attaining error p.Algorithms have also been found that require linear expected time, for independent identically distributed random points with a probability density function satisfying weak conditions. One such algorithm depends on the fact that under certain conditions, values that are identically distributed, but dependent, can be bucket sorted in linear expected time.An algorithm has been found for the all nearest neighbors problem that requires O(n log n) expected time for any input set of points, where the expectation is on the random sampling performed by the algorithm. This algorithm involves the construction of a new data structure, a compressed form of digital trie.",
+    "call-number": "10.5555/911891",
+    "genre": "phd",
+    "note": "AAT 8506171",
+    "publisher": "Stanford University",
+    "publisher-place": "Stanford, CA, USA",
+    "section": "Ph.D. Dissertation",
+    "title": "Algorithms for closest-point problems (computational geometry)"
+  }
+}]
+
+@phdthesis{10.5555/911891,
+    author = {Clarkson, Kenneth Lee},
+    advisor = {Yao, Andrew C.},
+    title = {Algorithms for Closest-Point Problems (Computational Geometry)},
+    year = {1985},
+    publisher = {Stanford University},
+    address = {Stanford, CA, USA},
+    abstract = {This dissertation reports a variety of new algorithms for solving closest-point problems. The input to these algorithms is a set or sets of points in d-dimensional space, with an associated L(,p) metric. The problems considered are: (1) The all nearest neighbors problem. For point set A, find the nearest neighbors in A of each point in A. (2) The nearest foreign neighbor problem. For point sets A and B, find the closest point in B to each point in A. (3) The geometric minimum spanning tree problem. For point set A, find the minimum spanning tree for the complete weighted undirected graph associated with A, where the vertices of the graph correspond to the points of A, and the weight of an edge is the distance between the points defining the edge. These problems arise in routing, statistical classification, data compression, and other areas. Obvious algorithms for them require a running time quadratic in n, the number of points in the input. In many cases they can be solved with algorithms requiring O(nlog('O(1)) n) time.In this work, approximation algorithms for some cases of these problems have been found. For example, for the minimum spanning tree problem with the L(,1) metric, an algorithm has been devised that requires O(nlog('d)(1/p)) time to find a spanning tree with weight within 1 + p of the minimum. Several other algorithms have been found with time bounds dependent on log(1/p) for attaining error p.Algorithms have also been found that require linear expected time, for independent identically distributed random points with a probability density function satisfying weak conditions. One such algorithm depends on the fact that under certain conditions, values that are identically distributed, but dependent, can be bucket sorted in linear expected time.An algorithm has been found for the all nearest neighbors problem that requires O(n log n) expected time for any input set of points, where the expectation is on the random sampling performed by the algorithm. This algorithm involves the construction of a new data structure, a compressed form of digital trie.},
+    note = {AAT 8506171}
+    }
+    

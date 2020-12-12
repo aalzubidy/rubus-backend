@@ -1,0 +1,31 @@
+[{
+  "10.5555/381159": {
+    "id": "10.5555/381159",
+    "type": "BOOK",
+    "author": [{
+      "family": "Kosiur",
+      "given": "Dave"
+    }],
+    "issued": {
+      "date-parts": [
+        [2001]
+      ]
+    },
+    "call-number": "10.5555/381159",
+    "ISBN": "0471388041",
+    "publisher": "John Wiley & Sons, Inc.",
+    "publisher-place": "USA",
+    "title": "Understanding policy-based networking"
+  }
+}]
+
+https://dl.acm.org/doi/book/10.5555/381159
+
+@book{10.5555/381159,
+    author = {Kosiur, Dave},
+    title = {Understanding Policy-Based Networking},
+    year = {2001},
+    isbn = {0471388041},
+    publisher = {John Wiley & Sons, Inc.},
+    address = {USA}
+    }

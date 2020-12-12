@@ -1,0 +1,30 @@
+[{
+  "10.5555/889810": {
+    "id": "10.5555/889810",
+    "type": "REPORT",
+    "author": [{
+      "family": "Harel",
+      "given": "D."
+    }],
+    "issued": {
+      "date-parts": [
+        [1978]
+      ]
+    },
+    "abstract": "This thesis is concerned with the development of mathematical tools for reasoning about computer programs. The approach is to design and investigate the properties of various dynamic logics with an emphasis on useful expressive power and adequate proof theory. First, rigorous definitions of the propositional and first-order dynamic logics are given, with an emphasis on the flexibility obtained by leaving unspecified the class of programs which these logics can discuss. A large portion of the result obtained to date in the investigation of dynamic logic is included and put in proper perspective. Then, a proof theory is developed based upon the idea of axiomatizing the first order dynamic logics relative to arithmetical universes. Such axiomatizations are supplied and proved arithmetically complete for the regular (flowcharts) and context-free (recursive programs) cases. The notions of diverging and failing are then introduced, with the aid of which the concept of the total correctness of a nondeterministic program is defined and the concept of a weakest precondition clarified. A detailed investigation of the properties of diverging and failing is then carried out, including the construction of arithmetically complete axiomatizations of both the regular and context-free logics obtained by supply dynamic logic with the ability to discuss diverging directly. If a termination condition, a list of zero or more objects, and a new environment; the termination condition is used to govern control flow. This uniform treatment of expressions and statements allows a simple definition of the run-time exception handling mechanism provided in CLU. The meaning of a procedure generator or iterator generator is a function that takes a list of actual parameters, a list of arguments, and an environment, and produces a result as for statement and expression evaluation. The meaning of parameters is given in terms of textual substitution. A non-parameterized routine is viewed as being a generator with an empty parameter list. The meaning of a cluster is a function that takes a list of actual cluster parameters and an operation name, and produces the meaning of that operation.",
+    "call-number": "10.5555/889810",
+    "genre": "Technical Report",
+    "publisher": "Massachusetts Institute of Technology",
+    "publisher-place": "USA",
+    "title": "LOGICS OF PROGRAMS: AXIOMATICS AND DESCRIPTIVE POWER"
+  }
+}]
+
+@techreport{10.5555/889810,
+    author = {Harel, D.},
+    title = {LOGICS OF PROGRAMS: AXIOMATICS AND DESCRIPTIVE POWER},
+    year = {1978},
+    publisher = {Massachusetts Institute of Technology},
+    address = {USA},
+    abstract = {This thesis is concerned with the development of mathematical tools for reasoning about computer programs. The approach is to design and investigate the properties of various dynamic logics with an emphasis on useful expressive power and adequate proof theory. First, rigorous definitions of the propositional and first-order dynamic logics are given, with an emphasis on the flexibility obtained by leaving unspecified the class of programs which these logics can discuss. A large portion of the result obtained to date in the investigation of dynamic logic is included and put in proper perspective. Then, a proof theory is developed based upon the idea of axiomatizing the first order dynamic logics relative to arithmetical universes. Such axiomatizations are supplied and proved arithmetically complete for the regular (flowcharts) and context-free (recursive programs) cases. The notions of diverging and failing are then introduced, with the aid of which the concept of the total correctness of a nondeterministic program is defined and the concept of a weakest precondition clarified. A detailed investigation of the properties of diverging and failing is then carried out, including the construction of arithmetically complete axiomatizations of both the regular and context-free logics obtained by supply dynamic logic with the ability to discuss diverging directly. If a termination condition, a list of zero or more objects, and a new environment; the termination condition is used to govern control flow. This uniform treatment of expressions and statements allows a simple definition of the run-time exception handling mechanism provided in CLU. The meaning of a procedure generator or iterator generator is a function that takes a list of actual parameters, a list of arguments, and an environment, and produces a result as for statement and expression evaluation. The meaning of parameters is given in terms of textual substitution. A non-parameterized routine is viewed as being a generator with an empty parameter list. The meaning of a cluster is a function that takes a list of actual cluster parameters and an operation name, and produces the meaning of that operation.}
+    }

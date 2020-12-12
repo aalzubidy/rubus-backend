@@ -1,0 +1,51 @@
+[{
+  "10.1145/1188913.1188915": {
+    "id": "10.1145/1188913.1188915",
+    "type": "ARTICLE",
+    "author": [{
+      "family": "Abril",
+      "given": "Patricia S."
+    }, {
+      "family": "Plant",
+      "given": "Robert"
+    }],
+    "issued": {
+      "date-parts": [
+        [2007, 1, 1]
+      ]
+    },
+    "abstract": "The current patent process in many ways works against IT innovation by making the road to realization too dispiriting for today's independent inventors.",
+    "call-number": "10.1145/1188913.1188915",
+    "container-title": "Commun. ACM",
+    "DOI": "10.1145/1188913.1188915",
+    "ISSN": "0001-0782",
+    "issue": "1",
+    "number-of-pages": "9",
+    "page": "36–44",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "source": "January 2007",
+    "title": "The patent holder's dilemma: buy, sell, or troll?",
+    "URL": "https://doi.org/10.1145/1188913.1188915",
+    "volume": "50"
+  }
+}]
+
+@article{10.1145/1188913.1188915,
+  author = {Abril, Patricia S. and Plant, Robert},
+  title = {The Patent Holder's Dilemma: Buy, Sell, or Troll?},
+  year = {2007},
+  issue_date = {January 2007},
+  publisher = {Association for Computing Machinery},
+  address = {New York, NY, USA},
+  volume = {50},
+  number = {1},
+  issn = {0001-0782},
+  url = {https://doi.org/10.1145/1188913.1188915},
+  doi = {10.1145/1188913.1188915},
+  abstract = {The current patent process in many ways works against IT innovation by making the road to realization too dispiriting for today's independent inventors.},
+  journal = {Commun. ACM},
+  month = jan,
+  pages = {36–44},
+  numpages = {9}
+  }
