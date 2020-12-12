@@ -36,7 +36,9 @@ const callSrcFile = async function callSrc(functionName, parameters, req, res) {
   }
 };
 
-// Updating users
+/**
+ * @summary Updating users
+ */
 router.put('/users', async (req, res) => {
   const {
     name,
@@ -46,7 +48,9 @@ router.put('/users', async (req, res) => {
   callSrcFile('updateUser', [name, email, organization], req, res);
 });
 
-// Updating password
+/**
+ * @summary Updating password
+ */
 router.put('/users/password', async (req, res) => {
   const {
     oldPassword,

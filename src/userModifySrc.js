@@ -1,7 +1,15 @@
 const bcrypt = require('bcrypt');
 const db = require('../db/db');
 
-// Updating user
+/**
+
+Update users
+@param {string} title Updating user
+@param {string} description Updating User information
+@param {object} user  Updating: Name, Email, Organization
+@returns {object} Updated user information
+@throws {object} errorCodeAndMsg
+*/
 const updateUser = async function updateUser(name, email, organization, user) {
   try {
     const {
@@ -15,7 +23,9 @@ const updateUser = async function updateUser(name, email, organization, user) {
       };
     }
 
-    // Update user: name, email, organization
+    /**
+ * @summary Updating user info
+ */
     const updateQuery = await db.query('update users set name=$1, email=$2, organization=$3 where id=$4', [name, email, organization, id]);
     if (!updateQuery) {
       throw {
@@ -40,7 +50,9 @@ const updateUser = async function updateUser(name, email, organization, user) {
   }
 };
 
-// Updating password
+/**
+ * @summary Updating password
+ */
 const changeUserPassword = async function changeUserPassword(oldPassword, newPassword, user) {
   try {
     const {
@@ -54,13 +66,17 @@ const changeUserPassword = async function changeUserPassword(oldPassword, newPas
       };
     }
 
-    // Get current password from database
+    /**
+ * @summary Get current password from database
+ */
     let currentPassword = await db.query('select password from users where id=$1', [id]);
     if (currentPassword) {
       currentPassword = currentPassword.rows[0].password;
     }
 
-    // Comparing password
+    /**
+ * @summary Comparing password
+ */
     const oldPasswordCheck = await bcrypt.compare(oldPassword, currentPassword);
 
     if (!oldPasswordCheck) {
@@ -70,11 +86,15 @@ const changeUserPassword = async function changeUserPassword(oldPassword, newPas
       };
     }
 
-    // create a new password
+    /**
+ * @summary create a new password
+ */
 
     const newPasswordHash = await bcrypt.hash(newPassword, 12);
 
-    // Update password
+    /**
+ * @summary Update password
+ */
     const updateQuery = await db.query('update users set password=$1 where id=$2', [newPasswordHash, id]);
     if (!updateQuery) {
       throw {
