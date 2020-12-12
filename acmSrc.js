@@ -252,12 +252,3 @@ const acmMisc = function acmMisc(item) {
   bibtex = bibtex.replace(/^\s*$\n/gm, '');
   return bibtex;
 };
-
-// getURLSearchArticles('123');
-// getBibtexRequest(['10.5555/911891'], '123');
-
-// console.log(acmArticle(testItem));
-// console.log(acmBook(testItem));
-// console.log(acmPhdThesis(testItem));
-// console.log(acmInproceedings(testItem));
-// console.log(acmMisc(testItem));
