@@ -4,6 +4,7 @@ const {
 } = require('cheerio');
 const cheerio = require('cheerio');
 const FormData = require('form-data');
+const { object } = require('testdouble');
 let $ = null;
 
 const getToken = async function getToken() {
@@ -88,10 +89,6 @@ const getURLSearchArticles = async function getURLSearchArticles(token1) {
   });
 };
 
-const buildBibtex = async function buildBibtex(bibtexRequest) {
-  // To-Do
-};
-
 const getBibtexRequest = async function getBibtexRequest(dois, token1) {
   const token = await getToken();
 
@@ -115,17 +112,33 @@ const getBibtexRequest = async function getBibtexRequest(dois, token1) {
   console.log(JSON.stringify(results.data.items));
 };
 
-const parseAuthors = function parseAuthors(author, type){
-   if(type && type.toLower() === 'article'){
-      
-   }
-   return authorParsed;
+function titleCase(str) {
+  return str.toLowerCase().split(' ').map(function (word) {
+    return (word.charAt(0).toUpperCase() + word.slice(1));
+  }).join(' ');
+}
+
+const parseAuthors = function parseAuthors(author) {
+  if (!author) {
+    return undefined;
+  }
+
+  let authorParsed = '';
+  author.forEach((item, index) => {
+    if (index === 0) {
+      authorParsed = `${item['family']}, ${item['given']}`;
+    } else {
+      authorParsed = `${authorParsed} and ${item['family']}, ${item['given']}`;
+    }
+  })
+  return authorParsed;
 }
 
 const acmArticle = function acmArticle(item) {
-  const bibtex = `@article{${item.id},
+  item = item[Object.keys(item)[0]];
+  let bibtex = `@article{${item.id},
       author = {${parseAuthors(item.author)}},
-      title = {${item.title}},
+      title = {${titleCase(item.title)}},
       year = {${item.issued && item.issued['date-parts'] ? item.issued['date-parts'][0] : null}},
       issue_date = {${item.source}},
       publisher = {${item.publisher}},
@@ -133,51 +146,118 @@ const acmArticle = function acmArticle(item) {
       volume = {${item.volume}},
       number = {${item.issue}},
       issn = {${item['ISSN']}},
-      url = {${item['URL']}},
+      url = {${item['URL'] || `https://dl.acm.org/doi/${item.id}`}},
       doi = {${item.id}},
       abstract = {${item.abstract}},
       journal = {${item['container-title']}},
-      month = jan,
       pages = {${item.page}},
-      numpages = {${item['number-of-pages']}}
+      numpages = {${item['number-of-pages']}},
+      keywords = {${item['keyword']}},
    }`;
+  bibtex = bibtex.replace(/.+?(?=undefined).+,/gm, '');
+  bibtex = bibtex.replace(/^\s*$\n/gm, '');
+  return bibtex;
+};
+
+const acmBook = function acmBook(item) {
+  item = item[Object.keys(item)[0]];
+  let bibtex = `@book{${item.id},
+      author = {${parseAuthors(item.author)}},
+      editor = {${parseAuthors(item.editor)}},
+      title = {${titleCase(item.title)}},
+      year = {${item.issued && item.issued['date-parts'] ? item.issued['date-parts'][0] : null}},
+      isbn = {${item['ISBN']}},
+      publisher = {${item.publisher}},
+      address = {${item['publisher-place']}},
+      volume = {${item.volume}},
+      url = {${item['URL'] || `https://dl.acm.org/doi/${item.id}`}},
+      abstract = {${item.abstract}},
+      doi = {${item.id}},
+      edition = ${item.edition},
+   }`;
+  bibtex = bibtex.replace(/.+?(?=undefined).+,/gm, '');
+  bibtex = bibtex.replace(/^\s*$\n/gm, '');
+  return bibtex;
+};
+
+const acmPhdThesis = function acmPhdThesis(item) {
+  item = item[Object.keys(item)[0]];
+  let bibtex = `@phdthesis{${item.id},
+      author = {${parseAuthors(item.author)}},
+      advisor = {${parseAuthors(item.editor)}},
+      title = {${titleCase(item.title)}},
+      year = {${item.issued && item.issued['date-parts'] ? item.issued['date-parts'][0] : null}},
+      publisher = {${item.publisher}},
+      address = {${item['publisher-place']}},
+      note = {${item['note']}},
+      url = {${item['URL'] || `https://dl.acm.org/doi/${item.id}`}},
+      abstract = {${item.abstract}},
+      doi = {${item.id}},
+   }`;
+  bibtex = bibtex.replace(/.+?(?=undefined).+,/gm, '');
+  bibtex = bibtex.replace(/^\s*$\n/gm, '');
+  return bibtex;
+};
+
+const acmInproceedings = function acmInproceedings(item) {
+  item = item[Object.keys(item)[0]];
+  let bibtex = `@inproceedings{${item.id},
+      author = {${parseAuthors(item.author)}},
+      title = {${titleCase(item.title)}},
+      year = {${item.issued && item.issued['date-parts'] ? item.issued['date-parts'][0] : null}},
+      isbn = {${item['ISBN']}},
+      publisher = {${item.publisher}},
+      address = {${item['publisher-place']}},
+      url = {${item['URL'] || `https://dl.acm.org/doi/${item.id}`}},
+      doi = {${item.id}},
+      abstract = {${item['abstract']}},
+      booktitle = {${item['container-title']}},
+      pages = {${item.page}},
+      numpages = {${item['number-of-pages']}},
+      location = {${item['event-place']}},
+      series = {${item['collection-title']}},
+   }`;
+  bibtex = bibtex.replace(/.+?(?=undefined).+,/gm, '');
+  bibtex = bibtex.replace(/^\s*$\n/gm, '');
+  return bibtex;
+};
+
+const acmTechnicalReport = function acmTechnicalReport(item) {
+  item = item[Object.keys(item)[0]];
+  let bibtex = `@techreport{${item.id},
+      author = {${parseAuthors(item.author)}},
+      title = {${titleCase(item.title)}},
+      year = {${item.issued && item.issued['date-parts'] ? item.issued['date-parts'][0] : null}},
+      publisher = {${item.publisher}},
+      address = {${item['publisher-place']}},
+      url = {${item['URL'] || `https://dl.acm.org/doi/${item.id}`}},
+      doi = {${item.id}},
+      abstract = {${item['abstract']}},
+   }`;
+  bibtex = bibtex.replace(/.+?(?=undefined).+,/gm, '');
+  bibtex = bibtex.replace(/^\s*$\n/gm, '');
+  return bibtex;
+};
+
+const acmMisc = function acmMisc(item) {
+  item = item[Object.keys(item)[0]];
+  let bibtex = `@misc{${item.id},
+      author = {${parseAuthors(item.author)}},
+      editor = {${parseAuthors(item.editor)}},
+      title = {${titleCase(item.title)}},
+      url = {${item['URL'] || `https://dl.acm.org/doi/${item.id}`}},
+      doi = {${item.id}},
+   }`;
+  bibtex = bibtex.replace(/.+?(?=undefined).+,/gm, '');
+  bibtex = bibtex.replace(/^\s*$\n/gm, '');
   return bibtex;
 };
 
 // getURLSearchArticles('123');
 // getBibtexRequest(['10.5555/911891'], '123');
 
-const articleTest = {
-  "10.1145/1188913.1188915": {
-    "id": "10.1145/1188913.1188915",
-    "type": "ARTICLE",
-    "author": [{
-      "family": "Abril",
-      "given": "Patricia S."
-    }, {
-      "family": "Plant",
-      "given": "Robert"
-    }],
-    "issued": {
-      "date-parts": [
-        [2007, 1, 1]
-      ]
-    },
-    "abstract": "The current patent process in many ways works against IT innovation by making the road to realization too dispiriting for today's independent inventors.",
-    "call-number": "10.1145/1188913.1188915",
-    "container-title": "Commun. ACM",
-    "DOI": "10.1145/1188913.1188915",
-    "ISSN": "0001-0782",
-    "issue": "1",
-    "number-of-pages": "9",
-    "page": "36–44",
-    "publisher": "Association for Computing Machinery",
-    "publisher-place": "New York, NY, USA",
-    "source": "January 2007",
-    "title": "The patent holder's dilemma: buy, sell, or troll?",
-    "URL": "https://doi.org/10.1145/1188913.1188915",
-    "volume": "50"
-  }
-};
-
-acmArticle(articleTest);
+// console.log(acmArticle(testItem));
+// console.log(acmBook(testItem));
+// console.log(acmPhdThesis(testItem));
+// console.log(acmInproceedings(testItem));
+// console.log(acmMisc(testItem));
