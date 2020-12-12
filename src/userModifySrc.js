@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const db = require('../db/db');
 
+// Updating user
 const updateUser = async function updateUser(name, email, organization, user) {
   try {
     const {
@@ -14,7 +15,7 @@ const updateUser = async function updateUser(name, email, organization, user) {
       };
     }
 
-    // Update user  and description name, email, organization, password.
+    // Update user: name, email, organization
     const updateQuery = await db.query('update users set name=$1, email=$2, organization=$3 where id=$4', [name, email, organization, id]);
     if (!updateQuery) {
       throw {
@@ -39,6 +40,7 @@ const updateUser = async function updateUser(name, email, organization, user) {
   }
 };
 
+// Updating password
 const changeUserPassword = async function changeUserPassword(oldPassword, newPassword, user) {
   try {
     const {
@@ -58,6 +60,7 @@ const changeUserPassword = async function changeUserPassword(oldPassword, newPas
       currentPassword = currentPassword.rows[0].password;
     }
 
+    // Comparing password
     const oldPasswordCheck = await bcrypt.compare(oldPassword, currentPassword);
 
     if (!oldPasswordCheck) {
@@ -66,6 +69,8 @@ const changeUserPassword = async function changeUserPassword(oldPassword, newPas
         message: 'Old password does not match'
       };
     }
+
+    // create a new password
 
     const newPasswordHash = await bcrypt.hash(newPassword, 12);
 
