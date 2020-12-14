@@ -2,13 +2,13 @@ const bcrypt = require('bcrypt');
 const db = require('../db/db');
 
 /**
-Update users
-@param {string} name Updating user name
-@param {string} organization Updating user organization
-@param {object} email  Updating user email
-@returns {object} Updated user information
-@throws {object} errorCodeAndMsg
-*/
+ *Update user information
+ *@param {string} name Updating user name
+ *@param {string} email  Updating user email
+ *@param {string} organization Updating user organization
+ *@returns {object} Updated user information
+ *@throws {object} errorCodeAndMsg
+ */
 const updateUser = async function updateUser(name, email, organization, user) {
   try {
     const {
@@ -47,7 +47,14 @@ const updateUser = async function updateUser(name, email, organization, user) {
   }
 };
 
-// Updating password
+/**
+ * update user password
+ * @param {string} oldPassword user current password
+ * @param {string} newPassword user new password
+ * @param {object} user user object contains Id
+ * @returns {object} updatePasswordResult
+ * @throws {object} errorDetails
+ */
 const changeUserPassword = async function changeUserPassword(oldPassword, newPassword, user) {
   try {
     const {

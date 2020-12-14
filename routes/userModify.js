@@ -37,15 +37,6 @@ const callSrcFile = async function callSrc(functionName, parameters, req, res) {
 };
 
 /**
-Create new project
-@param {string} title Modify users
-@param {string} description Modifying user & password routes
-@param {object} user User information
-@returns {object} Updated user and password
-@throws {object} errorCodeAndMsg
-*/
-
-/**
  * @summary Updating users
  */
 router.put('/users', async (req, res) => {
