@@ -12,15 +12,15 @@ const db = require('../db/db');
 const storeConvertedQuery = async function storeConvertedQuery(inputQuery, outputQuery, user) {
   try {
     // Check if there is no email or password
-    if (!inputQuery || outputQuery) {
+    if (!inputQuery || !outputQuery) {
       throw { code: 400, message: 'Please provide a query and its conversion' };
     }
 
     // Get date
     const createDate = moment().format('MM/DD/YYYY');
 
-    // Create a user in the database
-    await db.query('INSERT INTO convertQueries(input_query, output_query, user_id, create_date) VALUES($1, $2, $3, $4)', [inputQuery.trim(), outputQuery.trim(), user.id, createDate]);
+    // Insert a converted query in the database
+    await db.query('INSERT INTO convert_queries(input_query, output_query, user_id, create_date) VALUES($1, $2, $3, $4)', [inputQuery.trim(), outputQuery.trim(), user.id, createDate]);
 
     return { message: 'Query stored successfully' };
   } catch (error) {
@@ -45,13 +45,13 @@ const getConvertedQueries = async function getConvertedQueries(user) {
       id
     } = user;
 
-    // Get converted queryies from the database
-    const convertedQueries = await db.query('select * from convertQueries where user_id=$1', [id]);
+    // Get converted queries from the database
+    const convertedQueries = await db.query('select * from convert_queries where user_id=$1', [id]);
     if (!convertedQueries || !convertedQueries.rows || convertedQueries.rows.length <= 0) {
       throw { code: 404, message: 'User does not have any stored converted queries' };
     }
 
-    return convertedQueries;
+    return convertedQueries.rows;
   } catch (error) {
     if (error.code) {
       throw error;
@@ -75,13 +75,13 @@ const getConvertedQuery = async function getConvertedQuery(queryId, user) {
       id
     } = user;
 
-    // Get converted queryies from the database
-    const convertedQuery = await db.query('select * from convertQueries where user_id=$1 and id=$2', [id, queryId]);
+    // Get converted query from the database
+    const convertedQuery = await db.query('select * from convert_queries where user_id=$1 and id=$2', [id, queryId]);
     if (!convertedQuery || !convertedQuery.rows || convertedQuery.rows.length <= 0) {
       throw { code: 404, message: 'Could not find user converted query' };
     }
 
-    return convertedQuery;
+    return convertedQuery.rows;
   } catch (error) {
     if (error.code) {
       throw error;
@@ -105,13 +105,13 @@ const deleteConvertedQuery = async function deleteConvertedQuery(queryId, user) 
       id
     } = user;
 
-    // Get converted queryies from the database
-    const convertedQuery = await db.query('delete from convertQueries where user_id=$1 and id=$2', [id, queryId]);
+    // Delete converted query from the database
+    const convertedQuery = await db.query('delete from convert_queries where user_id=$1 and id=$2', [id, queryId]);
     if (!convertedQuery) {
       throw { code: 404, message: 'Could not delete user converted query' };
     }
 
-    return convertedQuery;
+    return {'message': 'Deleted succesfully'};
   } catch (error) {
     if (error.code) {
       throw error;
