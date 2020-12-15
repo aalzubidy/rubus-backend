@@ -6,7 +6,7 @@ const db = require('../db/db');
 /**
  * @async
  * @function newPublication
- * Create a new publication
+ * @summary Create a new publication
  * @param {object} publication Rubus format publication (required: "type", "author", "title", "doi", "url")
  * @returns {object} newPublicationResults
  * @throws {object} errorCodeAndMsg
