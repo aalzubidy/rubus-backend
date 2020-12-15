@@ -1,22 +1,62 @@
-// const moment = require('moment');
+// // const moment = require('moment');
 
-// console.log(moment().format('MM/DD/YYYY'));
+// // console.log(moment().format('MM/DD/YYYY'));
 
-const bcrypt = require('bcrypt');
+// const bcrypt = require('bcrypt');
 
-test = async () => {
-    const results = await bcrypt.hash('somePassword', 12);
-    console.log(results);
+// test = async () => {
+//     const results = await bcrypt.hash('somePassword', 12);
+//     console.log(results);
+// }
+
+// test();
+
+// -- update test set email = (select email ) || '{a@a.com, b@b.com}' where name='ahmed';
+
+// update test set email = (select ARRAY(SELECT DISTINCT UNNEST(email || '{a@a.com, b@b.com, c@c.com}')) from test) where name='ahmed';
+
+// select * from test;
+
+// https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+
+// https://google.github.io/styleguide/jsoncstyleguide.xml
+
+const Ajv = require("ajv");
+const publicationSchema = require('./schemas/publicationSchema.json');
+
+async function test() {
+  // var ajv = new Ajv();
+
+  // const schemaValidation = await ajv.validate(publicationSchema, {
+  //   "type": "",
+  //   "author": "",
+  //   "title": "",
+  //   "doi": "",
+  //   "url": "",
+  // });
+
+  // console.log(schemaValidation)
+  // console.log(ajv.errors)
+
+  const publication = {
+    "type": "testType",
+    "author": "testAuthor",
+    "title": "testTitle",
+    "doi": "testDoi",
+    "url": "testUrl",
+  }
+
+  // Build dynamic insert query
+  const publicationKeys = Object.keys(publication);
+  const publicationKeysCount = [];
+  const publicationValues = [];
+  publicationKeys.forEach((k, i) => {
+    publicationKeysCount.push(`$${i+1}`);
+    publicationValues.push(publication[k]);
+  });
+  const queryLine = `insert into publications(${publicationKeys.toString()}) values(${publicationKeysCount.toString()})`;
+  console.log(queryLine);
+  console.log(publicationValues);
 }
 
-test();
-
--- update test set email = (select email ) || '{a@a.com, b@b.com}' where name='ahmed';
-
-update test set email = (select ARRAY(SELECT DISTINCT UNNEST(email || '{a@a.com, b@b.com, c@c.com}')) from test) where name='ahmed';
-
-select * from test;
-
-https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
-
-https://google.github.io/styleguide/jsoncstyleguide.xml
+test()
