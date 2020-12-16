@@ -173,9 +173,62 @@ const addPublicationToProjectByDoi = async function addPublicationToProjectByDoi
   }
 };
 
+/**
+ * @async
+ * @function addPublicationToProjectById
+ * @summary Add publication(s) by id to a project
+ * @param {array} publicationIds Publication(s) id
+ * @param {string} projectId Project id
+ * @param {string} searchQueryId Search query id
+ * @param {user} user User information
+ * @returns {object} addPublicationResults
+ * @throws {object} errorCodeAndMsg
+ */
+const addPublicationToProjectById = async function addPublicationToProjectById(publicationIds, projectId, searchQueryId, user) {
+  try {
+    // Check if there is no dois or no project id
+    if (!publicationIds || !projectId) {
+      throw { code: 400, message: 'Please provide publication ids and a project id' };
+    }
+
+    const {
+      id
+    } = user;
+
+    // Check the user permission to manipulate project's publication
+    const queryProjectUsers = await db.query('select user_id, project_id from projects_users where user_id=$1 and project_id=$2', [id, projectId]);
+    if (!queryProjectUsers || !queryProjectUsers.rows[0] || queryProjectUsers.rows[0]['user_id'] != id || queryProjectUsers.rows[0]['project_id'] != projectId) {
+      throw { code: 403, message: 'User does not have permissions to modify project\'s publications' };
+    }
+
+    const successItems = [];
+    const failedItems = [];
+
+    // Retreive publication by id and add it to the project
+    publicationIds.forEach(async (publicationId) => {
+      const addPublicationQuery = await db.query('insert into publications_projects(publication_id, project_id, search_query_id) values($1, $2, $3)', [publicationId, projectId, searchQueryId]);
+      if (addPublicationQuery) {
+        successItems.push(publicationId);
+      } else {
+        failedItems.push(publicationId);
+      }
+    });
+
+    return { message: 'Publication added to project successfully by id', successItems, failedItems };
+  } catch (error) {
+    if (error.code) {
+      throw error;
+    }
+    const userMsg = 'Could add publications to project by id';
+    console.log(userMsg, error);
+    throw { code: 500, message: userMsg };
+  }
+};
+
 module.exports = {
   newPublication,
   deletePublicationByDOI,
   deletePublicationById,
-  addPublicationToProjectByDoi
+  addPublicationToProjectByDoi,
+  addPublicationToProjectById
 };
