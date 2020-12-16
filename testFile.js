@@ -37,26 +37,6 @@ async function test() {
 
   // console.log(schemaValidation)
   // console.log(ajv.errors)
-
-  const publication = {
-    "type": "testType",
-    "author": "testAuthor",
-    "title": "testTitle",
-    "doi": "testDoi",
-    "url": "testUrl",
-  }
-
-  // Build dynamic insert query
-  const publicationKeys = Object.keys(publication);
-  const publicationKeysCount = [];
-  const publicationValues = [];
-  publicationKeys.forEach((k, i) => {
-    publicationKeysCount.push(`$${i+1}`);
-    publicationValues.push(publication[k]);
-  });
-  const queryLine = `insert into publications(${publicationKeys.toString()}) values(${publicationKeysCount.toString()})`;
-  console.log(queryLine);
-  console.log(publicationValues);
 }
 
 test()
