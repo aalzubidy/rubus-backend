@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "title": "publicationSchema",
+  "type": "object",
+  "required": [
+    "type",
+    "author",
+    "title",
+    "doi",
+    "url"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "type": {
+      "type": "string",
+      "example": "article"
+    },
+    "author": {
+      "type": "string",
+      "example": "some full name, some full name"
+    },
+    "editor": {
+      "type": "string",
+      "example": "some full name, some full name"
+    },
+    "title": {
+      "type": "string",
+      "example": "some article title"
+    },
+    "book_title": {
+      "type": "string",
+      "example": "some book title"
+    },
+    "year": {
+      "type": "string",
+      "example": "2020"
+    },
+    "publisher": {
+      "type": "string",
+      "example": "some publisher"
+    },
+    "address": {
+      "type": "string",
+      "example": "Seattle, WA"
+    },
+    "pages": {
+      "type": "string",
+      "example": "122-300"
+    },
+    "isbn": {
+      "type": "string",
+      "example": "978-3-16-148410-0"
+    },
+    "doi": {
+      "type": "string",
+      "example": "10.1093/1234"
+    },
+    "url": {
+      "type": "string",
+      "example": "https://example.com/doi/10.1093/1234"
+    },
+    "journal": {
+      "type": "string",
+      "example": "some journal title"
+    },
+    "volume": {
+      "type": "string",
+      "example": "1"
+    },
+    "abstract": {
+      "type": "string",
+      "example": "some abstract"
+    },
+    "issn": {
+      "type": "string",
+      "example": "2049-3630"
+    },
+    "location": {
+      "type": "string",
+      "example": "WA"
+    },
+    "keywords": {
+      "type": "string",
+      "example": "some keywords"
+    },
+    "month": {
+      "type": "string",
+      "example": "Jan"
+    },
+    "obtained_bibtex": {
+      "type": "string",
+      "example": "@article{somebibtex}"
+    },
+    "generated_bibtex": {
+      "type": "string",
+      "example": "@article{somebibtex}"
+    },
+    "create_date": {
+      "type": "string",
+      "example": "1/1/2020"
+    }
+  }
+}

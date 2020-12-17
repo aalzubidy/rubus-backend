@@ -1,6 +1,6 @@
 {
   "name": "rubus",
-  "version": "0.27.0",
+  "version": "0.29.0",
   "description": "Rubus SLR Tool - Nodejs backend code",
   "main": "app.js",
   "scripts": {
@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.0",
+    "ajv": "^6.12.6",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "cheerio": "^1.0.0-rc.3",
