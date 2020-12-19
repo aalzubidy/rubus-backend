@@ -45,7 +45,7 @@ const callSrcFile = async function callSrc(functionName, parameters, req, res) {
 /**
  * @summary Create new project
  */
-router.post('/projects/new', async (req, res) => {
+router.post('/projects', async (req, res) => {
   const {
     title,
     description

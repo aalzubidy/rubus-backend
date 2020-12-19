@@ -45,7 +45,7 @@ const callSrcFile = async function callSrc(functionName, parameters, req, res) {
 /**
  * @summary Store new converted query
  */
-router.post('/searchQuery/new', async (req, res) => {
+router.post('/searchQuery', async (req, res) => {
   const {
     inputQuery,
     dbName,
