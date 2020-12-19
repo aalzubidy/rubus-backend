@@ -125,11 +125,11 @@ ALTER TABLE public.projects_users
 
 -------------------------------------------------------------------------------------------------
 
--- Table: public.download_requests
+-- Table: public.users_projects_requests
 
--- DROP TABLE public.download_requests;
+-- DROP TABLE public.users_projects_requests;
 
-CREATE TABLE public.download_requests
+CREATE TABLE public.users_projects_requests
 (
     id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
     user_id integer NOT NULL,
@@ -137,6 +137,13 @@ CREATE TABLE public.download_requests
     status character varying(30) COLLATE pg_catalog."default" NOT NULL,
     requested_date date NOT NULL,
     completed_date date,
+    type character varying(100) COLLATE pg_catalog."default" NOT NULL,
+    total bigint,
+    completed bigint,
+    failed bigint,
+    cancelled character varying(30)[] COLLATE pg_catalog."default" NOT NULL,
+    system_notes text COLLATE pg_catalog."default",
+    user_notes text COLLATE pg_catalog."default",
     CONSTRAINT download_requests_id_pk PRIMARY KEY (id),
     CONSTRAINT "downloadRequests_projectId_projectss_id_fk" FOREIGN KEY (project_id)
         REFERENCES public.projects (id) MATCH SIMPLE
@@ -150,7 +157,7 @@ CREATE TABLE public.download_requests
 
 TABLESPACE pg_default;
 
-ALTER TABLE public.download_requests
+ALTER TABLE public.users_projects_requests
     OWNER to postgres;
 
 -------------------------------------------------------------------------------------------------
