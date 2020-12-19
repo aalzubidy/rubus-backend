@@ -22,6 +22,7 @@
     },
     "status": {
       "type": "string",
+      "enum": ["requested", "in-progress", "completed", "cancelled", "failed"],
       "example": "in-progress"
     },
     "create_date": {
