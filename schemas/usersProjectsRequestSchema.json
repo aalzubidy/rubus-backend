@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+  "title": "usersProjectsRequestSchema",
+  "type": "object",
+  "required": [
+    "user_id",
+    "project_id",
+    "status",
+    "type"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "user_id": {
+      "type": "number",
+      "minimum": 0,
+      "example": 1
+    },
+    "project_id": {
+      "type": "number",
+      "minimum": 0,
+      "example": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": ["requested", "in-progress", "completed", "cancelled", "failed"],
+      "example": "in-progress"
+    },
+    "create_date": {
+      "type": "string",
+      "example": "2011-10-05T14:48:00.000Z"
+    },
+    "completed_date": {
+      "type": "string",
+      "example": "2011-10-05T14:48:00.000Z"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["search and save", "download"],
+      "example": "search and save"
+    },
+    "total": {
+      "type": "number",
+      "minimum": 0,
+      "example": 100
+    },
+    "completed": {
+      "type": "number",
+      "minimum": 0,
+      "example": 80
+    },
+    "failed": {
+      "type": "number",
+      "minimum": 0,
+      "example": 10
+    },
+    "system_notes": {
+      "type": "string",
+      "example": "We are processing your request"
+    },
+    "user_notes": {
+      "type": "string",
+      "example": "This is a search and save request"
+    },
+    "search_query_id": {
+      "type": "number",
+      "minimum": 0,
+      "example": 1
+    }
+  }
+}

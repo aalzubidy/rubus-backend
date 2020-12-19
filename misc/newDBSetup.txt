@@ -135,21 +135,26 @@ CREATE TABLE public.users_projects_requests
     user_id integer NOT NULL,
     project_id integer NOT NULL,
     status character varying(30) COLLATE pg_catalog."default" NOT NULL,
-    requested_date date NOT NULL,
+    create_date date NOT NULL,
     completed_date date,
     type character varying(100) COLLATE pg_catalog."default" NOT NULL,
     total bigint,
     completed bigint,
     failed bigint,
-    cancelled character varying(30)[] COLLATE pg_catalog."default" NOT NULL,
     system_notes text COLLATE pg_catalog."default",
     user_notes text COLLATE pg_catalog."default",
-    CONSTRAINT download_requests_id_pk PRIMARY KEY (id),
-    CONSTRAINT "downloadRequests_projectId_projectss_id_fk" FOREIGN KEY (project_id)
+    search_query_id integer,
+    CONSTRAINT users_projects_requests_id_pk PRIMARY KEY (id),
+    CONSTRAINT "usersProjectsRequests_projectId_projects_id_fk" FOREIGN KEY (project_id)
         REFERENCES public.projects (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION,
-    CONSTRAINT "downloadRequests_userId_users_id_fk" FOREIGN KEY (user_id)
+    CONSTRAINT "usersProjectsRequests_search_query_id_searchQueries_id_fk" FOREIGN KEY (search_query_id)
+        REFERENCES public.search_queries (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT "usersProjectsRequests_userId_users_id_fk" FOREIGN KEY (user_id)
         REFERENCES public.users (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
