@@ -6,7 +6,6 @@
     "user_id",
     "project_id",
     "status",
-    "create_date",
     "type"
   ],
   "additionalProperties": false,

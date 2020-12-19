@@ -5,51 +5,51 @@ const db = require('../db/db');
 
 /**
  * @async
- * @function newPublication
- * @summary Create a new publication
- * @param {object} publication Rubus format publication (required: "type", "author", "title", "doi", "url")
+ * @function newUserProjectRequest
+ * @summary Create a new user project request
+ * @param {object} userProjectRequest Rubus format user project request (required: "user_id", "project_id", "status", "type")
  * @param {user} user User information
- * @returns {object} newPublicationResults
+ * @returns {object} newUserProjectRequestResults
  * @throws {object} errorCodeAndMsg
  */
-const newPublication = async function newPublication(publication, user) {
+const newUserProjectRequest = async function newUserProjectRequest(userProjectRequest, user) {
   try {
-    // Check if there is no publication
-    if (!publication) {
-      throw { code: 400, message: 'Please provide a publication' };
+    // Check if there is no user project request
+    if (!userProjectRequest) {
+      throw { code: 400, message: 'Please provide a user project request' };
     }
 
     // Check publication object schema
     const ajv = new Ajv();
-    const schemaValidation = await ajv.validate(publicationSchema, {});
+    const schemaValidation = await ajv.validate(usersProjectsRequestSchema, userProjectRequest);
 
     if (!schemaValidation) {
-      throw { code: 400, message: 'Please provide correct format publication, schema failed to validate.' };
+      throw { code: 400, message: 'Please provide correct user project request format, schema failed to validate.' };
     }
 
     // Get date
     const createDate = moment().format('MM/DD/YYYY');
-    publication['create_date'] = createDate;
+    userProjectRequest['create_date'] = createDate;
 
     // Build dynamic insert query
-    const publicationKeys = Object.keys(publication);
-    const publicationKeysCount = [];
-    const publicationValues = [];
-    publicationKeys.forEach((k, i) => {
-      publicationKeysCount.push(`$${i + 1}`);
-      publicationValues.push(publication[k]);
+    const userProjectRequestKeys = Object.keys(userProjectRequest);
+    const userProjectRequestKeysCount = [];
+    const userProjectRequestValues = [];
+    userProjectRequestKeys.forEach((k, i) => {
+      userProjectRequestKeysCount.push(`$${i + 1}`);
+      userProjectRequestValues.push(userProjectRequest[k]);
     });
-    const queryLine = `insert into publications(${publicationKeys.toString()}) values(${publicationKeysCount.toString()})`;
+    const queryLine = `insert into users_projects_requests(${userProjectRequestKeys.toString()}) values(${userProjectRequestKeysCount.toString()})`;
 
-    // Create a user in the database
-    await db.query(queryLine, publicationValues);
+    // Create a user project request in the database
+    await db.query(queryLine, userProjectRequestValues);
 
-    return { message: 'Publication created successfully' };
+    return { message: 'User project request created successfully' };
   } catch (error) {
     if (error.code) {
       throw error;
     }
-    const userMsg = 'Could not create publication';
+    const userMsg = 'Could not create user project request';
     console.log(userMsg, error);
     throw { code: 500, message: userMsg };
   }
@@ -373,7 +373,7 @@ const deleteAllPublicationsFromProject = async function deleteAllPublicationsFro
 };
 
 module.exports = {
-  newPublication,
+  newUserProjectRequest,
   deletePublicationByDOI,
   deletePublicationById,
   addPublicationToProjectByDoi,
