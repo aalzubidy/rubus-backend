@@ -1,6 +1,7 @@
 const moment = require('moment');
 const Ajv = require('ajv');
 const usersProjectsRequestSchema = require('../schemas/usersProjectsRequestSchema.json');
+const usersProjectsRequestSchemaOptional = require('../schemas/usersProjectsRequestSchemaOptional.json');
 const db = require('../db/db');
 
 /**
@@ -19,7 +20,7 @@ const newUserProjectRequest = async function newUserProjectRequest(userProjectRe
       throw { code: 400, message: 'Please provide a user project request' };
     }
 
-    // Check publication object schema
+    // Check user project request object schema
     const ajv = new Ajv();
     const schemaValidation = await ajv.validate(usersProjectsRequestSchema, userProjectRequest);
 
@@ -57,31 +58,31 @@ const newUserProjectRequest = async function newUserProjectRequest(userProjectRe
 
 /**
  * @async
- * @function deletePublicationByDOI
- * @summary Delete publication(s) by DOI
- * @param {array} dois Publication(s) doi
+ * @function deleteUserProjectRequestById
+ * @summary Delete user project request(s) by id
+ * @param {array} userProjectRequestIds User project request(s) id
  * @param {user} user User information
- * @returns {object} deletePublicationResults
+ * @returns {object} deleteUserProjectRequestResults
  * @throws {object} errorCodeAndMsg
  */
-const deletePublicationByDOI = async function deletePublicationByDOI(dois, user) {
+const deleteUserProjectRequestById = async function deleteUserProjectRequestById(userProjectRequestIds, user) {
   try {
-    // Check if there is no dois
-    if (!dois) {
-      throw { code: 400, message: 'Please provide dois to delete' };
+    // Check if there is no user project request ids
+    if (!userProjectRequestIds) {
+      throw { code: 400, message: 'Please provide user project request ids to delete' };
     }
 
     // Delete publication by DOI
-    dois.forEach(async (doi) => {
-      await db.query('delete from publications where doi=$1', [doi]);
+    userProjectRequestIds.forEach(async (userProjectRequestId) => {
+      await db.query('delete from users_projects_requests where id=$1', [userProjectRequestId]);
     });
 
-    return { message: 'Publication deleted successfully by doi' };
+    return { message: 'User project request deleted successfully by id' };
   } catch (error) {
     if (error.code) {
       throw error;
     }
-    const userMsg = 'Could not delete publication by doi';
+    const userMsg = 'Could not delete user project request by id';
     console.log(userMsg, error);
     throw { code: 500, message: userMsg };
   }
@@ -89,296 +90,60 @@ const deletePublicationByDOI = async function deletePublicationByDOI(dois, user)
 
 /**
  * @async
- * @function deletePublicationById
- * @summary Delete publication(s) by id
- * @param {array} publicationIds Publication(s) id
+ * @function modifyUserProjectRequest
+ * @summary Modify an existing user project request
+ * @param {number} userProjectRequestId User project request id
+ * @param {object} userProjectRequest Rubus format user project request
  * @param {user} user User information
- * @returns {object} deletePublicationResults
+ * @returns {object} modifyUserProjectRequestResults
  * @throws {object} errorCodeAndMsg
  */
-const deletePublicationById = async function deletePublicationById(publicationIds, user) {
+const modifyUserProjectRequest = async function modifyUserProjectRequest(userProjectRequest, user) {
   try {
-    // Check if there is no publication ids
-    if (!publicationIds) {
-      throw { code: 400, message: 'Please provide publication ids to delete' };
+    // Check if there is no user project request
+    if (!userProjectRequest) {
+      throw { code: 400, message: 'Please provide a user project request to modify' };
     }
 
-    // Delete publication by DOI
-    publicationIds.forEach(async (publicationId) => {
-      await db.query('delete from publications where id=$1', [publicationId]);
+    // Check user project request object schema
+    const ajv = new Ajv();
+    const schemaValidation = await ajv.validate(usersProjectsRequestSchemaOptional, userProjectRequest);
+
+    if (!schemaValidation) {
+      throw { code: 400, message: 'Please provide correct user project request format to modify, schema failed to validate.' };
+    }
+
+    // Build dynamic insert query
+    const userProjectRequestKeys = Object.keys(userProjectRequest);
+    const userProjectRequestKeysCount = [];
+    const userProjectRequestValues = [];
+    userProjectRequestKeys.forEach((k, i) => {
+      userProjectRequestKeysCount.push(`$${i + 1}`);
+      userProjectRequestValues.push(`${userProjectRequest[k]}=$${i+2}`);
     });
+    const queryLine = `update users_projects_requests set (${userProjectRequestKeys.toString().replace(/\,/gm, ' ')}) where id=$1`;
 
-    return { message: 'Publication deleted successfully by id' };
+    // Add user project request id to the beignning of values
+    userProjectRequestValues.unshift(userProjectRequestId);
+
+    // Create a user project request in the database
+    await db.query(queryLine, userProjectRequestValues);
+
+    return { message: 'User project request modified successfully' };
   } catch (error) {
     if (error.code) {
       throw error;
     }
-    const userMsg = 'Could not delete publication by id';
+    const userMsg = 'Could not modify user project request';
     console.log(userMsg, error);
     throw { code: 500, message: userMsg };
   }
 };
 
-/**
- * @async
- * @function addPublicationToProjectByDoi
- * @summary Add publication(s) by DOI to a project
- * @param {array} dois Publication(s) doi
- * @param {string} projectId Project id
- * @param {string} searchQueryId Search query id
- * @param {user} user User information
- * @returns {object} addPublicationResults
- * @throws {object} errorCodeAndMsg
- */
-const addPublicationToProjectByDoi = async function addPublicationToProjectByDoi(dois, projectId, searchQueryId, user) {
-  try {
-    // Check if there is no dois or no project id
-    if (!dois || !projectId) {
-      throw { code: 400, message: 'Please provide dois and a project id' };
-    }
-
-    const {
-      id
-    } = user;
-
-    // Check the user permission to manipulate project's publication
-    const queryProjectUsers = await db.query('select user_id, project_id from projects_users where user_id=$1 and project_id=$2', [id, projectId]);
-    if (!queryProjectUsers || !queryProjectUsers.rows[0] || queryProjectUsers.rows[0]['user_id'] != id || queryProjectUsers.rows[0]['project_id'] != projectId) {
-      throw { code: 403, message: 'User does not have permissions to modify project\'s publications' };
-    }
-
-    const successItems = [];
-    const failedItems = [];
-
-    // Retreive publication by id and add it to a project
-    dois.forEach(async (doi) => {
-      let queryPublicationId = await db.query('select id from publications where doi=$1', [doi]);
-      if (queryPublicationId && queryPublicationId.rows[0]) {
-        queryPublicationId = queryPublicationId.rows[0];
-        await db.query('insert into publications_projects(publication_id, project_id, search_query_id) values($1, $2, $3)', [queryPublicationId, projectId, searchQueryId]);
-        successItems.push(doi);
-      } else {
-        failedItems.push(doi);
-      }
-    });
-
-    return { message: 'Publication added to project successfully by doi', successItems, failedItems };
-  } catch (error) {
-    if (error.code) {
-      throw error;
-    }
-    const userMsg = 'Could not add publications to a project by doi';
-    console.log(userMsg, error);
-    throw { code: 500, message: userMsg };
-  }
-};
-
-/**
- * @async
- * @function addPublicationToProjectById
- * @summary Add publication(s) by id to a project
- * @param {array} publicationIds Publication(s) id
- * @param {string} projectId Project id
- * @param {string} searchQueryId Search query id
- * @param {user} user User information
- * @returns {object} addPublicationResults
- * @throws {object} errorCodeAndMsg
- */
-const addPublicationToProjectById = async function addPublicationToProjectById(publicationIds, projectId, searchQueryId, user) {
-  try {
-    // Check if there is no dois or no project id
-    if (!publicationIds || !projectId) {
-      throw { code: 400, message: 'Please provide publication ids and a project id' };
-    }
-
-    const {
-      id
-    } = user;
-
-    // Check the user permission to manipulate project's publication
-    const queryProjectUsers = await db.query('select user_id, project_id from projects_users where user_id=$1 and project_id=$2', [id, projectId]);
-    if (!queryProjectUsers || !queryProjectUsers.rows[0] || queryProjectUsers.rows[0]['user_id'] != id || queryProjectUsers.rows[0]['project_id'] != projectId) {
-      throw { code: 403, message: 'User does not have permissions to modify project\'s publications' };
-    }
-
-    const successItems = [];
-    const failedItems = [];
-
-    // Retreive publication by id and add it to a project
-    publicationIds.forEach(async (publicationId) => {
-      const addPublicationQuery = await db.query('insert into publications_projects(publication_id, project_id, search_query_id) values($1, $2, $3)', [publicationId, projectId, searchQueryId]);
-      if (addPublicationQuery) {
-        successItems.push(publicationId);
-      } else {
-        failedItems.push(publicationId);
-      }
-    });
-
-    return { message: 'Publication added to project successfully by id', successItems, failedItems };
-  } catch (error) {
-    if (error.code) {
-      throw error;
-    }
-    const userMsg = 'Could not add publications to a project by id';
-    console.log(userMsg, error);
-    throw { code: 500, message: userMsg };
-  }
-};
-
-/**
- * @async
- * @function deletePublicationFromProjectByDoi
- * @summary Delete publication(s) by DOI from a project
- * @param {array} dois Publication(s) doi
- * @param {string} projectId Project id
- * @param {user} user User information
- * @returns {object} deletePublicationResults
- * @throws {object} errorCodeAndMsg
- */
-const deletePublicationFromProjectByDoi = async function deletePublicationFromProjectByDoi(dois, projectId, user) {
-  try {
-    // Check if there is no dois or no project id
-    if (!dois || !projectId) {
-      throw { code: 400, message: 'Please provide dois and a project id' };
-    }
-
-    const {
-      id
-    } = user;
-
-    // Check the user permission to manipulate project's publication
-    const queryProjectUsers = await db.query('select user_id, project_id from projects_users where user_id=$1 and project_id=$2', [id, projectId]);
-    if (!queryProjectUsers || !queryProjectUsers.rows[0] || queryProjectUsers.rows[0]['user_id'] != id || queryProjectUsers.rows[0]['project_id'] != projectId) {
-      throw { code: 403, message: 'User does not have permissions to modify project\'s publications' };
-    }
-
-    const successItems = [];
-    const failedItems = [];
-
-    // Retreive publication by id and delete it from a project
-    dois.forEach(async (doi) => {
-      let queryPublicationId = await db.query('select id from publications where doi=$1', [doi]);
-      if (queryPublicationId && queryPublicationId.rows[0]) {
-        queryPublicationId = queryPublicationId.rows[0];
-        await db.query('delete from publications_projects where publication_id=$1 and project_id=$2', [queryPublicationId, projectId]);
-        successItems.push(doi);
-      } else {
-        failedItems.push(doi);
-      }
-    });
-
-    return { message: 'Publication deleted to project successfully by doi', successItems, failedItems };
-  } catch (error) {
-    if (error.code) {
-      throw error;
-    }
-    const userMsg = 'Could not delete publications from a project by doi';
-    console.log(userMsg, error);
-    throw { code: 500, message: userMsg };
-  }
-};
-
-/**
- * @async
- * @function deletePublicationFromProjectById
- * @summary Delete publication(s) by id from a project
- * @param {array} publicationIds Publication(s) id
- * @param {string} projectId Project id
- * @param {user} user User information
- * @returns {object} deletePublicationResults
- * @throws {object} errorCodeAndMsg
- */
-const deletePublicationFromProjectById = async function deletePublicationFromProjectById(publicationIds, projectId, user) {
-  try {
-    // Check if there is no publication id or no project id
-    if (!publicationIds || !projectId) {
-      throw { code: 400, message: 'Please provide publication ids and a project id' };
-    }
-
-    const {
-      id
-    } = user;
-
-    // Check the user permission to manipulate project's publication
-    const queryProjectUsers = await db.query('select user_id, project_id from projects_users where user_id=$1 and project_id=$2', [id, projectId]);
-    if (!queryProjectUsers || !queryProjectUsers.rows[0] || queryProjectUsers.rows[0]['user_id'] != id || queryProjectUsers.rows[0]['project_id'] != projectId) {
-      throw { code: 403, message: 'User does not have permissions to modify project\'s publications' };
-    }
-
-    const successItems = [];
-    const failedItems = [];
-
-    // Delete publication from project by id
-    publicationIds.forEach(async (publicationId) => {
-      const deletePublicationQuery = await db.query('delete from publications_projects where publication_id=$1 and project_id=$2', [publicationId, projectId]);
-      if (deletePublicationQuery) {
-        successItems.push(publicationId);
-      } else {
-        failedItems.push(publicationId);
-      }
-    });
-
-    return { message: 'Publication deleted to project successfully by id', successItems, failedItems };
-  } catch (error) {
-    if (error.code) {
-      throw error;
-    }
-    const userMsg = 'Could not delete publications from a project by id';
-    console.log(userMsg, error);
-    throw { code: 500, message: userMsg };
-  }
-};
-
-/**
- * @async
- * @function deleteAllPublicationsFromProject
- * @summary Delete all publication(s) from a project
- * @param {string} projectId Project id
- * @param {user} user User information
- * @returns {object} deletePublicationResults
- * @throws {object} errorCodeAndMsg
- */
-const deleteAllPublicationsFromProject = async function deleteAllPublicationsFromProject(projectId, user) {
-  try {
-    // Check if there is no project id
-    if (!projectId) {
-      throw { code: 400, message: 'Please provide a project id' };
-    }
-
-    const {
-      id
-    } = user;
-
-    // Check the user permission to manipulate project's publication
-    const queryProjectUsers = await db.query('select user_id, project_id from projects_users where user_id=$1 and project_id=$2', [id, projectId]);
-    if (!queryProjectUsers || !queryProjectUsers.rows[0] || queryProjectUsers.rows[0]['user_id'] != id || queryProjectUsers.rows[0]['project_id'] != projectId) {
-      throw { code: 403, message: 'User does not have permissions to modify project\'s publications' };
-    }
-
-    // Delete all publications from a project
-    const deletePublicationQuery = await db.query('delete from publications_projects where project_id=$1', [projectId]);
-    if (deletePublicationQuery) {
-      return { message: 'All publication were deleted from a project successfully' };
-    } else {
-      throw { code: 500, message: 'Could not delete publications from a project' };
-    }
-  } catch (error) {
-    if (error.code) {
-      throw error;
-    }
-    const userMsg = 'Could not delete all publications from a project';
-    console.log(userMsg, error);
-    throw { code: 500, message: userMsg };
-  }
-};
+// Get one, get all, fix permission, test out the functions
 
 module.exports = {
   newUserProjectRequest,
-  deletePublicationByDOI,
-  deletePublicationById,
-  addPublicationToProjectByDoi,
-  addPublicationToProjectById,
-  deletePublicationFromProjectByDoi,
-  deletePublicationFromProjectById,
-  deleteAllPublicationsFromProject
+  deleteUserProjectRequestById,
+  modifyUserProjectRequest
 };
