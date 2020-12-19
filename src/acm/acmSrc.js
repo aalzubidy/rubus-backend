@@ -35,10 +35,11 @@ const getToken = async function getToken() {
  * @summary Get list of articles parsed from an ACM url
  * @param {string} acmQueryUrl url to parse
  * @param {string} token Token to use in cookies for ACM
+ * @param {object} user User information
  * @returns {object} results
  * @throws {object} errorDetails
  */
-const parseURLArticles = async function parseURLArticles(acmQueryUrl, token = null) {
+const parseURLArticles = async function parseURLArticles(acmQueryUrl, token = null, user) {
   try {
     if (!token) {
       token = await getToken();
@@ -127,10 +128,11 @@ const parseURLArticles = async function parseURLArticles(acmQueryUrl, token = nu
  * @summary Get articles details to generate bibtex file
  * @param {array} dois List of DOIs to retreive
  * @param {string} token Token to use in cookies for ACM
+ * @param {object} user User information
  * @returns {array} results
  * @throws {object} errorDetails
  */
-const getArticlesDetails = async function getArticlesDetails(dois, token = null) {
+const getArticlesDetails = async function getArticlesDetails(dois, token = null, user) {
   try {
     if (!token) {
       token = await getToken();
