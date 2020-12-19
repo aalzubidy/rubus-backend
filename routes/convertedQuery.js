@@ -45,7 +45,7 @@ const callSrcFile = async function callSrc(functionName, parameters, req, res) {
 /**
  * @summary Store new converted query
  */
-router.post('/convertedQuery/new', async (req, res) => {
+router.post('/convertedQuery', async (req, res) => {
   const {
     inputQuery,
     outputQuery

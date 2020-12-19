@@ -21,10 +21,10 @@ const newPublication = async function newPublication(publication, user) {
 
     // Check publication object schema
     const ajv = new Ajv();
-    const schemaValidation = await ajv.validate(publicationSchema, {});
+    const schemaValidation = await ajv.validate(publicationSchema, publication);
 
     if (!schemaValidation) {
-      throw { code: 400, message: 'Please provide correct format publication, schema failed to validate.' };
+      throw { code: 400, message: 'Please provide correct publication format, schema failed to validate.' };
     }
 
     // Get date
@@ -41,7 +41,7 @@ const newPublication = async function newPublication(publication, user) {
     });
     const queryLine = `insert into publications(${publicationKeys.toString()}) values(${publicationKeysCount.toString()})`;
 
-    // Create a user in the database
+    // Create a publication in the database
     await db.query(queryLine, publicationValues);
 
     return { message: 'Publication created successfully' };
