@@ -372,6 +372,115 @@ const deleteAllPublicationsFromProject = async function deleteAllPublicationsFro
   }
 };
 
+/**
+ * @async
+ * @function getPublicationById
+ * @summary Get publication by id
+ * @param {number} publicationId Publication id
+ * @param {user} user User information
+ * @returns {object} publicationResults
+ * @throws {object} errorCodeAndMsg
+ */
+const getPublicationById = async function getPublicationById(publicationId, user) {
+  try {
+    // Check if there is no publication id
+    if (!publicationId) {
+      throw { code: 400, message: 'Please provide a publication id' };
+    }
+
+    // Get publication by id
+    const publicationQuery = await db.query('select * from publications where id=$1', [publicationId]);
+    if (publicationQuery && publicationQuery.rows && publicationQuery.rows[0]) {
+      return publicationQuery.rows[0];
+    } else {
+      throw { code: 500, message: 'Could not find publication by id' };
+    }
+  } catch (error) {
+    if (error.code) {
+      throw error;
+    }
+    const userMsg = 'Could not get publication by id';
+    console.log(userMsg, error);
+    throw { code: 500, message: userMsg };
+  }
+};
+
+/**
+ * @async
+ * @function getPublicationByDOI
+ * @summary Get publication by doi
+ * @param {string} publicationDoi Publication doi
+ * @param {user} user User information
+ * @returns {object} publicationResults
+ * @throws {object} errorCodeAndMsg
+ */
+const getPublicationByDOI = async function getPublicationByDOI(publicationDoi, user) {
+  try {
+    // Check if there is no publication doi
+    if (!publicationDoi) {
+      throw { code: 400, message: 'Please provide a publication id' };
+    }
+
+    // Get publication by doi
+    const publicationQuery = await db.query('select * from publications where doi=$1', [publicationDoi]);
+    if (publicationQuery && publicationQuery.rows && publicationQuery.rows[0]) {
+      return publicationQuery.rows[0];
+    } else {
+      throw { code: 500, message: 'Could not find publication by doi' };
+    }
+  } catch (error) {
+    if (error.code) {
+      throw error;
+    }
+    const userMsg = 'Could not get publication by doi';
+    console.log(userMsg, error);
+    throw { code: 500, message: userMsg };
+  }
+};
+
+/**
+ * @async
+ * @function getPublicationsByProjectId
+ * @summary Get publications by project id
+ * @param {number} projectId Project id
+ * @param {user} user User information
+ * @returns {object} publicationResults
+ * @throws {object} errorCodeAndMsg
+ */
+const getPublicationsByProjectId = async function getPublicationsByProjectId(projectId, user) {
+  try {
+    // Check if there is no project id
+    if (!projectId) {
+      throw { code: 400, message: 'Please provide a project id' };
+    }
+
+    const {
+      id
+    } = user;
+
+    // Check the user permission to manipulate project's publication
+    const queryProjectUsers = await db.query('select user_id, project_id from projects_users where user_id=$1 and project_id=$2', [id, projectId]);
+    if (!queryProjectUsers || !queryProjectUsers.rows[0] || queryProjectUsers.rows[0]['user_id'] != id || queryProjectUsers.rows[0]['project_id'] != projectId) {
+      throw { code: 403, message: 'User does not have permissions to modify project\'s publications' };
+    }
+
+    // Get publications by project id
+    const publicationQuery = await db.query('select * from publications_projects where project_id=$1', [projectId]);
+    if (publicationQuery && publicationQuery.rows) {
+      return publicationQuery.rows;
+    } else {
+      throw { code: 500, message: 'Could not find publications by project id' };
+    }
+  } catch (error) {
+    if (error.code) {
+      throw error;
+    }
+    const userMsg = 'Could not get publications by project id';
+    console.log(userMsg, error);
+    throw { code: 500, message: userMsg };
+  }
+};
+
 module.exports = {
   newPublication,
   deletePublicationByDOI,
@@ -380,5 +489,8 @@ module.exports = {
   addPublicationToProjectById,
   deletePublicationFromProjectByDoi,
   deletePublicationFromProjectById,
-  deleteAllPublicationsFromProject
+  deleteAllPublicationsFromProject,
+  getPublicationById,
+  getPublicationByDOI,
+  getPublicationsByProjectId
 };

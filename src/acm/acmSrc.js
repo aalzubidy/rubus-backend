@@ -1,7 +1,9 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const FormData = require('form-data');
+const db = require('../../db/db');
 const userProjectRequest = require('../usersProjectsRequestsSrc');
+const publication = require('../publicationSrc');
 
 // Default values
 const acmBaseUrl = 'https://dl.acm.org/';
@@ -177,7 +179,7 @@ const getArticlesDetails = async function getArticlesDetails(dois, token = null,
  * @async
  * @function searchAndSave
  * @summary Search for articles, process them, and save them to a project while updating user projects requests
- * @param {string} searchUrl Search url to start from 
+ * @param {string} searchUrl Search url
  * @param {number} projectId Project id
  * @param {number} searchQueryId Search query id
  * @param {object} user User information
@@ -215,45 +217,64 @@ const searchAndSave = async function searchAndSave(searchUrl, projectId, searchQ
 
     let status = 'in-progress';
 
-    while (status != 'cancelled') {
+    // List of dois already in database
+    const doisInDB = [];
+    // List of dois that are needed
+    const doisNeeded = [];
+
+    while (status === 'in-progress') {
       // Go to a url and get all the DOIs
       const listOfDois = parseURLArticles(searchUrl, token, user);
 
-      // get dois
-      // check if the doi in the database
+      if (!listOfDois || !listOfDois.dois || listOfDois.dois.length <= 0) {
+        status = 'failed';
+        return;
+      }
+
+      const { dois, totalResults, parsedArticlesCount } = listOfDois;
+
+      // Check if the doi in the database or the doi is needed
+      dois.forEach(async (doi) => {
+        const publicationCheck = await publication.getPublicationByDOI(doi, user);
+        if (publicationCheck) {
+          doisInDB.push(doi);
+        } else {
+          doisNeeded.push(doi);
+        }
+      });
+
       // if it is in the databsae then add it to the project directly
       // if not in the database, download it, parse it, store it in the database and add it to the project
       // update the url and keep going
-      // 
+      //
       // issue a request at the start,
       // update the request by the end
       // always check for the request is not cancelled
-
     }
 
-    // Build form body for bibtex POST request
-    const bibtexFormData = new FormData();
-    bibtexFormData.append('format', 'bibTex');
-    bibtexFormData.append('targetFile', 'custom-bibtex');
-    bibtexFormData.append('dois', dois.toString());
+    //   // Build form body for bibtex POST request
+    //   const bibtexFormData = new FormData();
+    //   bibtexFormData.append('format', 'bibTex');
+    //   bibtexFormData.append('targetFile', 'custom-bibtex');
+    //   bibtexFormData.append('dois', dois.toString());
 
-    // POST call to get articles details
-    const restCallConfig = {
-      method: 'post',
-      url: acmBaseBibtexUrl,
-      headers: {
-        'Cookie': token,
-        ...bibtexFormData.getHeaders()
-      },
-      data: bibtexFormData
-    };
+    //   // POST call to get articles details
+    //   const restCallConfig = {
+    //     method: 'post',
+    //     url: acmBaseBibtexUrl,
+    //     headers: {
+    //       'Cookie': token,
+    //       ...bibtexFormData.getHeaders()
+    //     },
+    //     data: bibtexFormData
+    //   };
 
-    const results = await axios(restCallConfig);
-    if (results['data'] && results['data']['items']) {
-      return (results.data.items);
-    } else {
-      throw { code: 500, message: 'Could not get articles details from ACM', results };
-    }
+    //   const results = await axios(restCallConfig);
+    //   if (results['data'] && results['data']['items']) {
+    //     return (results.data.items);
+    //   } else {
+    //     throw { code: 500, message: 'Could not get articles details from ACM', results };
+    //   }
   } catch (error) {
     if (error.code) {
       throw error;
