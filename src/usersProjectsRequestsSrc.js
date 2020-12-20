@@ -48,12 +48,12 @@ const newUserProjectRequest = async function newUserProjectRequest(userProjectRe
       userProjectRequestKeysCount.push(`$${i + 1}`);
       userProjectRequestValues.push(userProjectRequest[k]);
     });
-    const queryLine = `insert into users_projects_requests(${userProjectRequestKeys.toString()}) values(${userProjectRequestKeysCount.toString()})`;
+    const queryLine = `insert into users_projects_requests(${userProjectRequestKeys.toString()}) values(${userProjectRequestKeysCount.toString()}) returning id`;
 
     // Create a user project request in the database
-    await db.query(queryLine, userProjectRequestValues);
+    const insertQueryResults = await db.query(queryLine, userProjectRequestValues);
 
-    return { message: 'User project request created successfully' };
+    return { message: 'User project request created successfully', id: insertQueryResults.rows[0]['id'] };
   } catch (error) {
     if (error.code) {
       console.log(error);

@@ -58,4 +58,17 @@ router.post('/db/search', async (req, res) => {
   callSrcFile(dbName, 'parseURLArticles', [searchUrl, null], req, res);
 });
 
+/**
+ * @summary Search and save results from a database(s) to a project
+ */
+router.post('/db/searchAndSave', async (req, res) => {
+  const {
+    searchUrl,
+    dbName,
+    projectId,
+    searchQueryId
+  } = req.body;
+  callSrcFile(dbName, 'searchAndSave', [searchUrl, null], req, res);
+});
+
 module.exports = router;

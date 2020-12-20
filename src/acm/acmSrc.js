@@ -1,6 +1,7 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 const FormData = require('form-data');
+const userProjectRequest = require('../usersProjectsRequestsSrc');
 
 // Default values
 const acmBaseUrl = 'https://dl.acm.org/';
@@ -172,8 +173,100 @@ const getArticlesDetails = async function getArticlesDetails(dois, token = null,
   }
 };
 
+/**
+ * @async
+ * @function searchAndSave
+ * @summary Search for articles, process them, and save them to a project while updating user projects requests
+ * @param {string} searchUrl Search url to start from 
+ * @param {number} projectId Project id
+ * @param {number} searchQueryId Search query id
+ * @param {object} user User information
+ * @returns {array} results
+ * @throws {object} errorDetails
+ */
+const searchAndSave = async function searchAndSave(searchUrl, projectId, searchQueryId, user) {
+  try {
+    const { id } = user;
+
+    // Check if the user is allowed to make requests on the project
+    const userProjectPermissionQuery = await db.query('select project_id from projects_users where user_id=$1', [id]);
+    if (!userProjectPermissionQuery || !userProjectPermissionQuery.rows || !userProjectPermissionQuery.rows[0] || !userProjectPermissionQuery.rows[0].project_id || !userProjectPermissionQuery['rows'][0]['project_id'].includes(projectId)) {
+      throw { code: 403, message: 'User does not have requests permissions on selected project.' };
+    }
+
+    // create a new request and get request id
+    const initialUserProjectRequest = {
+      user_id: id,
+      project_id: projectId,
+      status: 'in-progress',
+      type: 'search and save',
+      search_query_id: searchQueryId ? searchQueryId : null
+    };
+    let requestId = await userProjectRequest.newUserProjectRequest(initialUserProjectRequest, user);
+    if (!requestId.error && requestId['id']) {
+      requestId = requestId['id'];
+    } else {
+      throw { code: 500, message: 'Could not create user project request for search and save' };
+    }
+
+    // Get a token
+    let token = await getToken();
+    token = token['token'];
+
+    let status = 'in-progress';
+
+    while (status != 'cancelled') {
+      // Go to a url and get all the DOIs
+      const listOfDois = parseURLArticles(searchUrl, token, user);
+
+      // get dois
+      // check if the doi in the database
+      // if it is in the databsae then add it to the project directly
+      // if not in the database, download it, parse it, store it in the database and add it to the project
+      // update the url and keep going
+      // 
+      // issue a request at the start,
+      // update the request by the end
+      // always check for the request is not cancelled
+
+    }
+
+    // Build form body for bibtex POST request
+    const bibtexFormData = new FormData();
+    bibtexFormData.append('format', 'bibTex');
+    bibtexFormData.append('targetFile', 'custom-bibtex');
+    bibtexFormData.append('dois', dois.toString());
+
+    // POST call to get articles details
+    const restCallConfig = {
+      method: 'post',
+      url: acmBaseBibtexUrl,
+      headers: {
+        'Cookie': token,
+        ...bibtexFormData.getHeaders()
+      },
+      data: bibtexFormData
+    };
+
+    const results = await axios(restCallConfig);
+    if (results['data'] && results['data']['items']) {
+      return (results.data.items);
+    } else {
+      throw { code: 500, message: 'Could not get articles details from ACM', results };
+    }
+  } catch (error) {
+    if (error.code) {
+      throw error;
+    }
+    const errorMsg = 'Could not get ACM articles details';
+    console.log(errorMsg, error);
+    throw { code: 500, message: errorMsg };
+  }
+};
+
 module.exports = {
   getToken,
   parseURLArticles,
-  getArticlesDetails
+  getArticlesDetails,
+  searchAndSave
 };
