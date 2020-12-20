@@ -264,6 +264,34 @@ const acmMisc = function acmMisc(item) {
   }
 };
 
+/**
+ * @function generateBibtex
+ * @summary Generate bibtex based on item type
+ * @param {object} item Item obtained from ACM
+ * @returns {string} bibtex
+ * @throws {object} errorDetails
+ */
+const generateBibtex = function generateBibtex(item) {
+  if (!item.type) {
+    return (acmMisc(item));
+  }
+
+  switch (item.type.toLowerCase()) {
+    case 'article':
+      return (acmArticle(item));
+    case 'book':
+      return (acmBook(item));
+    case 'thesis':
+      return (acmPhdThesis(item));
+    case 'PAPER_CONFERENCE':
+      return (acmInproceedings(item));
+    case 'REPORT':
+      return (acmTechnicalReport(item));
+    default:
+      return (acmMisc(item));
+  }
+};
+
 module.exports = {
   titleCase,
   parseACMAuthors,
@@ -273,5 +301,6 @@ module.exports = {
   acmPhdThesis,
   acmInproceedings,
   acmTechnicalReport,
-  acmMisc
+  acmMisc,
+  generateBibtex
 };

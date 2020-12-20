@@ -39,6 +39,8 @@ module.exports = {
     'semi': 'error',
     'valid-jsdoc': 'off',
     'object-shorthand': 'off',
-    'no-console': 'off'
+    'no-console': 'off',
+    'no-loop-func': 'off',
+    'no-await-in-loop': 'off'
   }
 };

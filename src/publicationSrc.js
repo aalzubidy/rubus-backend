@@ -206,7 +206,7 @@ const addPublicationToProjectById = async function addPublicationToProjectById(p
 
     // Retreive publication by id and add it to a project
     publicationIds.forEach(async (publicationId) => {
-      const addPublicationQuery = await db.query('insert into publications_projects(publication_id, project_id, search_query_id) values($1, $2, $3)', [publicationId, projectId, searchQueryId]);
+      const addPublicationQuery = await db.query('insert into publications_projects(publication_id, project_id, search_query_id) values($1, $2, $3) ON CONFLICT DO NOTHING', [publicationId, projectId, searchQueryId]);
       if (addPublicationQuery) {
         successItems.push(publicationId);
       } else {
@@ -426,7 +426,7 @@ const getPublicationByDOI = async function getPublicationByDOI(publicationDoi, u
     if (publicationQuery && publicationQuery.rows && publicationQuery.rows[0]) {
       return publicationQuery.rows[0];
     } else {
-      throw { code: 500, message: 'Could not find publication by doi' };
+      return false;
     }
   } catch (error) {
     if (error.code) {

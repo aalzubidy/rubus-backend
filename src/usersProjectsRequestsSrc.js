@@ -194,7 +194,7 @@ const getUserProjectRequestById = async function getUserProjectRequestById(userP
     // Get user project request by id
     const item = await db.query('select * from users_projects_requests where id=$1', [userProjectRequestId]);
     if (item && item.rows && item.rows[0]) {
-      return { userProjectRequest: item.row[0] };
+      return item.row[0];
     } else {
       throw { code: 404, message: 'User project request not found using id' };
     }
