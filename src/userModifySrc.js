@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const { logger } = require('./logger');
 const db = require('../db/db');
 
 /**

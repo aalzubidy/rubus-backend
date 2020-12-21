@@ -1,4 +1,5 @@
 const moment = require('moment');
+const { logger } = require('./logger');
 const db = require('../db/db');
 
 /**

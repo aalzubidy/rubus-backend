@@ -1,3 +1,5 @@
+const { logger } = require('../logger');
+
 /**
  * @function titleCase
  * @summary Convert a string to title case format

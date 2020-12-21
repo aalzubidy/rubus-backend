@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const bcrypt = require('bcrypt');
+const { logger } = require('./logger');
 const db = require('../db/db');
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;

@@ -1,5 +1,6 @@
 const moment = require('moment');
 const Ajv = require('ajv');
+const { logger } = require('./logger');
 const publicationSchema = require('../schemas/publicationSchema.json');
 const db = require('../db/db');
 
