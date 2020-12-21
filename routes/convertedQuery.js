@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { logger } = require('../src/logger');
 const authorizationSrc = require('../src/authorizationSrc');
 const convertedQuerySrc = require('../src/convertedQuerySrc');
 
@@ -19,7 +20,7 @@ const callSrcFile = async function callSrc(functionName, parameters, req, res) {
       data
     });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     if (error && error.code) {
       res.status(error.code).json({
         error
