@@ -34,7 +34,7 @@ const register = async function register(req) {
     const createDate = moment().format('MM/DD/YYYY');
 
     // Create a user in the database
-    await db.query('INSERT INTO users(email, password, name, organization, register_ip, create_date) VALUES($1, $2, $3, $4, $5, $6)', [email, hash, name, organization, req.clientIp, createDate]);
+    await db.query('INSERT INTO users(email, password, name, organization, register_ip, create_date) VALUES($1, $2, $3, $4, $5, $6) returning id', [email, hash, name, organization, req.clientIp, createDate]);
 
     return { message: 'User registered successfully' };
   } catch (error) {
