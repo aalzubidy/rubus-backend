@@ -1,7 +1,11 @@
 const { createLogger, format, transports } = require('winston');
 
+// Set default log level for file and console transports
+const rubusLogFileLevel = process.env.RUBUS_LOG_FILE_LEVEL || 'error';
+const rubusLogConsoleLevel = process.env.RUBUS_LOG_CONSOLE_LEVEL || 'debug';
+
 // Set log file path
-const logFilePath = './rubus.log';
+const logFilePath = process.env.RUBUS_LOG_FILE_PATH || './rubus.log';
 
 // Create a format without color for file transport
 const fileFormat = format.combine(
@@ -22,20 +26,20 @@ const consoleFormat = format.combine(
   }),
 );
 
-// Create logger
+// Create a logger with file transport
 const logger = createLogger({
   format: fileFormat,
-  level: 'debug',
+  level: rubusLogFileLevel,
   transports: [
     new transports.File({ filename: logFilePath, handleExceptions: true, handleRejections: true }),
   ],
   exitOnError: false
 });
 
-// If the environment not production, enable console transport
+// If the environment not production, add console transport
 if (process.env.NODE_ENV !== 'production') {
   logger.add(new transports.Console({
-    level: 'debug',
+    level: rubusLogConsoleLevel,
     format: consoleFormat
   }));
 }
