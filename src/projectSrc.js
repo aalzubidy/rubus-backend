@@ -1,6 +1,7 @@
 const moment = require('moment');
 const { logger } = require('./logger');
 const db = require('../db/db');
+const tools = require('./tools');
 
 /**
  * Create new project
@@ -96,6 +97,9 @@ const getProject = async function getProject(projectId, user) {
       throw { code: 400, message: 'Please provide project id' };
     }
 
+    // Check if the user is allowed to make requests on the project
+    await tools.checkUserProjectPermission(id, projectId);
+
     // Get project title, description and admin
     let projectQuery = await db.query('select title, description, user_id from projects where id=$1', [projectId]);
     logger.debug({ label: 'get project query response', results: projectQuery.rows });
@@ -147,6 +151,11 @@ const getProjectAdminId = async function getProjectAdminId(projectId, user) {
       throw { code: 400, message: 'Please provide project id' };
     }
 
+    const { id } = user;
+
+    // Check if the user is allowed to make requests on the project
+    await tools.checkUserProjectPermission(id, projectId);
+
     // Get project admin
     let projectQuery = await db.query('select user_id from projects where id=$1', [projectId]);
     logger.debug({ label: 'get project admin query response', results: projectQuery.rows });
@@ -188,7 +197,7 @@ const deleteProject = async function deleteProject(projectId, user) {
     const projectAdminId = await getProjectAdminId(projectId);
 
     if (projectAdminId != id) {
-      throw { code: 401, message: 'Only admin is authorized to delete and modiy project' };
+      throw { code: 403, message: 'Only admin is authorized to delete and modiy project' };
     }
 
     // Delete project
@@ -233,7 +242,7 @@ const updateProject = async function updateProject(projectId, title, description
     const projectAdminId = await getProjectAdminId(projectId);
 
     if (projectAdminId != id) {
-      throw { code: 401, message: 'Only admin is authorized to delete and modiy project' };
+      throw { code: 403, message: 'Only admin is authorized to delete and modiy project' };
     }
 
     // Update project title and description
@@ -278,7 +287,7 @@ const addProjectUsers = async function addProjectUsers(projectId, projectUsers, 
     const projectAdminId = await getProjectAdminId(projectId);
 
     if (projectAdminId != id) {
-      throw { code: 401, message: 'Only admin is authorized to add users' };
+      throw { code: 403, message: 'Only admin is authorized to add users' };
     }
 
     // Get date
@@ -329,7 +338,7 @@ const removeProjectUsers = async function removeProjectUsers(projectId, projectU
     const projectAdminId = await getProjectAdminId(projectId);
 
     if (projectAdminId != id || !(email === projectUsers[0] && projectUsers.length === 1)) {
-      throw { code: 401, message: 'Only admin and self user are authorized to remove user(s)' };
+      throw { code: 403, message: 'Only admin and self user are authorized to remove user(s)' };
     }
 
     // Remove user(s) from project
