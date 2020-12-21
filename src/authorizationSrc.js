@@ -35,8 +35,8 @@ const register = async function register(req) {
 
     // Create a user in the database
     const registrationQuery = await db.query('INSERT INTO users(email, password, name, organization, register_ip, create_date) VALUES($1, $2, $3, $4, $5, $6) returning id', [email, hash, name, organization, req.clientIp, createDate]);
-
     logger.debug({ label: 'registration query response', results: registrationQuery.rows });
+
     return { message: 'User registered successfully', id: registrationQuery.rows[0] };
   } catch (error) {
     if (error.code) {
