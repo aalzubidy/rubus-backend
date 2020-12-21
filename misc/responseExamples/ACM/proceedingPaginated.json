@@ -1,0 +1,56 @@
+[{
+  "10.1145/567752.567774": {
+    "id": "10.1145/567752.567774",
+    "type": "PAPER_CONFERENCE",
+    "author": [{
+      "family": "Andler",
+      "given": "Sten"
+    }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 11]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [1979, 1, 1]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [1979, 1, 1]
+      ]
+    },
+    "abstract": "Path expressions are a tool for synchronization of concurrent processes. They are an integral part of the data abstraction mechanism in a programming language, and specify synchronization entirely in terms of the allowable sequences of operations on an object of the abstract data type. This paper describes an attempt to push the path expression synchronization construct along three dimensions - specification, verification, and implementation - into a useful theoretical and practical tool. We define Predicate Path Expressions (PPEs), which allow for a more convenient specification of many synchronization problems. The predicate is a powerful extension to path expressions that increases their expressiveness. We formally define the semantics of PPEs by a transformation to a corresponding nondeterministic program, thus allowing the use of known verification techniques for nondeterministic programs to be used for proving properties of the PPE and the data abstraction of which it is a part. We also describe our existing implementation, in Algol 68, of a data abstraction mechanism that incorporates PPEs.",
+    "call-number": "10.1145/567752.567774",
+    "collection-title": "POPL '79",
+    "container-title": "Proceedings of the 6th ACM SIGACT-SIGPLAN symposium on Principles of programming languages",
+    "DOI": "10.1145/567752.567774",
+    "event-place": "San Antonio, Texas",
+    "ISBN": "9781450373579",
+    "number-of-pages": "11",
+    "page": "226–236",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Predicate path expressions",
+    "URL": "https://doi.org/10.1145/567752.567774"
+  }
+}]
+
+@inproceedings{10.1145/567752.567774,
+    author = {Andler, Sten},
+    title = {Predicate Path Expressions},
+    year = {1979},
+    isbn = {9781450373579},
+    publisher = {Association for Computing Machinery},
+    address = {New York, NY, USA},
+    url = {https://doi.org/10.1145/567752.567774},
+    doi = {10.1145/567752.567774},
+    abstract = {Path expressions are a tool for synchronization of concurrent processes. They are an integral part of the data abstraction mechanism in a programming language, and specify synchronization entirely in terms of the allowable sequences of operations on an object of the abstract data type. This paper describes an attempt to push the path expression synchronization construct along three dimensions - specification, verification, and implementation - into a useful theoretical and practical tool. We define Predicate Path Expressions (PPEs), which allow for a more convenient specification of many synchronization problems. The predicate is a powerful extension to path expressions that increases their expressiveness. We formally define the semantics of PPEs by a transformation to a corresponding nondeterministic program, thus allowing the use of known verification techniques for nondeterministic programs to be used for proving properties of the PPE and the data abstraction of which it is a part. We also describe our existing implementation, in Algol 68, of a data abstraction mechanism that incorporates PPEs.},
+    booktitle = {Proceedings of the 6th ACM SIGACT-SIGPLAN Symposium on Principles of Programming Languages},
+    pages = {226–236},
+    numpages = {11},
+    location = {San Antonio, Texas},
+    series = {POPL '79}
+    }
+    

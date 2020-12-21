@@ -48,12 +48,12 @@ const newUserProjectRequest = async function newUserProjectRequest(userProjectRe
       userProjectRequestKeysCount.push(`$${i + 1}`);
       userProjectRequestValues.push(userProjectRequest[k]);
     });
-    const queryLine = `insert into users_projects_requests(${userProjectRequestKeys.toString()}) values(${userProjectRequestKeysCount.toString()})`;
+    const queryLine = `insert into users_projects_requests(${userProjectRequestKeys.toString()}) values(${userProjectRequestKeysCount.toString()}) returning id`;
 
     // Create a user project request in the database
-    await db.query(queryLine, userProjectRequestValues);
+    const insertQueryResults = await db.query(queryLine, userProjectRequestValues);
 
-    return { message: 'User project request created successfully' };
+    return { message: 'User project request created successfully', id: insertQueryResults.rows[0]['id'] };
   } catch (error) {
     if (error.code) {
       console.log(error);
@@ -194,7 +194,7 @@ const getUserProjectRequestById = async function getUserProjectRequestById(userP
     // Get user project request by id
     const item = await db.query('select * from users_projects_requests where id=$1', [userProjectRequestId]);
     if (item && item.rows && item.rows[0]) {
-      return { userProjectRequest: item.row[0] };
+      return item.row[0];
     } else {
       throw { code: 404, message: 'User project request not found using id' };
     }

@@ -1,0 +1,112 @@
+<li class="search__item issue-item-container">
+   <div class="issue-item-checkbox-container"><label class="checkbox--primary"><input name="10.1145/2483760.2483774" class="issue-Item__checkbox" type="checkbox"><span></span></label></div>
+   <div class="issue-item issue-item--search clearfix">
+      <div class="issue-item__citation">
+         <div class="issue-heading">research-article</div>
+         
+         
+         <div class="access-icon open-access">
+            Open Access
+         </div>
+         
+         
+         <div class="publisher-badge"><img class="simple-tooltip__block--b" src="/specs/products/acm/releasedAssets/images/acm-badge-20X20.png" alt="Published By ACM" title="Published By ACM" data-title="Published By ACM"><span class="visibility-hidden">Published By ACM</span></div>
+         <div class="badges"></div>
+      </div>
+      <div class="issue-item__content">
+         <div class="issue-item__content-right">
+            <h5 class="issue-item__title"><span class="hlFld-Title"><a href="/doi/10.1145/2483760.2483774">Does automated white-box <span onclick="highlight()" class="single_highlight_class">test</span> generation really help <span onclick="highlight()" class="single_highlight_class">software</span> <span onclick="highlight()" class="single_highlight_class">testers</span>?</a></span></h5>
+            <ul class="rlist--inline loa truncate-list" aria-label="authors" data-lines="1">
+               <li><a href="/profile/81337489204" title="Gordon Fraser"><img class="author-picture" src="/pb-assets/icons/DOs/default-profile-1543932446943.svg" alt="Gordon &nbsp;Fraser profile image"/><span>Gordon Fraser</span></a><span>, </span></li>
+               <li><a href="/profile/81503688489" title="Matt Staats"><img class="author-picture" src="/pb-assets/icons/DOs/default-profile-1543932446943.svg" alt="Matt &nbsp;Staats profile image"/><span>Matt Staats</span></a><span>, </span></li>
+               <li><a href="/profile/81333489966" title="Phil McMinn"><img class="author-picture" src="/pb-assets/icons/DOs/default-profile-1543932446943.svg" alt="Phil &nbsp;McMinn profile image"/><span>Phil McMinn</span></a><span>, </span></li>
+               <li><a href="/profile/81339488488" title="Andrea Arcuri"><img class="author-picture" src="/pb-assets/icons/DOs/default-profile-1543932446943.svg" alt="Andrea &nbsp;Arcuri profile image"/><span>Andrea Arcuri</span></a><span>, </span></li>
+               <li><a href="/profile/81100199729" title="Frank Padberg"><img class="author-picture" src="/pb-assets/icons/DOs/default-profile-1543932446943.svg" alt="Frank &nbsp;Padberg profile image"/><span>Frank Padberg</span></a></li>
+            </ul>
+            <div class="issue-item__detail"><a href="/doi/proceedings/10.1145/2483760" title="ISSTA 2013: Proceedings of the 2013 International Symposium on Software Testing and Analysis"><span class="epub-section__title">ISSTA 2013: Proceedings of the 2013 International Symposium on Software Testing and Analysis</span></a><span class="dot-separator"><span>July 2013, </span><span>pp 291–301</span></span><span><a href="https://doi.org/10.1145/2483760.2483774" class="issue-item__doi dot-separator">https://doi.org/10.1145/2483760.2483774</a></span></div>
+            <div class="issue-item__abstract truncate-text" data-lines="4">
+               
+               <p> Automated test generation techniques can efficiently produce test data that systematically
+                  cover structural aspects of a program. In the absence of a specification, a common
+                  assumption is that these tests relieve a developer of most of the work, as the ...
+               </p>
+            </div>
+            <div class="issue-item__footer clearfix">
+               <div class="issue-item__footer-wrapper clearfix">
+                  <div class="issue-item__footer-info pull-left">
+                     <ul class="rlist--inline">
+                        <li class="metric-holder">
+                           <div class="tooltip" tabindex="0">
+                              <ul class="rlist--inline padding-0">
+                                 <li><span class="citation"><i class="icon-quote"></i><span>50</span></span></li>
+                                 
+                                 <li><span class="metric"><i class="icon-metric"></i><span>1,312</span></span></li>
+                                 
+                              </ul>
+                              <div class="tooltip__body footer-metric-holder"><span class="arrow"></span><div class="left-bordered-title">Metrics</div>
+                                 <div class="citation">Total Citations<span class="bold">50</span></div>
+                                 
+                                 <div class="metric">Total Downloads<span class="bold">1,312</span></div>
+                                 <div class="info">Last 12 Months<span class="bold">221</span></div>
+                                 <div class="info">Last 6 weeks<span class="bold">23</span></div>
+                                 
+                              </div>
+                           </div>
+                        </li>
+                        <li class="highlights-holder">
+                           <div class="accordion"><a href="#" data-content-target="#accordion-content10114524837602483774" title="Show Highlights" aria-expanded="false" class="accordion__control"><i aria-hidden="true" class="icon-format_color_text"></i><span>Highlights</span><i aria-hidden="true" class="icon-section_arrow_d"></i></a></div>
+                        </li>
+                     </ul>
+                     <div class="accordion">
+                        <div id="accordion-content10114524837602483774" class="accordion__content" style=""><span class="hlFld-Abstract"></span><div class="abstract-text"><h6>Abstract</h6><p>In the absence of a specification, a common assumption is that these  <span onclick="highlight()" class="single_highlight_class">tests</span> relieve a developer of most of the work, as the act of  <span onclick="highlight()" class="single_highlight_class">testing</span> is reduced to checking the results of the  <span onclick="highlight()" class="single_highlight_class">tests</span>.</p><p>To investigate this issue, we performed a controlled experiment comparing a total of 49 subjects split between writing  <span onclick="highlight()" class="single_highlight_class">tests</span> manually and writing  <span onclick="highlight()" class="single_highlight_class">tests</span> with the aid of an automated unit  <span onclick="highlight()" class="single_highlight_class">test</span> generation tool, EvoSuite. We found that, on one hand, tool support leads to clear improvements in commonly applied  <span onclick="highlight()" class="single_highlight_class">quality</span> metrics such as code coverage (up to 300% increase).</p> </div><div class="full-text"><h6>Full Text</h6><p>D.2.5 [ <span onclick="highlight()" class="single_highlight_class">Software</span> Engineering]:  <span onclick="highlight()" class="single_highlight_class">Testing</span> and Debugging -  <span onclick="highlight()" class="single_highlight_class">Testing</span> Tools; General Terms. Algorithms, Experimentation, Reliability, Theory Keywords. Unit  <span onclick="highlight()" class="single_highlight_class">testing</span>, automated  <span onclick="highlight()" class="single_highlight_class">test</span> generation, branch coverage, empirical  <span onclick="highlight()" class="single_highlight_class">software</span> engineering 1. INTRODUCTION Controlled empirical studies involving human subjects are not common in  <span onclick="highlight()" class="single_highlight_class">software</span> engineering.</p><p>This result can be seen as a call to arms to the  <span onclick="highlight()" class="single_highlight_class">software</span>  <span onclick="highlight()" class="single_highlight_class">testing</span> research community. It is time for  <span onclick="highlight()" class="single_highlight_class">software</span>  <span onclick="highlight()" class="single_highlight_class">testing</span> research to consider the follow-up problem to whitebox  <span onclick="highlight()" class="single_highlight_class">test</span> data generation: once we have generated our  <span onclick="highlight()" class="single_highlight_class">test</span> data, how should the developer use it?</p> </div><div class="Subject"><h6>Subject</h6><p>ISSTA: International Symposium on  <span onclick="highlight()" class="single_highlight_class">Software</span>  <span onclick="highlight()" class="single_highlight_class">Testing</span> and Analysis</p><p>ISSTA: International Symposium on  <span onclick="highlight()" class="single_highlight_class">Software</span>  <span onclick="highlight()" class="single_highlight_class">Testing</span> and Analysis</p><p><span onclick="highlight()" class="single_highlight_class">Software</span>  <span onclick="highlight()" class="single_highlight_class">testing</span> and debugging</p> </div>
+                        </div>
+                     </div>
+                  </div>
+                  <div class="issue-item__footer-links pull-right">
+                     <ul class="rlist--inline left dot-separator">
+                        <li><a class="btn--icon simple-tooltip__block--b" href="#" data-title="Export Citation" data-toggle="modal" data-target="#exportCitation"><i class="icon-quote"></i><span class="visibility-hidden">Export Citations</span><input type="hidden" name="doiVal" value="10.1145/2483760.2483774"></a></li>
+                        <li><a href="/" role="menuitem" data-title="Save to Binder" data-db-target-for="save-to-binder-d3693e147" data-link="/action/binderList?doi=10.1145/2483760.2483774" class="btn--icon simple-tooltip__block--b saveToBinders"><i aria-hidden="true" class="icon-add-folder"></i><span class="visibility-hidden">Save to Binder</span></a><div data-db-target-of="save-to-binder-d3693e147">
+                              <div class="saveToBinders-list"><input type="hidden" name="doiVal" value="10.1145/2483760.2483774"><h5>Save to Binder</h5>
+                                 <div class="binder-list-alerts"></div>
+                                 <div class="saveToBinders-list__container">
+                                    <ul class="rlist saveToBinders-list__items">
+                                       <div class="loader"><img src="/specs/products/acm/releasedAssets/images/loader.gif"></div>
+                                    </ul>
+                                 </div>
+                                 <div class="binder__create"><a class="show-binder-form toggle-binder-form" data-action="show" href="/action/showMyBinders" title="Create a New Binder"><i class="icon-plus-light"></i>
+                                       Create a New Binder
+                                       </a><div class="binder-create-form binder__create-mini-form">
+                                       <div class="input-group input-group--gray-bg"><label>Name</label><div class="input-group__field-container--right-icon"><input type="text" placeholder="My new Binder" name="binderName" data-maxchar="256" class="binder-create-form__name charCount__text form-control"><span class="input-group-addon input-group-addon--right"><span class="charLimit"></span></span></div>
+                                       </div>
+                                       <div>
+                                          <ul class="rlist--inline binder__create-btns-container">
+                                             <li><button class="toggle-binder-form btn btn--border-less btn transparent binder__create-cancel" type="reset" value="Cancel" data-action="hide">Cancel
+                                                   </button></li>
+                                             <li class="pull-right"><button class="btn btn--no-margin blue big binder__create-submit binder-create-form__create" type="submit" value="Create Binder" disabled data-append-newbinder-link="/action/createBinder"><i class="icon-plus-light" aria-hidden="true"></i>
+                                                   Create
+                                                   </button></li>
+                                          </ul>
+                                       </div>
+                                    </div>
+                                 </div>
+                              </div>
+                           </div>
+                        </li>
+                     </ul>
+                     
+                     <ul class="rlist--inline right dot-separator">
+                        <li><a data-title="View online with eReader" class="btn--icon simple-tooltip__block--b blue btn" href="/doi/epdf/10.1145/2483760.2483774"><i aria-hidden="true" class="icon-eReader"></i><span class="visibility-hidden">View online with eReader</span></a></li>
+                        <li><a data-title="PDF" class="btn--icon simple-tooltip__block--b red btn" href="/doi/pdf/10.1145/2483760.2483774"><i class="icon-pdf-file"></i><span class="visibility-hidden">PDF</span></a></li>
+                     </ul>
+                     
+                     
+                     <ul class="rlist--inline right">
+                        
+                     </ul>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</li>

@@ -1,0 +1,21 @@
+@online{Thornburg01,
+    author ={Harry Thornburg},
+    year = {2001},
+    title ={Introduction to Bayesian Statistics},
+    url ={http://ccrma.stanford.edu/~jos/bayes/bayes.html},
+    month ={mar},
+    lastaccessed ={March 2, 2005},
+    }
+
+    @misc{ acm:###,
+    author = {ACM},
+    title = {Association for Computing Machinery: Advancing Computing as a Science & Profession},
+    url = {http://www.acm.org/}
+    }
+    
+    @misc{ wiki:###,
+    author = {Wikipedia},
+    title = {{W}ikipedia{,} The Free Encyclopedia},
+    year = {2017},
+    url = {https://www.wikipedia.org/}
+    }
