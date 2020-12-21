@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "preinstall": "node installGitHooks.js",
-    "test": "nyc --recursive --reporter=html --reporter=text --reporter-dir=coverage/unit mocha --recursive test/unit",
+    "test": "nyc --recursive --reporter=html --reporter=text --reporter-dir=coverage/unit mocha --recursive test/unit --silent",
     "lint": "eslint . --ext .json --ext .js"
   },
   "author": "",

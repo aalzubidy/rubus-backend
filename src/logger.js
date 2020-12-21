@@ -31,8 +31,9 @@ const logger = createLogger({
   format: fileFormat,
   level: rubusLogFileLevel,
   transports: [
-    new transports.File({ filename: logFilePath, handleExceptions: true, handleRejections: true }),
+    new transports.File({ filename: logFilePath, handleExceptions: true, handleRejections: true })
   ],
+  silent: process.argv.indexOf('--silent') >= 0,
   exitOnError: false
 });
 
