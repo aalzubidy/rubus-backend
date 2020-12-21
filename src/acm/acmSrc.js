@@ -27,10 +27,11 @@ const getToken = async function getToken() {
     return { token: cookieString };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const errorMsg = 'Could not get an ACM token';
-    console.log(errorMsg, error);
+    logger.error({ errorMsg, error });
     throw { code: 500, message: errorMsg };
   }
 };
@@ -120,10 +121,11 @@ const parseURLArticles = async function parseURLArticles(acmQueryUrl, token = nu
     });
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const errorMsg = 'Could not get parse articles from an ACM url';
-    console.log(errorMsg, error);
+    logger.error({ errorMsg, error });
     throw { code: 500, message: errorMsg };
   }
 };
@@ -170,10 +172,11 @@ const getArticlesDetails = async function getArticlesDetails(dois, token = null,
     }
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const errorMsg = 'Could not get ACM articles details';
-    console.log(errorMsg, error);
+    logger.error({ errorMsg, error });
     throw { code: 500, message: errorMsg };
   }
 };
@@ -370,10 +373,11 @@ const searchAndSave = async function searchAndSave(searchUrl, projectId, searchQ
     return { message: 'Search and save for ACM completed' };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const errorMsg = 'Could not search and save all results from ACM';
-    console.log(errorMsg, error);
+    logger.error({ errorMsg, error });
     throw { code: 500, message: errorMsg };
   }
 };
