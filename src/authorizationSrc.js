@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const bcrypt = require('bcrypt');
+const { logger } = require('./logger');
 const db = require('../db/db');
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
@@ -33,15 +34,17 @@ const register = async function register(req) {
     const createDate = moment().format('MM/DD/YYYY');
 
     // Create a user in the database
-    await db.query('INSERT INTO users(email, password, name, organization, register_ip, create_date) VALUES($1, $2, $3, $4, $5, $6)', [email, hash, name, organization, req.clientIp, createDate]);
+    const registrationQuery = await db.query('INSERT INTO users(email, password, name, organization, register_ip, create_date) VALUES($1, $2, $3, $4, $5, $6) returning id', [email, hash, name, organization, req.clientIp, createDate]);
+    logger.debug({ label: 'registration query response', results: registrationQuery.rows });
 
-    return { message: 'User registered successfully' };
+    return { message: 'User registered successfully', id: registrationQuery.rows[0] };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not register user';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -92,10 +95,11 @@ const login = async function login(req) {
     return ({ accessToken, refreshToken });
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const errorMsg = 'Could not login';
-    console.log(errorMsg, error);
+    logger.error({ errorMsg, error });
     throw { code: 500, message: errorMsg };
   }
 };
@@ -134,10 +138,11 @@ const logout = async function logout(req) {
     }
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const errorMsg = 'Could not logout';
-    console.log(errorMsg, error);
+    logger.error({ errorMsg, error });
     throw { code: 500, message: errorMsg };
   }
 };
@@ -174,7 +179,7 @@ const renewToken = async function renewToken(req) {
         return ({ 'accessToken': newAccessToken, 'refreshToken': refreshToken });
       } else {
         const dbMsg = 'Could not query and verify user';
-        console.log(dbMsg, queryResults);
+        logger.error({ dbMsg, queryResults });
         throw { code: 401, message: dbMsg };
       }
     } else {
@@ -182,10 +187,11 @@ const renewToken = async function renewToken(req) {
     }
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const errorMsg = 'Could not generate a new token from existing refresh token';
-    console.log(errorMsg, error);
+    logger.error({ errorMsg, error });
     throw { code: 500, message: errorMsg };
   }
 };
@@ -213,10 +219,11 @@ const verifyToken = async function verifyToken(req) {
     return (results);
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const errorMsg = 'Could not verify token';
-    console.log(errorMsg, error);
+    logger.error({ errorMsg, error });
     throw { code: 500, message: errorMsg };
   }
 };

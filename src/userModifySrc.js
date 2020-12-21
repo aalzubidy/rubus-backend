@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const { logger } = require('./logger');
 const db = require('../db/db');
 
 /**
@@ -24,6 +25,8 @@ const updateUser = async function updateUser(name, email, organization, user) {
 
     // Updating user info
     const updateQuery = await db.query('update users set name=$1, email=$2, organization=$3 where id=$4', [name, email, organization, id]);
+    logger.debug({ label: 'update user query response', results: updateQuery });
+
     if (!updateQuery) {
       throw {
         code: 500,
@@ -36,14 +39,12 @@ const updateUser = async function updateUser(name, email, organization, user) {
     };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not update user';
-    console.log(userMsg, error);
-    throw {
-      code: 500,
-      message: userMsg
-    };
+    logger.error({ userMsg, error });
+    throw { code: 500, message: userMsg };
   }
 };
 
@@ -101,14 +102,12 @@ const changeUserPassword = async function changeUserPassword(oldPassword, newPas
     };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not update password';
-    console.log(userMsg, error);
-    throw {
-      code: 500,
-      message: userMsg
-    };
+    logger.error({ userMsg, error });
+    throw { code: 500, message: userMsg };
   }
 };
 

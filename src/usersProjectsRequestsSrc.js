@@ -1,5 +1,6 @@
 const moment = require('moment');
 const Ajv = require('ajv');
+const { logger } = require('./logger');
 const usersProjectsRequestSchema = require('../schemas/usersProjectsRequestSchema.json');
 const usersProjectsRequestSchemaOptional = require('../schemas/usersProjectsRequestSchemaOptional.json');
 const db = require('../db/db');
@@ -52,15 +53,16 @@ const newUserProjectRequest = async function newUserProjectRequest(userProjectRe
 
     // Create a user project request in the database
     const insertQueryResults = await db.query(queryLine, userProjectRequestValues);
+    logger.debug({ label: 'new user project query response', results: insertQueryResults.rows });
 
     return { message: 'User project request created successfully', id: insertQueryResults.rows[0]['id'] };
   } catch (error) {
     if (error.code) {
-      console.log(error);
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not create user project request';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -91,15 +93,17 @@ const deleteUserProjectRequest = async function deleteUserProjectRequest(userPro
     }
 
     // Delete user project request by id
-    await db.query('delete from users_projects_requests where id=$1', [userProjectRequestId]);
+    const deleteQuery = await db.query('delete from users_projects_requests where id=$1', [userProjectRequestId]);
+    logger.debug({ label: 'delete user project query response', results: deleteQuery });
 
     return { message: 'User project request deleted successfully by id' };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not delete user project request by id';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -151,17 +155,18 @@ const modifyUserProjectRequest = async function modifyUserProjectRequest(userPro
     // Add user project request id to the beignning of values
     userProjectRequestValues.unshift(userProjectRequestId);
 
-    // Create a user project request in the database
-    await db.query(queryLine, userProjectRequestValues);
+    // Modify a user project request in the database
+    const modifyQuery = await db.query(queryLine, userProjectRequestValues);
+    logger.debug({ label: 'modify user project query response', results: modifyQuery });
 
     return { message: 'User project request modified successfully' };
   } catch (error) {
     if (error.code) {
-      console.log(error);
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not modify user project request';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -193,6 +198,8 @@ const getUserProjectRequestById = async function getUserProjectRequestById(userP
 
     // Get user project request by id
     const item = await db.query('select * from users_projects_requests where id=$1', [userProjectRequestId]);
+    logger.debug({ label: 'get user project by id query response', results: item.rows });
+
     if (item && item.rows && item.rows[0]) {
       return item.row[0];
     } else {
@@ -200,10 +207,11 @@ const getUserProjectRequestById = async function getUserProjectRequestById(userP
     }
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not retrieve user project request by id';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -234,6 +242,8 @@ const getUserProjectRequestByProjectId = async function getUserProjectRequestByP
 
     // Get user project request by project id
     const item = await db.query('select * from users_projects_requests where project_id=$1', [projectId]);
+    logger.debug({ label: 'get user project by project id query response', results: item.rows });
+
     if (item && item.rows && item.rows[0]) {
       return { userProjectRequests: item.rows[0] };
     } else {
@@ -241,10 +251,11 @@ const getUserProjectRequestByProjectId = async function getUserProjectRequestByP
     }
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not retrieve user project request by id';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };

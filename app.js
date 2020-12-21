@@ -107,6 +107,6 @@ app.get('*', function (req, res) {
 
 // Start server on specified url and port
 app.listen(serverPort, serverUrl, function () {
-  console.log('Application started successfully...');
-  console.log(`Server can be accessed on http://${serverUrl}:${serverPort}`);
+  logger.info('Application started successfully...');
+  logger.info(`Server can be accessed on http://${serverUrl}:${serverPort}`);
 });

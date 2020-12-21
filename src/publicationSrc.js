@@ -1,5 +1,6 @@
 const moment = require('moment');
 const Ajv = require('ajv');
+const { logger } = require('./logger');
 const publicationSchema = require('../schemas/publicationSchema.json');
 const db = require('../db/db');
 
@@ -39,18 +40,20 @@ const newPublication = async function newPublication(publication, user) {
       publicationKeysCount.push(`$${i + 1}`);
       publicationValues.push(publication[k]);
     });
-    const queryLine = `insert into publications(${publicationKeys.toString()}) values(${publicationKeysCount.toString()})`;
+    const queryLine = `insert into publications(${publicationKeys.toString()}) values(${publicationKeysCount.toString()}) returning id`;
 
     // Create a publication in the database
-    await db.query(queryLine, publicationValues);
+    const newPublicationQuery = await db.query(queryLine, publicationValues);
+    logger.debug({ label: 'new publication query response', results: newPublicationQuery.rows });
 
-    return { message: 'Publication created successfully' };
+    return { message: 'Publication created successfully', id: newPublicationQuery.rows[0] };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not create publication';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -79,10 +82,11 @@ const deletePublicationByDOI = async function deletePublicationByDOI(dois, user)
     return { message: 'Publication deleted successfully by doi' };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not delete publication by doi';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -111,10 +115,11 @@ const deletePublicationById = async function deletePublicationById(publicationId
     return { message: 'Publication deleted successfully by id' };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not delete publication by id';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -165,10 +170,11 @@ const addPublicationToProjectByDoi = async function addPublicationToProjectByDoi
     return { message: 'Publication added to project successfully by doi', successItems, failedItems };
   } catch (error) {
     if (error.code) {
+      console.log(error);
       throw error;
     }
     const userMsg = 'Could not add publications to a project by doi';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -217,10 +223,11 @@ const addPublicationToProjectById = async function addPublicationToProjectById(p
     return { message: 'Publication added to project successfully by id', successItems, failedItems };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not add publications to a project by id';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -270,10 +277,11 @@ const deletePublicationFromProjectByDoi = async function deletePublicationFromPr
     return { message: 'Publication deleted to project successfully by doi', successItems, failedItems };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not delete publications from a project by doi';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -321,10 +329,11 @@ const deletePublicationFromProjectById = async function deletePublicationFromPro
     return { message: 'Publication deleted to project successfully by id', successItems, failedItems };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not delete publications from a project by id';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -364,10 +373,11 @@ const deleteAllPublicationsFromProject = async function deleteAllPublicationsFro
     }
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not delete all publications from a project';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -390,6 +400,8 @@ const getPublicationById = async function getPublicationById(publicationId, user
 
     // Get publication by id
     const publicationQuery = await db.query('select * from publications where id=$1', [publicationId]);
+    logger.debug({ label: 'get publication by id query response', results: publicationQuery.rows });
+
     if (publicationQuery && publicationQuery.rows && publicationQuery.rows[0]) {
       return publicationQuery.rows[0];
     } else {
@@ -397,10 +409,11 @@ const getPublicationById = async function getPublicationById(publicationId, user
     }
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not get publication by id';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -423,6 +436,8 @@ const getPublicationByDOI = async function getPublicationByDOI(publicationDoi, u
 
     // Get publication by doi
     const publicationQuery = await db.query('select * from publications where doi=$1', [publicationDoi]);
+    logger.debug({ label: 'get publication by doi query response', results: publicationQuery.rows });
+
     if (publicationQuery && publicationQuery.rows && publicationQuery.rows[0]) {
       return publicationQuery.rows[0];
     } else {
@@ -430,10 +445,11 @@ const getPublicationByDOI = async function getPublicationByDOI(publicationDoi, u
     }
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not get publication by doi';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -466,6 +482,8 @@ const getPublicationsByProjectId = async function getPublicationsByProjectId(pro
 
     // Get publications by project id
     const publicationQuery = await db.query('select * from publications_projects where project_id=$1', [projectId]);
+    logger.debug({ label: 'get publications by project id query response', results: publicationQuery.rows });
+
     if (publicationQuery && publicationQuery.rows) {
       return publicationQuery.rows;
     } else {
@@ -473,10 +491,11 @@ const getPublicationsByProjectId = async function getPublicationsByProjectId(pro
     }
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not get publications by project id';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };

@@ -1,3 +1,5 @@
+const { logger } = require('../logger');
+
 /**
  * @function titleCase
  * @summary Convert a string to title case format
@@ -37,10 +39,11 @@ const parseACMAuthors = function parseACMAuthors(author) {
     return authorParsed;
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const errorMsg = 'Could not parse ACM authors';
-    console.log(errorMsg, error);
+    logger.error({ errorMsg, error });
     return undefined;
   }
 };
@@ -92,10 +95,11 @@ const acmArticle = function acmArticle(item) {
     return bibtex;
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const errorMsg = 'Could not generate bibtex for ACM article';
-    console.log(errorMsg, error);
+    logger.error({ errorMsg, error });
     throw { code: 500, message: errorMsg };
   }
 };
@@ -127,10 +131,11 @@ const acmBook = function acmBook(item) {
     return bibtex;
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const errorMsg = 'Could not generate bibtex for ACM book';
-    console.log(errorMsg, error);
+    logger.error({ errorMsg, error });
     throw { code: 500, message: errorMsg };
   }
 };
@@ -160,10 +165,11 @@ const acmPhdThesis = function acmPhdThesis(item) {
     return bibtex;
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const errorMsg = 'Could not generate bibtex for ACM PhD thesis';
-    console.log(errorMsg, error);
+    logger.error({ errorMsg, error });
     throw { code: 500, message: errorMsg };
   }
 };
@@ -197,10 +203,11 @@ const acmInproceedings = function acmInproceedings(item) {
     return bibtex;
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const errorMsg = 'Could not generate bibtex for ACM inproceedings';
-    console.log(errorMsg, error);
+    logger.error({ errorMsg, error });
     throw { code: 500, message: errorMsg };
   }
 };
@@ -228,10 +235,11 @@ const acmTechnicalReport = function acmTechnicalReport(item) {
     return bibtex;
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const errorMsg = 'Could not generate bibtex for ACM technical report';
-    console.log(errorMsg, error);
+    logger.error({ errorMsg, error });
     throw { code: 500, message: errorMsg };
   }
 };
@@ -256,10 +264,11 @@ const acmMisc = function acmMisc(item) {
     return bibtex;
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const errorMsg = 'Could not generate bibtex for an ACM misc item';
-    console.log(errorMsg, error);
+    logger.error({ errorMsg, error });
     throw { code: 500, message: errorMsg };
   }
 };

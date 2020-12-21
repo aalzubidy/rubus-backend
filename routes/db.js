@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { logger } = require('../src/logger');
 const authorizationSrc = require('../src/authorizationSrc');
 const acmSrc = require('../src/acm/acmSrc');
 
@@ -24,7 +25,7 @@ const callSrcFile = async function callSrc(fileName, functionName, parameters, r
       data
     });
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     if (error && error.code) {
       res.status(error.code).json({
         error

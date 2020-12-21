@@ -1,4 +1,5 @@
 const moment = require('moment');
+const { logger } = require('./logger');
 const db = require('../db/db');
 
 /**
@@ -20,15 +21,17 @@ const storeConvertedQuery = async function storeConvertedQuery(inputQuery, outpu
     const createDate = moment().format('MM/DD/YYYY');
 
     // Insert a converted query in the database
-    await db.query('INSERT INTO convert_queries(input_query, output_query, user_id, create_date) VALUES($1, $2, $3, $4)', [inputQuery.trim(), outputQuery.trim(), user.id, createDate]);
+    const insertConvertedQuery = await db.query('INSERT INTO convert_queries(input_query, output_query, user_id, create_date) VALUES($1, $2, $3, $4) returning id', [inputQuery.trim(), outputQuery.trim(), user.id, createDate]);
+    logger.debug({ label: 'new converted query response', results: insertConvertedQuery.rows });
 
-    return { message: 'Query stored successfully' };
+    return { message: 'Query stored successfully', id: insertConvertedQuery.rows[0] };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not store query';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -47,6 +50,8 @@ const getConvertedQueries = async function getConvertedQueries(user) {
 
     // Get converted queries from the database
     const convertedQueries = await db.query('select * from convert_queries where user_id=$1', [id]);
+    logger.debug({ label: 'get converted queries response', results: convertedQueries.rows });
+
     if (!convertedQueries || !convertedQueries.rows || convertedQueries.rows.length <= 0) {
       throw { code: 404, message: 'User does not have any stored converted queries' };
     }
@@ -54,10 +59,11 @@ const getConvertedQueries = async function getConvertedQueries(user) {
     return convertedQueries.rows;
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not get converted queries';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -77,6 +83,8 @@ const getConvertedQuery = async function getConvertedQuery(queryId, user) {
 
     // Get converted query from the database
     const convertedQuery = await db.query('select * from convert_queries where user_id=$1 and id=$2', [id, queryId]);
+    logger.debug({ label: 'get converted query response', results: convertedQuery.rows });
+
     if (!convertedQuery || !convertedQuery.rows || convertedQuery.rows.length <= 0) {
       throw { code: 404, message: 'Could not find user converted query' };
     }
@@ -84,10 +92,11 @@ const getConvertedQuery = async function getConvertedQuery(queryId, user) {
     return convertedQuery.rows;
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not get converted query';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -107,17 +116,20 @@ const deleteConvertedQuery = async function deleteConvertedQuery(queryId, user) 
 
     // Delete converted query from the database
     const convertedQuery = await db.query('delete from convert_queries where user_id=$1 and id=$2', [id, queryId]);
+    logger.debug({ label: 'delete converted query response', results: convertedQuery });
+
     if (!convertedQuery) {
       throw { code: 404, message: 'Could not delete user converted query' };
     }
 
-    return {'message': 'Deleted succesfully'};
+    return { 'message': 'Deleted succesfully' };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not delete converted query';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };

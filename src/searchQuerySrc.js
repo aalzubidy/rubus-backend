@@ -1,4 +1,5 @@
 const moment = require('moment');
+const { logger } = require('./logger');
 const db = require('../db/db');
 
 /**
@@ -22,15 +23,17 @@ const storeSearchQuery = async function storeSearchQuery(inputQuery, dbName, tot
     const createDate = moment().format('MM/DD/YYYY');
 
     // Insert a search query in the database
-    await db.query('INSERT into search_queries(input_query, db, total_results, project_id, user_id, create_date) VALUES($1, $2, $3, $4, $5, $6)', [inputQuery.trim(), db.trim(), totalResults, projectId, user.id, createDate]);
+    const insertSearchQuery = await db.query('INSERT into search_queries(input_query, db, total_results, project_id, user_id, create_date) VALUES($1, $2, $3, $4, $5, $6) returning id', [inputQuery.trim(), db.trim(), totalResults, projectId, user.id, createDate]);
+    logger.debug({ label: 'insert search query response', results: insertSearchQuery.rows });
 
-    return { message: 'Search query stored successfully' };
+    return { message: 'Search query stored successfully', id: insertSearchQuery.rows[0] };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not store search query';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -49,6 +52,8 @@ const getSearchQueries = async function getSearchQueries(user) {
 
     // Get search queries from the database
     const searchQueries = await db.query('select * from search_queries where user_id=$1', [id]);
+    logger.debug({ label: 'get search queries response', results: searchQueries.rows });
+
     if (!searchQueries || !searchQueries.rows || searchQueries.rows.length <= 0) {
       throw { code: 404, message: 'User does not have any stored search queries' };
     }
@@ -56,10 +61,11 @@ const getSearchQueries = async function getSearchQueries(user) {
     return searchQueries.rows;
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not get search queries';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -79,6 +85,8 @@ const getProjectSearchQueries = async function getProjectSearchQueries(projectId
 
     // Get project search queryies from the database
     const searchQueries = await db.query('select * from search_queries where project_id=$1', [projectId]);
+    logger.debug({ label: 'get project search query response', results: searchQueries.rows });
+
     if (!searchQueries || !searchQueries.rows || searchQueries.rows.length <= 0) {
       throw { code: 404, message: 'Project does not have any stored search queries' };
     }
@@ -86,10 +94,11 @@ const getProjectSearchQueries = async function getProjectSearchQueries(projectId
     return searchQueries.rows;
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not get project search queries';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -110,6 +119,8 @@ const getSearchQuery = async function getSearchQuery(queryId, projectId, user) {
 
     // Get search query from the database
     const searchQuery = await db.query('select * from search_queries where id=$1 and project_id=$2', [queryId, projectId]);
+    logger.debug({ label: 'get search query response', results: searchQuery.rows });
+
     if (!searchQuery || !searchQuery.rows || searchQuery.rows.length <= 0) {
       throw { code: 404, message: 'Could not find user search query' };
     }
@@ -117,10 +128,11 @@ const getSearchQuery = async function getSearchQuery(queryId, projectId, user) {
     return searchQuery.rows;
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not get search query';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -141,17 +153,20 @@ const deleteSearchQuery = async function deleteSearchQuery(queryId, projectId, u
 
     // Delete search query from the database
     const searchQuery = await db.query('delete from search_queries where id=$1 and project_id=$2', [queryId, projectId]);
+    logger.debug({ label: 'delete search query response', results: searchQuery });
+
     if (!searchQuery) {
       throw { code: 404, message: 'Could not delete search query' };
     }
 
-    return {'message': 'Deleted search query succesfully'};
+    return { 'message': 'Deleted search query succesfully' };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not delete search query';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
