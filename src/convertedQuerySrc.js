@@ -29,7 +29,7 @@ const storeConvertedQuery = async function storeConvertedQuery(inputQuery, outpu
       throw error;
     }
     const userMsg = 'Could not store query';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -48,6 +48,7 @@ const getConvertedQueries = async function getConvertedQueries(user) {
 
     // Get converted queries from the database
     const convertedQueries = await db.query('select * from convert_queries where user_id=$1', [id]);
+    logger.debug({ label: 'get converted queries query response', results: convertedQueries.rows });
     if (!convertedQueries || !convertedQueries.rows || convertedQueries.rows.length <= 0) {
       throw { code: 404, message: 'User does not have any stored converted queries' };
     }
@@ -58,7 +59,7 @@ const getConvertedQueries = async function getConvertedQueries(user) {
       throw error;
     }
     const userMsg = 'Could not get converted queries';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -78,6 +79,7 @@ const getConvertedQuery = async function getConvertedQuery(queryId, user) {
 
     // Get converted query from the database
     const convertedQuery = await db.query('select * from convert_queries where user_id=$1 and id=$2', [id, queryId]);
+    logger.debug({ label: 'get converted query query response', results: convertedQuery.rows });
     if (!convertedQuery || !convertedQuery.rows || convertedQuery.rows.length <= 0) {
       throw { code: 404, message: 'Could not find user converted query' };
     }
@@ -88,7 +90,7 @@ const getConvertedQuery = async function getConvertedQuery(queryId, user) {
       throw error;
     }
     const userMsg = 'Could not get converted query';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
@@ -108,17 +110,18 @@ const deleteConvertedQuery = async function deleteConvertedQuery(queryId, user) 
 
     // Delete converted query from the database
     const convertedQuery = await db.query('delete from convert_queries where user_id=$1 and id=$2', [id, queryId]);
+    logger.debug({ label: 'delete converted query query response', results: convertedQuery });
     if (!convertedQuery) {
       throw { code: 404, message: 'Could not delete user converted query' };
     }
 
-    return {'message': 'Deleted succesfully'};
+    return { 'message': 'Deleted succesfully' };
   } catch (error) {
     if (error.code) {
       throw error;
     }
     const userMsg = 'Could not delete converted query';
-    console.log(userMsg, error);
+    logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
 };
