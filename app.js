@@ -9,6 +9,7 @@ const multer = require('multer');
 const path = require('path');
 const cors = require('cors');
 const requestIp = require('request-ip');
+const { logger } = require('./src/logger');
 
 // Require routes
 const authorizationRoutes = require('./routes/authorization');
