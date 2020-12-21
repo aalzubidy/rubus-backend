@@ -40,6 +40,7 @@ const register = async function register(req) {
     return { message: 'User registered successfully', id: registrationQuery.rows[0] };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not register user';
@@ -94,6 +95,7 @@ const login = async function login(req) {
     return ({ accessToken, refreshToken });
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const errorMsg = 'Could not login';
@@ -136,6 +138,7 @@ const logout = async function logout(req) {
     }
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const errorMsg = 'Could not logout';
@@ -184,6 +187,7 @@ const renewToken = async function renewToken(req) {
     }
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const errorMsg = 'Could not generate a new token from existing refresh token';
@@ -215,6 +219,7 @@ const verifyToken = async function verifyToken(req) {
     return (results);
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const errorMsg = 'Could not verify token';

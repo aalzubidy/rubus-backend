@@ -27,6 +27,7 @@ const newProject = async function newProject(title, description, user) {
     return { message: 'Project created successfully', id: projectQuery.rows[0] };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not create project';
@@ -69,6 +70,7 @@ const getProjects = async function getProjects(user) {
     return allProjects;
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not get projects';
@@ -124,6 +126,7 @@ const getProject = async function getProject(projectId, user) {
     return projectInfo;
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not get project';
@@ -156,6 +159,7 @@ const getProjectAdminId = async function getProjectAdminId(projectId, user) {
     return { adminId: projectQuery };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not get project admin id';
@@ -198,6 +202,7 @@ const deleteProject = async function deleteProject(projectId, user) {
     return { 'message': 'Deleted project successfully' };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not delete project project';
@@ -242,6 +247,7 @@ const updateProject = async function updateProject(projectId, title, description
     return { 'message': 'Updated project successfully' };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not updated project project';
@@ -291,6 +297,7 @@ const addProjectUsers = async function addProjectUsers(projectId, projectUsers, 
     return { 'message': 'Added all users successfully', insertedUsers };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not add one or more users';
@@ -338,6 +345,7 @@ const removeProjectUsers = async function removeProjectUsers(projectId, projectU
     return { 'message': 'Delete all requested users successfully', deletedUsers };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not delete one or more users';

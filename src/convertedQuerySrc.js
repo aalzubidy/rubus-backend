@@ -27,6 +27,7 @@ const storeConvertedQuery = async function storeConvertedQuery(inputQuery, outpu
     return { message: 'Query stored successfully', id: insertConvertedQuery.rows[0] };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not store query';
@@ -58,6 +59,7 @@ const getConvertedQueries = async function getConvertedQueries(user) {
     return convertedQueries.rows;
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not get converted queries';
@@ -90,6 +92,7 @@ const getConvertedQuery = async function getConvertedQuery(queryId, user) {
     return convertedQuery.rows;
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not get converted query';
@@ -122,6 +125,7 @@ const deleteConvertedQuery = async function deleteConvertedQuery(queryId, user) 
     return { 'message': 'Deleted succesfully' };
   } catch (error) {
     if (error.code) {
+      logger.error(error);
       throw error;
     }
     const userMsg = 'Could not delete converted query';

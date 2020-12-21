@@ -13,6 +13,8 @@ const db = require('../db/db');
 const checkUserProjectPermission = async function checkUserProjectPermission(userId, projectId) {
   try {
     const userProjectPermissionQuery = await db.query('select project_id from projects_users where user_id=$1', [userId]);
+    logger.debug({ label: 'user project permission query response', results: userProjectPermissionQuery.rows });
+
     if (!userProjectPermissionQuery || !userProjectPermissionQuery.rows || !userProjectPermissionQuery.rows[0] || !userProjectPermissionQuery.rows[0].project_id || !userProjectPermissionQuery['rows'][0]['project_id'].includes(projectId)) {
       throw { code: 403, message: 'User does not have requests permissions on selected project.' };
     } else {
