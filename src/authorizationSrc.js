@@ -37,7 +37,7 @@ const register = async function register(req) {
     const registrationQuery = await db.query('INSERT INTO users(email, password, name, organization, register_ip, create_date) VALUES($1, $2, $3, $4, $5, $6) returning id', [email, hash, name, organization, req.clientIp, createDate]);
     logger.debug({ label: 'registration query response', results: registrationQuery.rows });
 
-    return { message: 'User registered successfully', id: registrationQuery.rows[0] };
+    return { message: 'User registered successfully', id: registrationQuery.rows[0].id };
   } catch (error) {
     if (error.code) {
       logger.error(error);
@@ -57,13 +57,13 @@ const register = async function register(req) {
  */
 const login = async function login(req) {
   try {
-    // Check if there is no email or password
-    if (!req.body.email || !req.body.password) {
-      throw { code: 400, message: 'Please provide email and password' };
-    }
-
     // Extract email and password
     const { email, password } = req.body;
+
+    // Check if there is no email or password
+    if (!email || !password) {
+      throw { code: 400, message: 'Please provide email and password' };
+    }
 
     // Query the database to get user information using the email
     let queryResults = await db.query('select id, name, email, password from users where email=$1', [email]);
