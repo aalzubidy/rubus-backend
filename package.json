@@ -1,11 +1,11 @@
 {
   "name": "rubus",
-  "version": "0.32.1",
+  "version": "0.32.2",
   "description": "Rubus SLR Tool - Nodejs backend code",
   "main": "app.js",
   "scripts": {
     "preinstall": "node installGitHooks.js",
-    "test": "nyc --recursive --reporter=html --reporter=text --reporter-dir=coverage/unit mocha --recursive test/unit --silent",
+    "test": "ACCESS_TOKEN_SECRET=test REFRESH_TOKEN_SECRET=test nyc --recursive --reporter=html --reporter=text --reporter-dir=coverage/unit mocha --recursive test/unit --silent",
     "lint": "eslint . --ext .json --ext .js"
   },
   "author": "",
@@ -43,6 +43,7 @@
     "jsdoc-to-markdown": "^6.0.1",
     "mocha": "^8.2.0",
     "nyc": "^15.1.0",
+    "sinon": "^9.2.2",
     "testdouble": "^3.16.1"
   }
 }
