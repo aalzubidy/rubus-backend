@@ -6,6 +6,7 @@ const td = require('testdouble');
 const anything = td.matchers.anything();
 const jwt = require('jsonwebtoken');
 const sinon = require('sinon');
+const bcrypt = require('bcrypt');
 
 // Import files
 const authorizationSrc = require('../../../src/authorizationSrc');
