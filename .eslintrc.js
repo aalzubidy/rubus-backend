@@ -41,6 +41,7 @@ module.exports = {
     'object-shorthand': 'off',
     'no-console': 'off',
     'no-loop-func': 'off',
-    'no-await-in-loop': 'off'
+    'no-await-in-loop': 'off',
+    'no-restricted-syntax': 'warn'
   }
 };
