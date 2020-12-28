@@ -27,9 +27,9 @@ const newProject = async function newProject(title, description, user) {
 
     // Create a new user for the project
     const projectUserCreateDate = moment().format();
-    const projectUserQuery = await db.query('insert into projects_users(user_id, project_id, added_by, create_date) values($1, $2, $3, $4) returning user_id', [user.id, projectQuery.rows[0].id, user.id, projectUserCreateDate])
+    const projectUserQuery = await db.query('insert into projects_users(user_id, project_id, added_by, create_date) values($1, $2, $3, $4) returning user_id', [user.id, projectQuery.rows[0].id, user.id, projectUserCreateDate]);
     logger.debug({ label: 'create new user project query response', results: projectUserQuery.rows });
-    
+
     return { message: 'Project created successfully', id: projectQuery.rows[0].id };
   } catch (error) {
     if (error.code) {
