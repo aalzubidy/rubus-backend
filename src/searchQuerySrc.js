@@ -1,6 +1,7 @@
 const moment = require('moment');
 const { logger } = require('./logger');
 const db = require('../db/db');
+const tools = require('./tools');
 
 /**
  * Store a new search query
@@ -19,16 +20,19 @@ const storeSearchQuery = async function storeSearchQuery(inputQuery, dbName, tot
       throw { code: 400, message: 'Please provide a query, databsae name, and a project id' };
     }
 
+    // Check if the user is in the project
+    await tools.checkUserInProject(user.id, projectId);
+
     // Get date
-    const createDate = moment().format('MM/DD/YYYY');
+    const createDate = moment().format();
 
     // Insert a search query in the database
-    const insertSearchQuery = await db.query('INSERT into search_queries(input_query, db, total_results, project_id, user_id, create_date) VALUES($1, $2, $3, $4, $5, $6) returning id', [inputQuery.trim(), db.trim(), totalResults, projectId, user.id, createDate]);
+    const insertSearchQuery = await db.query('INSERT into search_queries(input_query, db, total_results, project_id, user_id, create_date) VALUES($1, $2, $3, $4, $5, $6) returning id', [inputQuery.trim(), dbName.trim(), totalResults, projectId, user.id, createDate]);
     logger.debug({ label: 'insert search query response', results: insertSearchQuery.rows });
 
-    return { message: 'Search query stored successfully', id: insertSearchQuery.rows[0] };
+    return { message: 'Search query stored successfully', id: insertSearchQuery.rows[0].id };
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -60,7 +64,7 @@ const getSearchQueries = async function getSearchQueries(user) {
 
     return searchQueries.rows;
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -83,6 +87,9 @@ const getProjectSearchQueries = async function getProjectSearchQueries(projectId
       id
     } = user;
 
+    // Check if the user is in the project
+    await tools.checkUserInProject(id, projectId);
+
     // Get project search queryies from the database
     const searchQueries = await db.query('select * from search_queries where project_id=$1', [projectId]);
     logger.debug({ label: 'get project search query response', results: searchQueries.rows });
@@ -93,7 +100,7 @@ const getProjectSearchQueries = async function getProjectSearchQueries(projectId
 
     return searchQueries.rows;
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -127,7 +134,7 @@ const getSearchQuery = async function getSearchQuery(queryId, projectId, user) {
 
     return searchQuery.rows;
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -161,7 +168,7 @@ const deleteSearchQuery = async function deleteSearchQuery(queryId, projectId, u
 
     return { 'message': 'Deleted search query succesfully' };
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
