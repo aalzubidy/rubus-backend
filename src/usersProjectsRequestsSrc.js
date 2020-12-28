@@ -4,6 +4,7 @@ const { logger } = require('./logger');
 const usersProjectsRequestSchema = require('../schemas/usersProjectsRequestSchema.json');
 const usersProjectsRequestSchemaOptional = require('../schemas/usersProjectsRequestSchemaOptional.json');
 const db = require('../db/db');
+const tools = require('./tools');
 
 /**
  * @async
@@ -20,8 +21,16 @@ const newUserProjectRequest = async function newUserProjectRequest(userProjectRe
 
     // Check if there is no user project request
     if (!userProjectRequest) {
-      throw { code: 400, message: 'Please provide a user project request' };
+      throw { code: 400, message: 'Please provide a userProjectRequest' };
     }
+
+    userProjectRequest['user_id'] = id;
+
+    userProjectRequest['status'] = userProjectRequest['status'] || 'requested';
+
+    // Get date
+    const createDate = moment().format();
+    userProjectRequest['create_date'] = createDate;
 
     // Check user project request object schema
     const ajv = new Ajv();
@@ -31,15 +40,8 @@ const newUserProjectRequest = async function newUserProjectRequest(userProjectRe
       throw { code: 400, message: 'Please provide correct user project request format, schema failed to validate.' };
     }
 
-    // Check if the user is allowed to make requests on the project
-    const userProjectPermissionQuery = await db.query('select project_id from projects_users where user_id=$1', [id]);
-    if (!userProjectPermissionQuery || !userProjectPermissionQuery.rows || !userProjectPermissionQuery.rows[0] || !userProjectPermissionQuery.rows[0].project_id || !userProjectPermissionQuery['rows'][0]['project_id'].includes(userProjectRequest['project_id'])) {
-      throw { code: 403, message: 'User does not have requests permissions on selected project.' };
-    }
-
-    // Get date
-    const createDate = moment().format();
-    userProjectRequest['create_date'] = createDate;
+    // Check if the user is in the project
+    await tools.checkUserInProject(id, userProjectRequest['project_id']);
 
     // Build dynamic insert query
     const userProjectRequestKeys = Object.keys(userProjectRequest);
@@ -57,7 +59,7 @@ const newUserProjectRequest = async function newUserProjectRequest(userProjectRe
 
     return { message: 'User project request created successfully', id: insertQueryResults.rows[0]['id'] };
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -86,19 +88,16 @@ const deleteUserProjectRequest = async function deleteUserProjectRequest(userPro
       throw { code: 400, message: 'Please provide user project request id, and a project id to delete' };
     }
 
-    // Check if the user is allowed to make requests on the project
-    const userProjectPermissionQuery = await db.query('select project_id from projects_users where user_id=$1', [id]);
-    if (!userProjectPermissionQuery || !userProjectPermissionQuery.rows || !userProjectPermissionQuery.rows[0] || !userProjectPermissionQuery.rows[0].project_id || !userProjectPermissionQuery['rows'][0]['project_id'].includes(projectId)) {
-      throw { code: 403, message: 'User does not have requests permissions on selected project.' };
-    }
+    // Check if the user is in the project
+    await tools.checkUserInProject(id, projectId);
 
     // Delete user project request by id
-    const deleteQuery = await db.query('delete from users_projects_requests where id=$1', [userProjectRequestId]);
+    const deleteQuery = await db.query('delete from users_projects_requests where id=$1 and project_id=$2', [userProjectRequestId, projectId]);
     logger.debug({ label: 'delete user project query response', results: deleteQuery });
 
     return { message: 'User project request deleted successfully by id' };
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -136,11 +135,8 @@ const modifyUserProjectRequest = async function modifyUserProjectRequest(userPro
       throw { code: 400, message: 'Please provide correct user project request format to modify, schema failed to validate.' };
     }
 
-    // Check if the user is allowed to make requests on the project
-    const userProjectPermissionQuery = await db.query('select project_id from projects_users where user_id=$1', [id]);
-    if (!userProjectPermissionQuery || !userProjectPermissionQuery.rows || !userProjectPermissionQuery.rows[0] || !userProjectPermissionQuery.rows[0].project_id || !userProjectPermissionQuery['rows'][0]['project_id'].includes(projectId)) {
-      throw { code: 403, message: 'User does not have requests permissions on selected project.' };
-    }
+    // Check if the user is in the project
+    await tools.checkUserInProject(id, projectId);
 
     // Build dynamic insert query
     const userProjectRequestKeys = Object.keys(userProjectRequest);
@@ -150,7 +146,7 @@ const modifyUserProjectRequest = async function modifyUserProjectRequest(userPro
       userProjectRequestKeysCount.push(`${k}=$${i + 2}`);
       userProjectRequestValues.push(userProjectRequest[k]);
     });
-    const queryLine = `update users_projects_requests set ${userProjectRequestKeysCount.toString().replace(/\,/gm, ' ')} where id=$1`;
+    const queryLine = `update users_projects_requests set ${userProjectRequestKeysCount.toString()} where id=$1`;
 
     // Add user project request id to the beignning of values
     userProjectRequestValues.unshift(userProjectRequestId);
@@ -161,7 +157,7 @@ const modifyUserProjectRequest = async function modifyUserProjectRequest(userPro
 
     return { message: 'User project request modified successfully' };
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -190,23 +186,20 @@ const getUserProjectRequestById = async function getUserProjectRequestById(userP
       throw { code: 400, message: 'Please provide user project request id and a project id to retrieve' };
     }
 
-    // Check if the user is allowed to make requests on the project
-    const userProjectPermissionQuery = await db.query('select project_id from projects_users where user_id=$1', [id]);
-    if (!userProjectPermissionQuery || !userProjectPermissionQuery.rows || !userProjectPermissionQuery.rows[0] || !userProjectPermissionQuery.rows[0].project_id || !userProjectPermissionQuery['rows'][0]['project_id'].includes(projectId)) {
-      throw { code: 403, message: 'User does not have requests permissions on selected project.' };
-    }
+    // Check if the user is in the project
+    await tools.checkUserInProject(id, projectId);
 
     // Get user project request by id
     const item = await db.query('select * from users_projects_requests where id=$1', [userProjectRequestId]);
     logger.debug({ label: 'get user project by id query response', results: item.rows });
 
     if (item && item.rows && item.rows[0]) {
-      return item.row[0];
+      return item.rows[0];
     } else {
       throw { code: 404, message: 'User project request not found using id' };
     }
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -234,23 +227,20 @@ const getUserProjectRequestByProjectId = async function getUserProjectRequestByP
       throw { code: 400, message: 'Please provide a project id to retrieve' };
     }
 
-    // Check if the user is allowed to make requests on the project
-    const userProjectPermissionQuery = await db.query('select project_id from projects_users where user_id=$1', [id]);
-    if (!userProjectPermissionQuery || !userProjectPermissionQuery.rows || !userProjectPermissionQuery.rows[0] || !userProjectPermissionQuery.rows[0].project_id || !userProjectPermissionQuery['rows'][0]['project_id'].includes(projectId)) {
-      throw { code: 403, message: 'User does not have requests permissions on selected project.' };
-    }
+    // Check if the user is in the project
+    await tools.checkUserInProject(id, projectId);
 
     // Get user project request by project id
     const item = await db.query('select * from users_projects_requests where project_id=$1', [projectId]);
     logger.debug({ label: 'get user project by project id query response', results: item.rows });
 
     if (item && item.rows && item.rows[0]) {
-      return { userProjectRequests: item.rows[0] };
+      return item.rows;
     } else {
       throw { code: 404, message: 'User project request not found using project id' };
     }
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
