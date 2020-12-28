@@ -37,14 +37,27 @@ const checkUserProjectPermission = async function checkUserProjectPermission(use
 const checkUserInProject = async function checkUserInProject(userId, projectId) {
   try {
     const userProjectQuery = await db.query('select project_id from projects_users where user_id=$1 and project_id=$2', [userId, projectId]);
-    logger.debug({ label: 'user in project query response', results: userProjectQuery.rows });
+    const projectAdminQuery = await db.query('select user_id from projects where user_id=$1', [userId]);
+    logger.debug({ label: 'user in project query response', userProjectResults: userProjectQuery.rows, projectAdminResults: projectAdminQuery.rows });
+
+    let userProjectCheck = true;
+    let projectAdminCheck = true;
 
     if (!userProjectQuery || !userProjectQuery.rows || !userProjectQuery.rows[0]) {
-      throw { code: 403, message: 'User is not the selected project' };
-    } else {
+      userProjectCheck = false;
+    }
+
+    if (!projectAdminQuery || !projectAdminQuery.rows || !projectAdminQuery.rows[0]) {
+      projectAdminCheck = false;
+    }
+
+    if (userProjectCheck || projectAdminCheck) {
       return { allowed: true };
+    } else {
+      throw { code: 403, message: 'User is not in the project' };
     }
   } catch (error) {
+    console.log(error);
     throw { code: 403, message: 'User is not in the project' };
   }
 };
@@ -65,8 +78,26 @@ const titleCase = function titleCase(inputString) {
   }
 };
 
+/**
+ * @function isHttpErrorCode
+ * @summary Convert a string to title case format
+ * @params {string} inputString Input string
+ * @returns {boolean} httpErroCodeResults
+ */
+const isHttpErrorCode = function isHttpErrorCode(errorCode) {
+  try {
+    const errorCodes = [400, 401, 402, 403, 404, 500];
+    return errorCodes.some((item) => {
+      return item === errorCode;
+    });
+  } catch (error) {
+    return false;
+  }
+};
+
 module.exports = {
   checkUserProjectPermission,
   checkUserInProject,
-  titleCase
+  titleCase,
+  isHttpErrorCode
 };

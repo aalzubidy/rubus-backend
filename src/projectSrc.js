@@ -32,7 +32,7 @@ const newProject = async function newProject(title, description, user) {
 
     return { message: 'Project created successfully', id: projectQuery.rows[0].id };
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -75,7 +75,7 @@ const getProjects = async function getProjects(user) {
     });
     return allProjects;
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -134,7 +134,7 @@ const getProject = async function getProject(projectId, user) {
 
     return projectInfo;
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -172,7 +172,7 @@ const getProjectAdminId = async function getProjectAdminId(projectId, user) {
 
     return { adminId: projectQuery };
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -199,13 +199,22 @@ const deleteProject = async function deleteProject(projectId, user) {
       throw { code: 400, message: 'Please provide project id' };
     }
 
-    const projectAdminId = await getProjectAdminId(projectId);
+    const projectAdminId = await getProjectAdminId(projectId, user);
 
     if (projectAdminId.adminId != id) {
       throw { code: 403, message: 'Only admin is authorized to delete and modiy project' };
     }
 
-    // Delete project
+    // Delete project and all accociated items (publications projects, search queries, users in projects)
+    const deletePublicationsProject = await db.query('delete from publications_projects where project_id=$1', [projectId]);
+    logger.debug({ label: 'delete project (publications projects) query response', results: deletePublicationsProject });
+
+    const deleteSearchQueries = await db.query('delete from search_queries where project_id=$1', [projectId]);
+    logger.debug({ label: 'delete project (search queries) query response', results: deleteSearchQueries });
+
+    const deleteProjectUsers = await db.query('delete from projects_users where project_id=$1', [projectId]);
+    logger.debug({ label: 'delete project (projects users) query response', results: deleteProjectUsers });
+
     const deleteQuery = await db.query('delete from projects where id=$1 AND user_id=$2', [projectId, id]);
     logger.debug({ label: 'delete project query response', results: deleteQuery });
 
@@ -215,11 +224,11 @@ const deleteProject = async function deleteProject(projectId, user) {
 
     return { 'message': 'Deleted project successfully' };
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
-    const userMsg = 'Could not delete project project';
+    const userMsg = 'Could not delete project';
     logger.error({ userMsg, error });
     throw { code: 500, message: userMsg };
   }
@@ -244,9 +253,9 @@ const updateProject = async function updateProject(projectId, title, description
       throw { code: 400, message: 'Please provide project id and title' };
     }
 
-    const projectAdminId = await getProjectAdminId(projectId);
+    const projectAdminId = await getProjectAdminId(projectId, user);
 
-    if (projectAdminId != id) {
+    if (projectAdminId.adminId != id) {
       throw { code: 403, message: 'Only admin is authorized to delete and modiy project' };
     }
 
@@ -260,7 +269,7 @@ const updateProject = async function updateProject(projectId, title, description
 
     return { 'message': 'Updated project successfully' };
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -279,7 +288,7 @@ const updateProject = async function updateProject(projectId, title, description
  * @throws {object} errorCodeAndMsg
  */
 const addProjectUsers = async function addProjectUsers(projectId, projectUsers, user) {
-  const insertedUsers = [];
+  let insertedUsers = [];
   try {
     const {
       id
@@ -289,9 +298,9 @@ const addProjectUsers = async function addProjectUsers(projectId, projectUsers, 
       throw { code: 400, message: 'Please provide project id and users to add' };
     }
 
-    const projectAdminId = await getProjectAdminId(projectId);
+    const projectAdminId = await getProjectAdminId(projectId, user);
 
-    if (projectAdminId != id) {
+    if (projectAdminId.adminId != id) {
       throw { code: 403, message: 'Only admin is authorized to add users' };
     }
 
@@ -299,18 +308,19 @@ const addProjectUsers = async function addProjectUsers(projectId, projectUsers, 
     const createDate = moment().format('MM/DD/YYYY');
 
     // Add users to project
-    projectUsers.forEach(async (pUserEmail) => {
-      const insertQuery = await db.query('insert into projects_users values((select id from users where email=$1),$2,$3,$4)', [pUserEmail, projectId, id, createDate]);
+    await Promise.all(projectUsers.map(async (pUserEmail) => {
+      const insertQuery = await db.query('insert into projects_users values((select id from users where email=$1),$2,$3,$4) ON CONFLICT DO NOTHING', [pUserEmail, projectId, id, createDate]);
       logger.debug({ label: 'add user to project query response', results: insertQuery });
-
       if (insertQuery) {
-        insertedUsers.push(pUserEmail);
+        return pUserEmail;
       }
+    })).then((values) => {
+      insertedUsers = values;
     });
 
     return { 'message': 'Added all users successfully', insertedUsers };
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -329,7 +339,7 @@ const addProjectUsers = async function addProjectUsers(projectId, projectUsers, 
  * @throws {object} errorCodeAndMsg
  */
 const removeProjectUsers = async function removeProjectUsers(projectId, projectUsers, user) {
-  const deletedUsers = [];
+  let deletedUsers = [];
   try {
     const {
       id,
@@ -340,25 +350,27 @@ const removeProjectUsers = async function removeProjectUsers(projectId, projectU
       throw { code: 400, message: 'Please provide project id and users to add' };
     }
 
-    const projectAdminId = await getProjectAdminId(projectId);
+    const projectAdminId = await getProjectAdminId(projectId, user);
 
-    if (projectAdminId != id || !(email === projectUsers[0] && projectUsers.length === 1)) {
+    if (projectAdminId.adminId != id || !(email === projectUsers[0] && projectUsers.length === 1)) {
       throw { code: 403, message: 'Only admin and self user are authorized to remove user(s)' };
     }
 
     // Remove user(s) from project
-    projectUsers.forEach(async (pUserEmail) => {
-      const deleteQuery = await db.query('delete from projects_users where user_id=(select id from users where email=$1), project_id=$2', [pUserEmail, projectId]);
+    await Promise.all(projectUsers.map(async (pUserEmail) => {
+      const deleteQuery = await db.query('delete from projects_users where user_id=(select id from users where email=$1) AND project_id=$2', [pUserEmail, projectId]);
       logger.debug({ label: 'remove users from project query response', results: deleteQuery });
 
       if (deleteQuery) {
-        deletedUsers.push(pUserEmail);
+        return pUserEmail;
       }
+    })).then((values) => {
+      deletedUsers = values;
     });
 
     return { 'message': 'Delete all requested users successfully', deletedUsers };
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
