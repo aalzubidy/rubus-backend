@@ -26,6 +26,30 @@ const checkUserProjectPermission = async function checkUserProjectPermission(use
 };
 
 /**
+ * @async
+ * @function checkUserInProject
+ * @summary Check if a user in a project
+ * @param {number} userId User Id
+ * @param {number} projectId Project Id
+ * @returns {object} results
+ * @throws {object} errorDetails
+ */
+const checkUserInProject = async function checkUserInProject(userId, projectId) {
+  try {
+    const userProjectQuery = await db.query('select project_id from projects_users where user_id=$1 and project_id=$2', [userId, projectId]);
+    logger.debug({ label: 'user in project query response', results: userProjectQuery.rows });
+
+    if (!userProjectQuery || !userProjectQuery.rows || !userProjectQuery.rows[0]) {
+      throw { code: 403, message: 'User is not the selected project' };
+    } else {
+      return { allowed: true };
+    }
+  } catch (error) {
+    throw { code: 403, message: 'User is not in the project' };
+  }
+};
+
+/**
  * @function titleCase
  * @summary Convert a string to title case format
  * @params {string} inputString Input string
@@ -43,5 +67,6 @@ const titleCase = function titleCase(inputString) {
 
 module.exports = {
   checkUserProjectPermission,
+  checkUserInProject,
   titleCase
 };
