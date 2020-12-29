@@ -69,7 +69,7 @@ router.post('/db/searchAndSave', async (req, res) => {
     projectId,
     searchQueryId
   } = req.body;
-  callSrcFile(dbName, 'searchAndSave', [searchUrl, null], req, res);
+  callSrcFile(dbName, 'searchAndSave', [searchUrl, projectId, searchQueryId], req, res);
 });
 
 module.exports = router;

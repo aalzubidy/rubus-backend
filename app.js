@@ -19,6 +19,7 @@ const convertedQueryRoutes = require('./routes/convertedQuery');
 const searchQueryRoutes = require('./routes/searchQuery');
 const publicationRoutes = require('./routes/publication');
 const userProjectRequestRoutes = require('./routes/userProjectRequest');
+const dbRoutes = require('./routes/db');
 
 // Application Setup
 const app = express();
@@ -85,6 +86,9 @@ app.use(publicationRoutes);
 
 // User project requests routes
 app.use(userProjectRequestRoutes);
+
+// DB routes
+app.use(dbRoutes);
 
 // Upload a new file
 app.post('/uploadFile', function (req, res) {

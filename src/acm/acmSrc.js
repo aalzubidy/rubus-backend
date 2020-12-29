@@ -26,7 +26,7 @@ const getToken = async function getToken() {
     cookieString = cookieString['headers']['set-cookie'][0];
     return { token: cookieString };
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -62,7 +62,8 @@ const parseURLArticles = async function parseURLArticles(acmQueryUrl, token = nu
 
     const articles = [];
     const dois = [];
-    $('.issue-item-container').each((item) => {
+
+    $('.issue-item-container').each((i, item) => {
       // Convert item to parsable html
       const htmlItem = cheerio.load(item);
 
@@ -120,11 +121,12 @@ const parseURLArticles = async function parseURLArticles(acmQueryUrl, token = nu
       dois
     });
   } catch (error) {
-    if (error.code) {
+    console.log(error);
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
-    const errorMsg = 'Could not get parse articles from an ACM url';
+    const errorMsg = 'Could not get and parse articles from an ACM url';
     logger.error({ errorMsg, error });
     throw { code: 500, message: errorMsg };
   }
@@ -171,7 +173,7 @@ const getArticlesDetails = async function getArticlesDetails(dois, token = null,
       throw { code: 500, message: 'Could not get articles details from ACM', results };
     }
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -372,7 +374,7 @@ const searchAndSave = async function searchAndSave(searchUrl, projectId, searchQ
 
     return { message: 'Search and save for ACM completed' };
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
