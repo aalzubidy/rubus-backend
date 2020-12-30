@@ -47,6 +47,11 @@
       "minimum": 0,
       "example": 10
     },
+    "skipped": {
+      "type": "number",
+      "minimum": 0,
+      "example": 10
+    },
     "system_notes": {
       "type": "string",
       "example": "We are processing your request"

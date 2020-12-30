@@ -41,7 +41,7 @@ const newPublication = async function newPublication(publication, user) {
       publicationKeysCount.push(`$${i + 1}`);
       publicationValues.push(publication[k]);
     });
-    const queryLine = `insert into publications(${publicationKeys.toString()}) values(${publicationKeysCount.toString()}) returning id`;
+    const queryLine = `insert into publications(${publicationKeys.toString()}) values(${publicationKeysCount.toString()}) ON CONFLICT DO NOTHING returning id`;
 
     // Create a publication in the database
     const newPublicationQuery = await db.query(queryLine, publicationValues);
@@ -49,6 +49,7 @@ const newPublication = async function newPublication(publication, user) {
 
     return { message: 'Publication created successfully', id: newPublicationQuery.rows[0].id };
   } catch (error) {
+    console.log(error);
     if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
@@ -233,6 +234,7 @@ const addPublicationToProjectById = async function addPublicationToProjectById(p
 
     return { message: returnMsg, successItems, failedItems };
   } catch (error) {
+    console.log(error);
     if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;

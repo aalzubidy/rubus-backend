@@ -1,0 +1,1690 @@
+[{
+  "10.5555/3234847.3234906": {
+    "id": "10.5555/3234847.3234906",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Quinlan", "given": "Jason" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2018, 2, 12]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2018, 2, 16]
+      ]
+    },
+    "abstract": "In this position paper, I present my vision on how enhancing the interaction between devices in an Internet of Things (IoT) network and the mechanisms of Software Defined Networking (SDN) can not only improve the efficiency of wirelessly transmitted data but can enhance the viability and manageability of devices in an IoT network and beyond. By expanding the composition of SDN to encompass not only the existing North (controller API), South (device API), East and West interfaces (distributed controller(s) API) - viewed as an X-/Y-axis, but also a holistic adaptive Z-axis which mandates a higher layer abstraction of the root APIs irrespective of the underlying architecture. This adaptive Z-axis improves the global view by offering an abstracted view of the network control and management for all objects in the network. In this proposal all interfaces, irrespective of axis, can be viewed as a single abstraction, by which \"inter-operative function calls\" can be leveraged adaptively between the device(s) and the network(s). By leveraging these additional constructs, I believe that SDN can improve the capabilities and efficiency of IoT networks.",
+    "call-number": "10.5555/3234847.3234906",
+    "collection-title": "EWSN &#x2019;18",
+    "container-title": "Proceedings of the 2018 International Conference on Embedded Wireless Systems and Networks",
+    "event-place": "Madrid, Spain",
+    "ISBN": "9780994988621",
+    "keyword": "IoT, SDN, SDaN, Software Defined adaptive Networking",
+    "number-of-pages": "2",
+    "page": "250–251",
+    "publisher": "Junction Publishing",
+    "publisher-place": "USA",
+    "title": "SDaN: Software Defined adaptive Networking - IoT and beyond"
+  }
+}, {
+  "10.5555/3324320.3324380": {
+    "id": "10.5555/3324320.3324380",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Yang", "given": "Deliang" }, { "family": "Shen", "given": "Liqian" }, { "family": "Zhang", "given": "Xianghui" }, { "family": "Chang", "given": "Xiangmao" }, { "family": "Huang", "given": "Jun" }, { "family": "Xing", "given": "Guoliang" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2019, 3, 15]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2019, 2, 25]
+      ]
+    },
+    "abstract": "Narrowband-Internet of Things standard is in its early stage of deployment. The lack of a diagnostic and measurement toolset hinders the problem analysis and device development in the community. In this demo, we present NBViewer, a software suite that exposed important and detailed low-level insight of the deployed NB-IoT network without the assistance from the operators. NBViewer also supports hosting and communication with multiple peripheral modules to provide concurrent power measurement and geolocation information. With such a comprehensive tool at hand, researchers and developer can identify potential problems, understand the energy profile, and propose possible solutions with less encumbrance.",
+    "call-number": "10.5555/3324320.3324380",
+    "collection-title": "EWSN '19",
+    "container-title": "Proceedings of the 2019 International Conference on Embedded Wireless Systems and Networks",
+    "event-place": "Beijing, China",
+    "ISBN": "9780994988638",
+    "number-of-pages": "3",
+    "page": "279–281",
+    "publisher": "Junction Publishing",
+    "publisher-place": "USA",
+    "title": "Demo: Software Suite for NB-IoT Measurement Analysis"
+  }
+}, {
+  "10.1145/3132728": {
+    "id": "10.1145/3132728",
+    "type": "ARTICLE",
+    "author": [{ "family": "Neville-Neil", "given": "George V." }],
+    "issued": {
+      "date-parts": [
+        [2017, 9, 25]
+      ]
+    },
+    "abstract": "If it seems like the sky is falling, that's because it is.",
+    "call-number": "10.1145/3132728",
+    "container-title": "Commun. ACM",
+    "DOI": "10.1145/3132728",
+    "ISSN": "0001-0782",
+    "issue": "10",
+    "number-of-pages": "2",
+    "page": "36–37",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "source": "October 2017",
+    "title": "IoT: the internet of terror",
+    "URL": "https://doi.org/10.1145/3132728",
+    "volume": "60"
+  }
+}, {
+  "10.1145/3328905.3332509": {
+    "id": "10.1145/3328905.3332509",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Sahal", "given": "Radhya" }, { "family": "Breslin", "given": "John G." }, { "family": "Ali", "given": "Muhammad Intizar" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2019, 6, 24]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2019, 6, 24]
+      ]
+    },
+    "abstract": "With the ever increasing number of IoT devices getting connected, an enormous amount of streaming data is being produced with very high velocity. In order to process these large number of data streams, a variety of stream processing platforms and query engines are emerging. In the stream query processing, an infinite data stream is divided into small chunks of finite data using a window operator. Window size and its type play an important role in the performance of any stream query engine. Due to the dynamic nature of IoT, data stream rate fluctuates very often, thus impeding the performance of query engines. In this work, we investigated the impact of any changes in data stream rates over the performance of a distributed query engine (e.g. Flink - https://flink.apache.org/). Our evaluation results indicate a direct impact of any changes in stream rate and window size over the performance of the engines. We propose an adaptive and dynamic query window size and type selector to improve the resilience of query processing engines. We consider several characteristics of input data streams, application workload, and resource constraints and proposes an optimal stream query window size and type for stream query execution.",
+    "call-number": "10.1145/3328905.3332509",
+    "collection-title": "DEBS '19",
+    "container-title": "Proceedings of the 13th ACM International Conference on Distributed and Event-based Systems",
+    "DOI": "10.1145/3328905.3332509",
+    "event-place": "Darmstadt, Germany",
+    "ISBN": "9781450367943",
+    "keyword": "IoT, Query Optimization, Stream Processing",
+    "number-of-pages": "2",
+    "page": "262–263",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "On Evaluating the Impact of Changes in IoT Data Streams Rate over Query Window Configurations",
+    "URL": "https://doi.org/10.1145/3328905.3332509"
+  }
+}, {
+  "10.5555/3108009.3108023": {
+    "id": "10.5555/3108009.3108023",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Akkermans", "given": "Sven" }, { "family": "Daniels", "given": "Wilfried" }, { "family": "Sankar R.", "given": "Gowri" }, { "family": "Crispo", "given": "Bruno" }, { "family": "Hughes", "given": "Danny" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2017, 2, 20]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2017, 2, 20]
+      ]
+    },
+    "abstract": "To continue to grow, the Internet of Things (IoT) requires scalable and secure system software solutions for resource-constrained devices. To maximize return on investment of these devices, IoT platforms should support multiple third-party applications and adaptation of software over time. However, realizing the vision of shared IoT platforms demands not only strong guarantees on the confidentiality and integrity of application data, but also guarantees on the use of critical resources such as computation, sensors and energy. We refer to this vision as resource security . Prior research on Operating Systems (OS) for tiny IoT devices has focused on miniaturizing core functionality such as scheduling and communication and does not consider resource security. To address this problem, we introduce CerberOS, a resource-secure OS for sharing IoT devices. CerberOS enables multiple applications on constrained IoT devices while, for the first time, guaranteeing data confidentiality, integrity and secure resource management. Our approach is based upon the twin pillars of virtualization, which isolates applications, and contracts, which control application resource usage. Evaluation shows that CerberOS supports the secure coexistence of up to seven applications on a representative IoT device with a memory usage of 40KB ROM and 5KB RAM while preserving multi-year battery lifetimes.",
+    "call-number": "10.5555/3108009.3108023",
+    "collection-title": "EWSN &#x2019;17",
+    "container-title": "Proceedings of the 2017 International Conference on Embedded Wireless Systems and Networks",
+    "event-place": "Uppsala, Sweden",
+    "ISBN": "9780994988614",
+    "keyword": "Internet of Things, Multiple applications, operating systems, resource security, virtualization",
+    "number-of-pages": "12",
+    "page": "96–107",
+    "publisher": "Junction Publishing",
+    "publisher-place": "USA",
+    "title": "CerberOS: A Resource-Secure OS for Sharing IoT Devices"
+  }
+}, {
+  "10.5555/3400306.3400357": {
+    "id": "10.5555/3400306.3400357",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Banaszek", "given": "Mateusz" }, { "family": "Rüb", "given": "Inga" }, { "family": "Dębski", "given": "Maciej" }, { "family": "Paszkowska", "given": "Agnieszka" }, { "family": "Kisiel", "given": "Maciej" }, { "family": "Łazarczyk", "given": "Dawid" }, { "family": "Głogowska", "given": "Ewa" }, { "family": "Gumienny", "given": "Przemysław" }, { "family": "Siłuszyk", "given": "Cezary" }, { "family": "Ciołkosz", "given": "Piotr" }, { "family": "Łysiak", "given": "Jacek" }, { "family": "Dubiel", "given": "Wojciech" }, { "family": "Acedański", "given": "Szymon" }, { "family": "Horban", "given": "Przemysław" }, { "family": "Iwanicki", "given": "Konrad" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2020, 2, 17]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2020, 2, 17]
+      ]
+    },
+    "abstract": "While prototyping devices dedicated for a 1000-node low-power wireless networking testbed, we encountered over a dozen nontrivial technical problems. This paper analyzes a few selected ones, which we faced during development of the hardware-software support for two different communication channels for supervising experiments on the testbed. The problems arose despite our employing popular standards and reputed components, minimizing risky features, and following modern quality assurance practices. Moreover, if it had not been for our emphasis on dependability, they would have likely passed undetected and doomed our project. In this light, we believe that the presented lessons we learned the hard way when debugging the problems may be of interest to the community.",
+    "call-number": "10.5555/3400306.3400357",
+    "collection-title": "EWSN '20",
+    "container-title": "Proceedings of the 2020 International Conference on Embedded Wireless Systems and Networks on Proceedings of the 2020 International Conference on Embedded Wireless Systems and Networks",
+    "event-place": "Lyon, France",
+    "ISBN": "9780994988645",
+    "keyword": "low-power wireless network, WiFi, experimental platform, Ethernet, Internet of Things, prototyping, testbed",
+    "number-of-pages": "6",
+    "page": "259–264",
+    "publisher": "Junction Publishing",
+    "publisher-place": "USA",
+    "title": "Lessons from Communication Problems that Nearly Jeopardized Development of Hardware-Software Support for a 1000-Device IoT Testbed"
+  }
+}, {
+  "10.1145/3365871.3365905": {
+    "id": "10.1145/3365871.3365905",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Cattermole", "given": "Thomas" }, { "family": "Docherty", "given": "Simon" }, { "family": "Pym", "given": "David" }, { "family": "Sasse", "given": "M. Angela" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2019, 10, 22]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2019, 10, 22]
+      ]
+    },
+    "abstract": "Controlling asset-access has traditionally been considered a matter for systems in which assets reside. Centralized approaches to access control are, however, problematic for the IoT. One reason for this is that devices may not be confined to a single system of control. In this abstract, we argue for a new paradigm in which assets are empowered to make their own access decisions. To facilitate this shift in perspective, we propose a policy-neutral framework based on principles adapted from object-oriented programming. This approach establishes assets as active, message-passing entities that store and determine their own access control. We describe initial work modelling the interaction of such assets and point to future formal work for reasoning about protocols and policy composition.",
+    "call-number": "10.1145/3365871.3365905",
+    "collection-number": "31",
+    "collection-title": "IoT 2019",
+    "container-title": "Proceedings of the 9th International Conference on the Internet of Things",
+    "DOI": "10.1145/3365871.3365905",
+    "event-place": "Bilbao, Spain",
+    "ISBN": "9781450372077",
+    "keyword": "Internet of Things, Access Control, Object-Oriented",
+    "number": "Article 31",
+    "number-of-pages": "4",
+    "page": "1–4",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Asset-Oriented Access Control: Towards a New IoT Framework",
+    "URL": "https://doi.org/10.1145/3365871.3365905"
+  }
+}, {
+  "10.1145/3385678.3385686": {
+    "id": "10.1145/3385678.3385686",
+    "type": "ARTICLE",
+    "author": [{ "family": "Cito", "given": "Jürgen" }, { "family": "Santolucito", "given": "Mark" }],
+    "issued": {
+      "date-parts": [
+        [2020, 4, 30]
+      ]
+    },
+    "abstract": "Errors in con gurations, rather than source code, have become one of the major causes of system failures, resulting in security vulnerabilities, application outages, and incorrect program execu- tions. We report on the structure and results of the rst Interna- tional Workshop on Software Engineering for Infrastructure and Con guration Code. Our aim in organizing this jworkshop was to",
+    "call-number": "10.1145/3385678.3385686",
+    "container-title": "SIGSOFT Softw. Eng. Notes",
+    "DOI": "10.1145/3385678.3385686",
+    "ISSN": "0163-5948",
+    "issue": "2",
+    "number-of-pages": "2",
+    "page": "23–24",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "source": "April 2020",
+    "title": "Software Engineering for Infrastructure and Configuration (SEConfig) - Workshop Report",
+    "URL": "https://doi.org/10.1145/3385678.3385686",
+    "volume": "45"
+  }
+}, {
+  "10.5555/2959355.2959392": {
+    "id": "10.5555/2959355.2959392",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Chauhan", "given": "Saurabh" }, { "family": "Patel", "given": "Pankesh" }, { "family": "Sureka", "given": "Ashish" }, { "family": "Delicato", "given": "Flávia C." }, { "family": "Chaudhary", "given": "Sanjay" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2016, 4, 11]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2016, 4, 11]
+      ]
+    },
+    "abstract": "Internet of Things (IoT) application development is technically challenging and complex due to several factors such as the presence of different IoT protocols, interoperability issues, lack of industry standards and dealing with the heterogeneity that exists both in Physical and Internet worlds. Furthermore, developers involved in the IoT application development have to address issues pertaining to different life-cycles ranging from design, implementation to deployment (deployment complexities due to the possibilities of wide range of devices). Manual effort involved in all above three phases for heterogeneous devices is a time-consuming and error-prone process. We demonstrate IoTSuite which is an application development platform consisting of a suite of tools motivated by the need to simplify IoT application development. The IoTSuite supports several features such as automatic code generation and integration with a set of modeling languages. It takes high-level specification as input that abstract heterogeneity related complexity. It integrates compiler and deployment module to provide automation at different phases of application development process.",
+    "call-number": "10.5555/2959355.2959392",
+    "collection-number": "37",
+    "collection-title": "IPSN '16",
+    "container-title": "Proceedings of the 15th International Conference on Information Processing in Sensor Networks",
+    "event-place": "Vienna, Austria",
+    "ISBN": "9781509008025",
+    "keyword": "internet of things (IoT), development framework, cyber-physical system (CPS)",
+    "number": "Article 37",
+    "number-of-pages": "2",
+    "page": "1–2",
+    "publisher": "IEEE Press",
+    "title": "IoTSuite: a framework to design, implement, and deploy IoT applications: demonstration abstract"
+  }
+}, {
+  "10.1145/3194133.3194150": {
+    "id": "10.1145/3194133.3194150",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Sedgewick", "given": "Peter E." }, { "family": "de Lemos", "given": "Rogério" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2018, 5, 28]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2018, 5, 28]
+      ]
+    },
+    "abstract": "This position paper describes how blockchains facilitate the implementation of distributed self-adaptive systems. We demonstrate how the master/slave decentralised control pattern for self-adaptive systems, integrated with a permissioned blockchain, can protect nodes of a network against attacks by continuously adapting the membership of an access control list. Whenever malicious behaviour is detected, consensus on an updated access control list is reached, and that node is removed from the network. Using a smart home, as an example, we demonstrate that a permissioned blockchain is able to maintain a consistent view of a network of Internet of Things (IoT) devices in the presence of malicious nodes.",
+    "call-number": "10.1145/3194133.3194150",
+    "collection-title": "SEAMS '18",
+    "container-title": "Proceedings of the 13th International Conference on Software Engineering for Adaptive and Self-Managing Systems",
+    "DOI": "10.1145/3194133.3194150",
+    "event-place": "Gothenburg, Sweden",
+    "ISBN": "9781450357159",
+    "keyword": "IoT, multichain, access control, blockchains, self-adapive systems",
+    "number-of-pages": "2",
+    "page": "192–193",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Self-adaptation made easy with blockchains",
+    "URL": "https://doi.org/10.1145/3194133.3194150"
+  }
+}, {
+  "10.1145/3098954.3106070": {
+    "id": "10.1145/3098954.3106070",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Conti", "given": "Mauro" }, { "family": "Kaliyar", "given": "Pallavi" }, { "family": "Lal", "given": "Chhagan" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2017, 8, 29]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2017, 8, 29]
+      ]
+    },
+    "abstract": "In this paper, we present REMI, a reliable and secure multicast routing protocol for IoT networks. The main aim of REMI is to enable efficient communication in low-power and lossy networks such as IoT, by ensuring that a message will be received by all its intended destinations, irrespective of the network size and the presence of misbehaving nodes. REMI uses a cluster-based routing approach that triggers a faster multicast dissemination of messages within the network. We implemented REMI with Contiki, a multitasking operating system which is widely adopted by industry for deploying energy-constrained and memory-efficient wireless networks. To assess the effectiveness and efficiency of REMI, we run a thorough set of simulations. Our results show the effectiveness of our protocol over state-of-art protocols in terms of network throughput, propagation delay, and scalability at the cost of minimal overheads in terms of energy consumption and memory utilization.",
+    "call-number": "10.1145/3098954.3106070",
+    "collection-number": "84",
+    "collection-title": "ARES '17",
+    "container-title": "Proceedings of the 12th International Conference on Availability, Reliability and Security",
+    "DOI": "10.1145/3098954.3106070",
+    "event-place": "Reggio Calabria, Italy",
+    "ISBN": "9781450352574",
+    "number": "Article 84",
+    "number-of-pages": "8",
+    "page": "1–8",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "REMI: A Reliable and Secure Multicast Routing Protocol for IoT Networks",
+    "URL": "https://doi.org/10.1145/3098954.3106070"
+  }
+}, {
+  "10.1109/SEAMS.2019.00011": {
+    "id": "10.1109/SEAMS.2019.00011",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Quin", "given": "Federico" }, { "family": "Weyns", "given": "Danny" }, { "family": "Bamelis", "given": "Thomas" }, { "family": "Buttar", "given": "Sarpreet Singh" }, { "family": "Michiels", "given": "Sam" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2019, 5, 25]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2019, 5, 25]
+      ]
+    },
+    "abstract": "When a self-adaptive system detects that its adaptation goals may be compromised, it needs to determine how to adapt to ensure its goals. To that end, the system can analyze the possible options for adaptation, i.e., the adaptation space, and pick the best option that achieves the goals. Such analysis can be resource and time consuming, in particular when rigorous analysis methods are applied. Hence, exhaustively analyzing all options may be infeasible for systems with large adaptation spaces. This problem is further complicated as the adaptation options typically include uncertainty parameters that can only be resolved at runtime. In this paper, we present a machine learning approach to tackle this problem. This approach enhances the traditional MAPE-K feedback loop with a learning module that selects subsets of adaptation options from a large adaptation space to support the analyzer with performing efficient analysis. We instantiate the approach for two concrete learning techniques, classification and regression, and evaluate the approaches for two instances of an Internet of Things application for smart environment monitoring with different sizes of adaptation spaces. The evaluation shows that both learning approaches reduce the adaptation space significantly without noticeable effect on realizing the adaptation goals.",
+    "call-number": "10.1109/SEAMS.2019.00011",
+    "collection-title": "SEAMS '19",
+    "container-title": "Proceedings of the 14th International Symposium on Software Engineering for Adaptive and Self-Managing Systems",
+    "DOI": "10.1109/SEAMS.2019.00011",
+    "event-place": "Montreal, Quebec, Canada",
+    "keyword": "analysis, self-adaptation, learning, IoT",
+    "number-of-pages": "12",
+    "page": "1–12",
+    "publisher": "IEEE Press",
+    "title": "Efficient analysis of large adaptation spaces in self-adaptive systems using machine learning",
+    "URL": "https://doi.org/10.1109/SEAMS.2019.00011"
+  }
+}, {
+  "10.1145/3254601": {
+    "id": "10.1145/3254601",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Kroß", "given": "Johannes" }, { "family": "Jiang", "given": "Zhen Ming (Jack)" }, { "family": "Bezemer", "given": "Cor-Paul" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2017, 4, 18]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2017, 4, 18]
+      ]
+    },
+    "call-number": "10.1145/3254601",
+    "collection-title": "ICPE '17 Companion",
+    "container-title": "Proceedings of the 8th ACM/SPEC on International Conference on Performance Engineering Companion",
+    "DOI": "10.1145/3254601",
+    "event-place": "L&apos;Aquila, Italy",
+    "ISBN": "9781450348997",
+    "number-of-pages": "1",
+    "page": "",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Session details: Sixth International Workshop on Load Testing and Benchmarking of Software Systems (LTB'17)",
+    "URL": "https://doi.org/10.1145/3254601"
+  }
+}, {
+  "10.1145/3423423.3423460": {
+    "id": "10.1145/3423423.3423460",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Milenkovic", "given": "Milan" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2020, 10, 6]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2020, 10, 6]
+      ]
+    },
+    "abstract": "This tutorial provides a comprehensive overview of the foundational principles, architecture, and design of IoT systems. It includes coverage and analysis of key components including sensors, edge, fog, communications, cloud, data processing with analytics ML and AI, security and management. The emphasis is on providing a balanced treatment at roughly equal level of depth for all covered topics, based on the presenter's book “Internet of Things: Concepts and Systems Design” (Springer 2020). In addition to component analysis, major emphasis is on the system integration and how the various parts are put together and function as an ensemble to carry out the common objectives. Finally, coverage is provided on IoT data and metadata representation – information models and standards - in ways that foster semantic interoperability, aggregation, and reuse of data across specifications and system implementations.Partial list of content:",
+    "call-number": "10.1145/3423423.3423460",
+    "collection-number": "12",
+    "collection-title": "IoT '20 Companion",
+    "container-title": "10th International Conference on the Internet of Things Companion",
+    "DOI": "10.1145/3423423.3423460",
+    "event-place": "Malmö, Sweden",
+    "ISBN": "9781450388207",
+    "number": "Article 12",
+    "number-of-pages": "2",
+    "page": "1–2",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Tutorial: Internet of Things Systems: a Reconnaissance Flyover",
+    "URL": "https://doi.org/10.1145/3423423.3423460"
+  }
+}, {
+  "10.1145/2898442.2912151": {
+    "id": "10.1145/2898442.2912151",
+    "type": "ARTICLE",
+    "author": [{ "family": "Jacobson", "given": "Ivar" }, { "family": "Spence", "given": "Ian" }, { "family": "Kerr", "given": "Brian" }],
+    "issued": {
+      "date-parts": [
+        [2016, 1, 28]
+      ]
+    },
+    "abstract": "Use cases have been around for almost 30 years as a requirements approach and have been part of the inspiration for more-recent techniques such as user stories. Now the inspiration has flown in the other direction. Use-Case 2.0 is the new generation of use-case-driven development-light, agile, and lean-inspired by user stories and the agile methodologies Scrum and Kanban.",
+    "call-number": "10.1145/2898442.2912151",
+    "container-title": "Queue",
+    "DOI": "10.1145/2898442.2912151",
+    "ISSN": "1542-7730",
+    "issue": "1",
+    "number-of-pages": "30",
+    "page": "94–123",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "source": "January-February 2016",
+    "title": "Use-Case 2.0: The Hub of Software Development",
+    "URL": "https://doi.org/10.1145/2898442.2912151",
+    "volume": "14"
+  }
+}, {
+  "10.1145/3313151.3314057": {
+    "id": "10.1145/3313151.3314057",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Kecskes", "given": "Tamas" }, { "family": "Meijer", "given": "Patrik" }, { "family": "Johnson", "given": "Taylor T." }, { "family": "Lucas", "given": "Marcus" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2019, 4, 15]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2019, 4, 15]
+      ]
+    },
+    "abstract": "It is often the case that analysis, simulation and verification tools from different sources share a lot of commonalities. Even though the syntax might differ, the semantics of the input models are many times the same. Theoretically this means that different tools could either be compared or combined to analyze different aspects of the same model. In practise however, this often leads to time-consuming manual tweaks and modifications on a per model basis. Additionally, the necessary environments, in form of run-times and dependencies required for the tools to be executed, are not always readily available. Images for virtual machines and containers surely ease the process for setting up the context, but this still requires manual plumbing when setting up a work-flow.In this demo a Design Studio for combining different verification tools is show-cased. Building on top of WebGME (Generic Modeling Environment) it provides end-users with an online, browser-based editor where models are stored in a version-controlled, centralized database. At any point of the design process, a model can at the click of a button be requested to act as input for a range of different verification tools such as SpaceEx, Flow* and dReach. The Design Studio is currently hosted at cps-vo.org, but also available as open source and the entire system can, thanks to containerization, be hosted locally with a single command. At the core of this Design Studio lies the HYbrid Source Transformer, HYST, which is hosted as an independent service for translating a common model format, SpaceEx, into each tool-specific format.",
+    "call-number": "10.1145/3313151.3314057",
+    "collection-title": "DESTION '19",
+    "container-title": "Proceedings of the Workshop on Design Automation for CPS and IoT",
+    "DOI": "10.1145/3313151.3314057",
+    "event-place": "Montreal, Quebec, Canada",
+    "ISBN": "9781450366991",
+    "number-of-pages": "2",
+    "page": "60–61",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Demo: a design studio for verification tools",
+    "URL": "https://doi.org/10.1145/3313151.3314057"
+  }
+}, {
+  "10.1145/3277593.3277629": {
+    "id": "10.1145/3277593.3277629",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Chen", "given": "Gang" }, { "family": "Sabato", "given": "Zachary" }, { "family": "Kong", "given": "Zhaodan" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2018, 10, 15]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2018, 10, 15]
+      ]
+    },
+    "abstract": "Formal specification plays crucial roles in the rigorous verification and design of automobile steering systems. The challenge of getting high-quality formal specifications is well documented. This paper presents a problem called 'semantic parsing', the goal of which is to automatically translate the behavior of an automobile steering system to a formal specification written in signal temporal logic (STL) with human-in-the loop manner. To tackle the combinatorial explosion inherent to the problem, this paper adopts a search strategy called agenda-based parsing, which is inspired by natural language processing. Based on such a strategy, the semantic parsing problem can be formulated as a Markov decision process (MDP) and then solved using reinforcement learning. The obtained formal specification can be viewed as an interpretable classifier, which, on the one hand, can classify desirable and undesirable behaviors, and, on the other hand, is expressed in a human-understandable form. The performance of the proposed method is demonstrated with study.",
+    "call-number": "10.1145/3277593.3277629",
+    "collection-number": "41",
+    "collection-title": "IOT '18",
+    "container-title": "Proceedings of the 8th International Conference on the Internet of Things",
+    "DOI": "10.1145/3277593.3277629",
+    "event-place": "Santa Barbara, California, USA",
+    "ISBN": "9781450365642",
+    "keyword": "steering systems, formal specification, semantic parsing, reinforcement learning, signal temporal logic",
+    "number": "Article 41",
+    "number-of-pages": "3",
+    "page": "1–3",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Semantic parsing of automobile steering systems",
+    "URL": "https://doi.org/10.1145/3277593.3277629"
+  }
+}, {
+  "10.1145/3328433.3328465": {
+    "id": "10.1145/3328433.3328465",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Olianas", "given": "Dario" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2019, 4, 1]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2019, 4, 1]
+      ]
+    },
+    "abstract": "This poster outlines a method to automatically generate executable test scripts for an IoT system, starting from the description of its behaviour expressed by an UML state machine diagram.",
+    "call-number": "10.1145/3328433.3328465",
+    "collection-number": "31",
+    "collection-title": "Programming '19",
+    "container-title": "Proceedings of the Conference Companion of the 3rd International Conference on Art, Science, and Engineering of Programming",
+    "DOI": "10.1145/3328433.3328465",
+    "event-place": "Genova, Italy",
+    "ISBN": "9781450362573",
+    "keyword": "test automation, software quality assurance, UML",
+    "number": "Article 31",
+    "number-of-pages": "2",
+    "page": "1–2",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Automatic test case generation from UML state machine diagrams",
+    "URL": "https://doi.org/10.1145/3328433.3328465"
+  }
+}, {
+  "10.1145/2890778": {
+    "id": "10.1145/2890778",
+    "type": "ARTICLE",
+    "author": [{ "family": "Jacobson", "given": "Ivar" }, { "family": "Spence", "given": "Ian" }, { "family": "Kerr", "given": "Brian" }],
+    "issued": {
+      "date-parts": [
+        [2016, 4, 26]
+      ]
+    },
+    "abstract": "The hub of software development.",
+    "call-number": "10.1145/2890778",
+    "container-title": "Commun. ACM",
+    "DOI": "10.1145/2890778",
+    "ISSN": "0001-0782",
+    "issue": "5",
+    "number-of-pages": "9",
+    "page": "61–69",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "source": "May 2016",
+    "title": "Use-case 2.0",
+    "URL": "https://doi.org/10.1145/2890778",
+    "volume": "59"
+  }
+}, {
+  "10.1145/3125502.3125552": {
+    "id": "10.1145/3125502.3125552",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Karabacak", "given": "Fatih" }, { "family": "Ogras", "given": "Umit" }, { "family": "Ozev", "given": "Sule" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2017, 10, 15]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2017, 10, 15]
+      ]
+    },
+    "abstract": "Unauthorized hardware or firmware modifications, known as trojans, can steal information, drain the battery, or damage IoT devices. This paper presents a stand-off self-referencing technique for detecting unauthorized activity. The proposed technique processes involuntary electromagnetic emissions on a separate hardware, which is physically decoupled from the device under test. When the device enter the test mode, it runs a predefined application repetitively with a fixed period. The periodicity ensures that the spectral electromagnetic power of the test application concentrates at known frequencies, leaving the remaining frequencies within the operation bandwidth at the noise level. Any deviations from the noise level for these unoccupied frequency locations indicates the presence of unknown (unauthorized) activity. Experiments based on hardware measurements show that the proposed technique achieves close to 100% detection accuracy at up to 120 cm distance.",
+    "call-number": "10.1145/3125502.3125552",
+    "collection-number": "10",
+    "collection-title": "CODES '17",
+    "container-title": "Proceedings of the Twelfth IEEE/ACM/IFIP International Conference on Hardware/Software Codesign and System Synthesis Companion",
+    "DOI": "10.1145/3125502.3125552",
+    "event-place": "Seoul, Republic of Korea",
+    "ISBN": "9781450351850",
+    "keyword": "EM emission, IoT security, hardware/firmware trojan detection",
+    "number": "Article 10",
+    "number-of-pages": "2",
+    "page": "1–2",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Remote detection of unauthorized activity via spectral analysis: work-in-progress",
+    "URL": "https://doi.org/10.1145/3125502.3125552"
+  }
+}, {
+  "10.1145/3109729.3109755": {
+    "id": "10.1145/3109729.3109755",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Tolvanen", "given": "Juha-Pekka" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2017, 9, 25]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2017, 9, 25]
+      ]
+    },
+    "abstract": "This demonstration shows how domain-specific languages are applied with MetaEdit+ tool in various kinds of product lines, ranging from industry automation to consumer electronics. In the demonstration practical examples are illustrated and executed covering both domain engineering and application engineering. In particular evolution and versioning of domain knowledge and application knowledge is detailed and demonstrated.",
+    "call-number": "10.1145/3109729.3109755",
+    "collection-title": "SPLC '17",
+    "container-title": "Proceedings of the 21st International Systems and Software Product Line Conference - Volume B",
+    "DOI": "10.1145/3109729.3109755",
+    "event-place": "Sevilla, Spain",
+    "ISBN": "9781450351195",
+    "keyword": "MetaEdit+, Domain-Specific Language, Software Product Line, Domain-Specific Modeling",
+    "number-of-pages": "1",
+    "page": "17",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Applying Domain-Specific Languages in MetaEdit+ for Product Line Development",
+    "URL": "https://doi.org/10.1145/3109729.3109755"
+  }
+}, {
+  "10.1145/3402842.3407159": {
+    "id": "10.1145/3402842.3407159",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Lu", "given": "Zhihao" }, { "family": "Wang", "given": "Rui" }, { "family": "Guan", "given": "Yong" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2020, 7, 19]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2020, 7, 19]
+      ]
+    },
+    "abstract": "Ptolemy is a modeling and simulation toolkit widely used in cyber physical systems. Formal verification is a very important method to guarantee the correctness of systems. However, the proposed verification approach in Ptolemy is inconvenient and only supports a few actors. In this paper, we present a model translation based approach to verify the Ptolemy Discrete-Event model and implement a plug-in tool in Ptolemy. A set of mapping rules are designed to translate the Ptolemy Discrete-Event model into a network of timed automata. A template library that translates from actors in Ptolemy Discrete-Event model is also built in advance. A case study of traffic lights control system has been successfully translated and verified. The verification results are reliable and valid. The experimental results confirm our approach is useful to verify the Ptolemy Discrete-Event model.",
+    "call-number": "10.1145/3402842.3407159",
+    "collection-title": "TAV-CPS/IoT 2020",
+    "container-title": "Proceedings of the 4th ACM SIGSOFT International Workshop on Testing, Analysis, and Verification of Cyber-Physical Systems and Internet of Things",
+    "DOI": "10.1145/3402842.3407159",
+    "event-place": "Virtual Event, USA",
+    "ISBN": "9781450380324",
+    "keyword": "Automatic model translation, Ptolemy DE model, Timed automata, Formal verification",
+    "number-of-pages": "2",
+    "page": "3–4",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Formal verification of discrete event model",
+    "URL": "https://doi.org/10.1145/3402842.3407159"
+  }
+}, {
+  "10.1145/3040992.3041005": {
+    "id": "10.1145/3040992.3041005",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Park", "given": "Younghee" }, { "family": "Chandaliya", "given": "Pritesh" }, { "family": "Muralidharan", "given": "Akshaya" }, { "family": "Kumar", "given": "Nikash" }, { "family": "Hu", "given": "Hongxin" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2017, 3, 24]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2017, 3, 24]
+      ]
+    },
+    "abstract": "Network Function Virtualization (NFV) is a critical part of a new defense paradigm providing high flexibility at a lower cost through software-based virtual instances. Despite the promise of the NFV, the original Intrusion Detection System (IDS) designed for NFV still draws heavily on processing power and requires significant CPU resources. In this paper, we provide a framework for dynamic defense provision by building in light intrusion detection network functions (NFs) over NFV. Without using the existing IDSes, our system constructs a light intrusion detection system by using a chain of network functions in NFV. The entire IDS is broken down into separate light network functions according to different protocols. The intrusion detection NFs cover various protocol stacks from the link layer to the application layer protocols. They also include different deep packet inspection NFs for different application layer protocols. The experimental results show the proposed system reduces resource consumption while performing valid intrusion detection functions.",
+    "call-number": "10.1145/3040992.3041005",
+    "collection-title": "SDN-NFVSec '17",
+    "container-title": "Proceedings of the ACM International Workshop on Security in Software Defined Networks & Network Function Virtualization",
+    "DOI": "10.1145/3040992.3041005",
+    "event-place": "Scottsdale, Arizona, USA",
+    "ISBN": "9781450349086",
+    "keyword": "network functions virtualization, software-defined networks, network attacks, security",
+    "number-of-pages": "4",
+    "page": "43–46",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Dynamic Defense Provision via Network Functions Virtualization",
+    "URL": "https://doi.org/10.1145/3040992.3041005"
+  }
+}, {
+  "10.1109/CESSER-IP.2019.00011": {
+    "id": "10.1109/CESSER-IP.2019.00011",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Walenstein", "given": "Andrew" }, { "family": "Malton", "given": "Andrew" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2019, 5, 27]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2019, 5, 27]
+      ]
+    },
+    "abstract": "We present an approach to industry-academic research collaboration in which generative modeling is the central mechanism for not only enabling tactical coordination in exploratory research, but also for ensuring strategic alignment of both partners through a cooperative/competitive game approach of model evolution. Thoughts and experiences are offered for its applicability in contexts common relevant to software engineering research.",
+    "call-number": "10.1109/CESSER-IP.2019.00011",
+    "collection-title": "CESSER-IP '19",
+    "container-title": "Proceedings of the Joint 7th International Workshop on Conducting Empirical Studies in Industry and 6th International Workshop on Software Engineering Research and Industrial Practice",
+    "DOI": "10.1109/CESSER-IP.2019.00011",
+    "event-place": "Montreal, Quebec, Canada",
+    "number-of-pages": "4",
+    "page": "18–21",
+    "publisher": "IEEE Press",
+    "title": "Generative modeling games for exploratory industry-academic research",
+    "URL": "https://doi.org/10.1109/CESSER-IP.2019.00011"
+  }
+}, {
+  "10.3115/991146.991212": {
+    "id": "10.3115/991146.991212",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Dong", "given": "Dong Zhen" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [1990, 8, 20]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [1990, 8, 20]
+      ]
+    },
+    "call-number": "10.3115/991146.991212",
+    "collection-title": "COLING '90",
+    "container-title": "Proceedings of the 13th conference on Computational linguistics - Volume 3",
+    "DOI": "10.3115/991146.991212",
+    "event-place": "Helsinki, Finland",
+    "ISBN": "9529020287",
+    "number-of-pages": "3",
+    "page": "339–341",
+    "publisher": "Association for Computational Linguistics",
+    "publisher-place": "USA",
+    "title": "TRANSTAR: a commercial English-Chinese MT system",
+    "URL": "https://doi.org/10.3115/991146.991212"
+  }
+}, {
+  "10.1145/3129790.3129807": {
+    "id": "10.1145/3129790.3129807",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Sharaf", "given": "Mohammad" }, { "family": "Abughazala", "given": "Moamin" }, { "family": "Muccini", "given": "Henry" }, { "family": "Abusair", "given": "Mai" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2017, 9, 11]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2017, 9, 11]
+      ]
+    },
+    "abstract": "Situational aware cyber-physical space seamlessly incorporates computational and physical parts to monitor what is going on in the environment and utilize this data to choose and act. Graphical Modeling, Code generation and simulation help in diminishing the cost of building a situational aware cyber-physical space application since the architects can automatically get an executable application from the architectural model by applying the automatic transformation. In this paper, we present CAPS environment in which an architect can make diverse models to catch distinctive concerns in cyber-physical spaces, simulate and get an energy consumption and data traffic evaluation for their architectures.",
+    "call-number": "10.1145/3129790.3129807",
+    "collection-title": "ECSA '17",
+    "container-title": "Proceedings of the 11th European Conference on Software Architecture: Companion Proceedings",
+    "DOI": "10.1145/3129790.3129807",
+    "event-place": "Canterbury, United Kingdom",
+    "ISBN": "9781450352178",
+    "keyword": "situation-awareness, simulation, cyber-physical space",
+    "number-of-pages": "2",
+    "page": "66–67",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Simulating architectures of situational-aware cyber-physical space",
+    "URL": "https://doi.org/10.1145/3129790.3129807"
+  }
+}, {
+  "10.1145/3230833.3232802": {
+    "id": "10.1145/3230833.3232802",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Serror", "given": "Martin" }, { "family": "Henze", "given": "Martin" }, { "family": "Hack", "given": "Sacha" }, { "family": "Schuba", "given": "Marko" }, { "family": "Wehrle", "given": "Klaus" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2018, 8, 27]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2018, 8, 27]
+      ]
+    },
+    "abstract": "The proliferation of the Internet of Things (IoT) in the context of smart homes entails new security risks threatening the privacy and safety of end users. In this paper, we explore the design space of in-network security for smart home networks, which automatically complements existing security mechanisms with a rule-based approach, i. e., every IoT device provides a specification of the required communication to fulfill the desired services. In our approach, the home router as the central network component then enforces these communication rules with traffic filtering and anomaly detection to dynamically react to threats. We show that in-network security can be easily integrated into smart home networks based on existing approaches and thus provides additional protection for heterogeneous IoT devices and protocols. Furthermore, in-network security relieves users of difficult home network configurations, since it automatically adapts to the connected devices and services.",
+    "call-number": "10.1145/3230833.3232802",
+    "collection-number": "18",
+    "collection-title": "ARES 2018",
+    "container-title": "Proceedings of the 13th International Conference on Availability, Reliability and Security",
+    "DOI": "10.1145/3230833.3232802",
+    "event-place": "Hamburg, Germany",
+    "ISBN": "9781450364485",
+    "keyword": "Smart Homes, Internet of Things, Anomaly Detection, Network Security, Attack Mitigation",
+    "number": "Article 18",
+    "number-of-pages": "8",
+    "page": "1–8",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Towards In-Network Security for Smart Homes",
+    "URL": "https://doi.org/10.1145/3230833.3232802"
+  }
+}, {
+  "10.1145/3401025.3401756": {
+    "id": "10.1145/3401025.3401756",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Silva", "given": "Pedro" }, { "family": "Yue", "given": "Wang" }, { "family": "Rabl", "given": "Tilmann" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2020, 7, 13]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2020, 7, 13]
+      ]
+    },
+    "abstract": "Applications in the Internet of Things (IoT) create many data processing challenges because they have to deal with massive amounts of data and low latency constraints. The DEBS Grand Challenge 2020 specifies an IoT problem whose objective is to identify special type of events in a stream of electricity smart meters data.In this work, we present the Sequential Incremental DBSCAN-based Event Detection Algorithm (SINBAD), a solution based on an incremental version of the clustering algorithm DBSCAN and scenario specific data processing optimizations. SINBAD manages to calculate solutions up to 7 times faster and up to 26% more accurate than the baseline provided by the DEBS Grand Challenge.",
+    "call-number": "10.1145/3401025.3401756",
+    "collection-title": "DEBS '20",
+    "container-title": "Proceedings of the 14th ACM International Conference on Distributed and Event-based Systems",
+    "DOI": "10.1145/3401025.3401756",
+    "event-place": "Montreal, Quebec, Canada",
+    "ISBN": "9781450380287",
+    "keyword": "stream processing, DEBS grand challenge, event detection, clustering",
+    "number-of-pages": "6",
+    "page": "187–192",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Incremental stream query analytics",
+    "URL": "https://doi.org/10.1145/3401025.3401756"
+  }
+}, {
+  "10.5555/3234847.3234910": {
+    "id": "10.5555/3234847.3234910",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Peyrard", "given": "Alexandre" }, { "family": "Kosmatov,", "given": "Nikolai" }, { "family": "Duquennoy", "given": "Simon" }, { "family": "Lille", "given": "Inria" }, { "family": "Raza", "given": "Shahid" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2018, 2, 12]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2018, 2, 16]
+      ]
+    },
+    "abstract": "The number of IoT (Internet of Things) applications is rapidly increasing and allows embedded devices today to be massively connected to the Internet. This raises software security questions. This paper demonstrates the usage of formal verification to increase the security of Contiki OS, a popular open-source operating system for IoT. We present a case study on deductive verification of encryption-decryption modules of Contiki (namely, AES--CCM*) using Frama-C, a software analysis platform for C code.",
+    "call-number": "10.5555/3234847.3234910",
+    "collection-title": "EWSN &#x2019;18",
+    "container-title": "Proceedings of the 2018 International Conference on Embedded Wireless Systems and Networks",
+    "event-place": "Madrid, Spain",
+    "ISBN": "9780994988621",
+    "keyword": "AES, Formal Verification, Security. Contiki1, Frama-C",
+    "number-of-pages": "6",
+    "page": "264–269",
+    "publisher": "Junction Publishing",
+    "publisher-place": "USA",
+    "title": "Towards Formal Verification of Contiki: Analysis of the AES-CCM* Modules with Frama-C"
+  }
+}, {
+  "10.1145/2846696.2846697": {
+    "id": "10.1145/2846696.2846697",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Degueule", "given": "Thomas" }, { "family": "Combemale", "given": "Benoit" }, { "family": "Blouin", "given": "Arnaud" }, { "family": "Barais", "given": "Olivier" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2015, 10, 27]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2015, 10, 27]
+      ]
+    },
+    "abstract": " The proliferation of independently-developed and constantly-evolving domain-specific languages (DSLs) in many domains raises new challenges for the software language engineering community. Instead of starting the definition of new DSLs from scratch, language designers would benefit from the reuse of previously defined DSLs. While the support for engineering isolated DSLs is getting more and more mature, there is still little support in language workbenches for importing, assembling, and customizing legacy languages to form new ones. Melange is a new language workbench where new DSLs are built by assembling pieces of syntax and semantics. These pieces can be imported and subsequently extended, restricted, or customized to fit specific requirements. The demonstration will introduce the audience to the main features of Melange through the definition of an executable DSL for the design and execution of Internet of Things systems. Specifically, we will show how such a language can be obtained from the assembly of other popular languages while maintaining the compatibility with their tools and transformations. ",
+    "call-number": "10.1145/2846696.2846697",
+    "collection-title": "DSM 2015",
+    "container-title": "Proceedings of the Workshop on Domain-Specific Modeling",
+    "DOI": "10.1145/2846696.2846697",
+    "event-place": "Pittsburgh, PA, USA",
+    "ISBN": "9781450339032",
+    "keyword": "model typing, language workbench, melange, Domain-specific languages, language reuse",
+    "number-of-pages": "2",
+    "page": "45–46",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Reusing legacy DSLs with Melange",
+    "URL": "https://doi.org/10.1145/2846696.2846697"
+  }
+}, {
+  "10.1145/3023147.3023155": {
+    "id": "10.1145/3023147.3023155",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Tolvanen", "given": "Juha-Pekka" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2016, 10, 30]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2016, 10, 30]
+      ]
+    },
+    "abstract": " While creation of modeling languages and related code generators has become easier, their testing is perhaps now-adays the most time consuming part. This is particularly relevant for Domain-Specific Modeling (DSM) as it is common that the language and generators evolve frequently along with the domain it addresses. We demonstrate one solution that we have found practical when applying Test Driven Development for creating and maintaining modeling languages and generators along with tool support. ",
+    "call-number": "10.1145/3023147.3023155",
+    "collection-title": "DSM 2016",
+    "container-title": "Proceedings of the International Workshop on Domain-Specific Modeling",
+    "DOI": "10.1145/3023147.3023155",
+    "event-place": "Amsterdam, Netherlands",
+    "ISBN": "9781450348942",
+    "keyword": "domain-specific modeling, generators, metamodeling, modeling languages, test-driven development",
+    "number-of-pages": "4",
+    "page": "49–52",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Applying test-driven development for creating and refining domain-specific modeling languages and generators",
+    "URL": "https://doi.org/10.1145/3023147.3023155"
+  }
+}, {
+  "10.1145/2976796.2976872": {
+    "id": "10.1145/2976796.2976872",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Sousa", "given": "Marcelo Fernandes de" }, { "family": "Kulesza", "given": "Raoni" }, { "family": "Ferraz", "given": "Carlos Andre Guimaraes" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2016, 11, 8]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2016, 11, 8]
+      ]
+    },
+    "abstract": "The MulSeMedia has been considered the great challenge of Multimedia for the next ten years. Aiming to stimulate other human sensory receptors such as mechanoreceptors, chemoreceptors and thermoceptors, the MulSeMedia increases the degree of immersion of users as well as improves the Quality of Experience and is standardized by MPEG-V. It is currently possible to identify a gap in the definition of processes, methods and tools to support the systematic development of multimedia /multisensory applications in accordance with the MPEG-V standard. The main objective of this work is to propose a Model-driven approach to integrate media, software and sensory effects projects. In this research, the thesis is argued that MDD can increase the productivity of the development of MulSeMedia applications, in particular those with such strong integration requirement with complex programming logic.",
+    "call-number": "10.1145/2976796.2976872",
+    "collection-title": "Webmedia '16",
+    "container-title": "Proceedings of the 22nd Brazilian Symposium on Multimedia and the Web",
+    "DOI": "10.1145/2976796.2976872",
+    "event-place": "Teresina, Piauí State, Brazil",
+    "ISBN": "9781450345125",
+    "keyword": "generative development, model-driven development, mulsemedia applications development, domain-specific language",
+    "number-of-pages": "8",
+    "page": "111–118",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "A Model-driven Approach for MulSeMedia Application Domain",
+    "URL": "https://doi.org/10.1145/2976796.2976872"
+  }
+}, {
+  "10.1145/3306446.3340832": {
+    "id": "10.1145/3306446.3340832",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Olsson", "given": "Thomas" }, { "family": "Runeson", "given": "Per" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2019, 8, 20]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2019, 8, 20]
+      ]
+    },
+    "abstract": "Data defined software is becoming more and more prevalent, especially with the advent of machine learning and artificial intelligence. With data defined systems come both challenges - to continue to collect and maintain quality data - and opportunities - open innovation by sharing with others. We propose Open Data Collaboration (ODC) to describe pecuniary and non-pecuniary sharing of open data, similar to Open Source Software. To understand challenges and opportunities with ODC, we ran focus groups with 22 companies and organizations. We observed an interest in the subject, but we conclude that the overall maturity is low and ODC is rare.",
+    "call-number": "10.1145/3306446.3340832",
+    "collection-number": "19",
+    "collection-title": "OpenSym '19",
+    "container-title": "Proceedings of the 15th International Symposium on Open Collaboration",
+    "DOI": "10.1145/3306446.3340832",
+    "event-place": "Skövde, Sweden",
+    "ISBN": "9781450363198",
+    "keyword": "open innovation, open data, data collaborations",
+    "number": "Article 19",
+    "number-of-pages": "4",
+    "page": "1–4",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Open data collaborations: a snapshot of an emerging practice",
+    "URL": "https://doi.org/10.1145/3306446.3340832"
+  }
+}, {
+  "10.1145/3120459.3120482": {
+    "id": "10.1145/3120459.3120482",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Wang", "given": "Yang" }, { "family": "Bogicevic", "given": "Ivan" }, { "family": "Wagner", "given": "Stefan" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2017, 5, 22]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2017, 5, 22]
+      ]
+    },
+    "abstract": "Context: There has been an increasing use of agile techniques for safety-critical systems. Agile techniques embrace fast changing requirements, continuously delivered products and frequent communication with lightweight documentation. Motivation: However, for safety-critical system projects, a lack of safety-related documentation influences the safety-related communication and may reduce the safety assurance's capability. Objective: In this article, we aim to improve the safety-related documentation in a Scrum development process and to support a more efficient safety-related communication. Method: We investigated three types of safety-related documentation patterns in agile development: safety epic, safety story, and agile safety plan. We further adapted and implemented them in a student project at the University of Stuttgart, Germany. We used participant observation, Scrum artifacts, documentation review, and questionnaires combined with interviews to validate this adapted documentation concerning their effect on communication, safety culture, and general impact on organization. Result: The results showed that safety story and safety epic have a positive effect on both internal and external communication. However, the agile safety plan showed little effect on communication. Rather, it has general impact on the safety process overview, priority management, providing a safety backup knowledge as well as having a delivered safety assessment report. Conclusion: To improve safety-related communication in a Scrum development process for safety-critical systems, the safety story and the safety epic are strongly suggested, while an agile safety plan should be further investigated depending on its general impact in various projects.",
+    "call-number": "10.1145/3120459.3120482",
+    "collection-number": "22",
+    "collection-title": "XP '17",
+    "container-title": "Proceedings of the XP2017 Scientific Workshops",
+    "DOI": "10.1145/3120459.3120482",
+    "event-place": "Cologne, Germany",
+    "ISBN": "9781450352642",
+    "keyword": "safety documentation, safety analysis, agile development",
+    "number": "Article 22",
+    "number-of-pages": "5",
+    "page": "1–5",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "A study of safety documentation in a Scrum development process",
+    "URL": "https://doi.org/10.1145/3120459.3120482"
+  }
+}, {
+  "10.1145/3078468.3078496": {
+    "id": "10.1145/3078468.3078496",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Vernik", "given": "Gil" }, { "family": "Factor", "given": "Michael" }, { "family": "Kolodner", "given": "Elliot K." }, { "family": "Ofer", "given": "Effi" }, { "family": "Michiardi", "given": "Pietro" }, { "family": "Pace", "given": "Francesco" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2017, 5, 22]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2017, 5, 22]
+      ]
+    },
+    "abstract": "Data is the natural resource of the 21st century. It is being produced at dizzying rates, e.g., for genomics by sequencers, for Media and Entertainment with very high resolution formats, and for Internet of Things (IoT) by multitudes of sensors. Object Stores such as AWS S3, Azure Blob storage, and IBM Cloud Object Storage, are highly scalable distributed storage systems that offer high capacity, cost effective storage for this data. But it is not enough just to store data; we also need to derive value from it. Apache Spark is the leading big data analytics processing engine. It runs up to one hundred times faster than Hadoop MapReduce and combines SQL, streaming and complex analytics. In this poster we present Stocator, a high performance storage connector, that enables Spark to work directly on data stored in object storage systems.",
+    "call-number": "10.1145/3078468.3078496",
+    "collection-number": "27",
+    "collection-title": "SYSTOR '17",
+    "container-title": "Proceedings of the 10th ACM International Systems and Storage Conference",
+    "DOI": "10.1145/3078468.3078496",
+    "event-place": "Haifa, Israel",
+    "ISBN": "9781450350358",
+    "number": "Article 27",
+    "number-of-pages": "1",
+    "page": "1",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Stocator: a high performance object store connector for spark",
+    "URL": "https://doi.org/10.1145/3078468.3078496"
+  }
+}, {
+  "10.1109/IPSN.2018.00032": {
+    "id": "10.1109/IPSN.2018.00032",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Dongare", "given": "Adwait" }, { "family": "Luong", "given": "Anh" }, { "family": "Balanuta", "given": "Artur" }, { "family": "Hesling", "given": "Craig" }, { "family": "Bhatia", "given": "Khushboo" }, { "family": "Iannucci", "given": "Bob" }, { "family": "Kumar", "given": "Swarun" }, { "family": "Rowe", "given": "Anthony" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2018, 4, 11]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2018, 4, 11]
+      ]
+    },
+    "abstract": "In this demonstration, we present OpenChirp, an open-source Low-Power Wide Area Networking (LPWAN) infrastructure. OpenChirp is a management framework that provides data context, storage, visualization, and access control over the web. At the physical layer of the system, we present LPRAN, a low-cost high-performance software-defined radio hardware platform that can receive signals up to -30 dB below the noise floor. Using our LPRAN hardware, it is possible to operate on raw I/Q streams in the cloud to perform collaborative tasks across multiple gateways such as jointly decoding weak signals and localization.",
+    "call-number": "10.1109/IPSN.2018.00032",
+    "collection-title": "IPSN '18",
+    "container-title": "Proceedings of the 17th ACM/IEEE International Conference on Information Processing in Sensor Networks",
+    "DOI": "10.1109/IPSN.2018.00032",
+    "event-place": "Porto, Portugal",
+    "ISBN": "9781538652985",
+    "number-of-pages": "2",
+    "page": "138–139",
+    "publisher": "IEEE Press",
+    "title": "The openchirp low-power wide-area network and ecosystem: demo abstract",
+    "URL": "https://doi.org/10.1109/IPSN.2018.00032"
+  }
+}, {
+  "10.1109/MICRO.2018.00071": {
+    "id": "10.1109/MICRO.2018.00071",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Zhang", "given": "Rui" }, { "family": "Deutschbein", "given": "Calvin" }, { "family": "Huang", "given": "Peng" }, { "family": "Sturton", "given": "Cynthia" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2018, 10, 20]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2018, 10, 20]
+      ]
+    },
+    "abstract": "This paper presents Coppelia, an end-to-end tool that, given a processor design and a set of security-critical invariants, automatically generates complete, replayable exploit programs to help designers find, contextualize, and assess the security threat of hardware vulnerabilities. In Coppelia, we develop a hardware-oriented backward symbolic execution engine with a new cycle stitching method and fast validation technique, along with several optimizations for exploit generation. We then add program stubs to complete the exploit. We evaluate Coppelia on three CPUs of different architectures. Coppelia is able to find and generate exploits for 29 of 31 known vulnerabilities in these CPUs, including 11 vulnerabilities that commercial and academic model checking tools can not find. All of the generated exploits are successfully replayable on an FPGA board. Moreover, Coppelia finds 4 new vulnerabilities along with exploits in these CPUs. We also use Coppelia to verify whether a security patch indeed fixed a vulnerability, and to refine a set of assertions.",
+    "call-number": "10.1109/MICRO.2018.00071",
+    "collection-title": "MICRO-51",
+    "container-title": "Proceedings of the 51st Annual IEEE/ACM International Symposium on Microarchitecture",
+    "DOI": "10.1109/MICRO.2018.00071",
+    "event-place": "Fukuoka, Japan",
+    "ISBN": "9781538662403",
+    "keyword": "symbolic execution, processor security, exploit generation",
+    "number-of-pages": "13",
+    "page": "815–827",
+    "publisher": "IEEE Press",
+    "title": "End-to-end automated exploit generation for validating the security of processor designs",
+    "URL": "https://doi.org/10.1109/MICRO.2018.00071"
+  }
+}, {
+  "10.1145/1163566.1163572": {
+    "id": "10.1145/1163566.1163572",
+    "type": "ARTICLE",
+    "author": [{ "family": "Denckla", "given": "Ben" }],
+    "issued": {
+      "date-parts": [
+        [2006, 8, 1]
+      ]
+    },
+    "abstract": "Some cyclic block diagrams need parallel semantics: they are syntactically invalid or semantically nonterminating in any block diagram language with sequential semantics. Yet, many cyclic block diagrams do not need parallel semantics: they behave the same in a block diagram language with non-strict sequential semantics. We show that a block diagram used to motivate the parallel semantics of the Ptolemy SR domain behaves the same in BdHas, a block diagram language with non-strict sequential semantics. BdHas is implemented as syntactic sugar on top of Haskell.",
+    "call-number": "10.1145/1163566.1163572",
+    "container-title": "SIGPLAN Not.",
+    "DOI": "10.1145/1163566.1163572",
+    "ISSN": "0362-1340",
+    "issue": "8",
+    "keyword": "semantics, haskell, ptolemy, esterel, block diagrams",
+    "number-of-pages": "5",
+    "page": "16–20",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "source": "August 2006",
+    "title": "Many cyclic block diagrams do not need parallel semantics",
+    "URL": "https://doi.org/10.1145/1163566.1163572",
+    "volume": "41"
+  }
+}, {
+  "10.1145/3302506.3312606": {
+    "id": "10.1145/3302506.3312606",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Friesel", "given": "Daniel" }, { "family": "Spinczyk", "given": "Olaf" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2019, 4, 16]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2019, 4, 16]
+      ]
+    },
+    "abstract": "The Inter-Integrated Circuit (I2C) bus is frequently used to connect sensors and actuators to cyber-physical systems. It is designed around always-on pull-up resistors, which transform valuable electric energy into heat whenever a 0-signal is sent or received. Using a software I2C implementation which disables pull-ups when possible, we decrease the energy demand of I2C transmissions at the cost of additional CPU time. On a low-power MSP430FR5969 microcontroller, we observe 10 to 50 % lower whole-system energy usage per transmission compared to conventional software I2C. An advantage over hardware I2C modules is only apparent at bus clocks below 10 kHz.",
+    "call-number": "10.1145/3302506.3312606",
+    "collection-title": "IPSN '19",
+    "container-title": "Proceedings of the 18th International Conference on Information Processing in Sensor Networks",
+    "DOI": "10.1145/3302506.3312606",
+    "event-place": "Montreal, Quebec, Canada",
+    "ISBN": "9781450362849",
+    "keyword": "I2C bus, energy models, embedded systems design, energy saving",
+    "number-of-pages": "2",
+    "page": "315–316",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "I<sup>2</sup>C considered wasteful: saving energy with host-controlled pull-up resistors: poster abstract",
+    "URL": "https://doi.org/10.1145/3302506.3312606"
+  }
+}, {
+  "10.1145/2882903.2899408": {
+    "id": "10.1145/2882903.2899408",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Ramnarayan", "given": "Jags" }, { "family": "Mozafari", "given": "Barzan" }, { "family": "Wale", "given": "Sumedh" }, { "family": "Menon", "given": "Sudhir" }, { "family": "Kumar", "given": "Neeraj" }, { "family": "Bhanawat", "given": "Hemant" }, { "family": "Chakraborty", "given": "Soubhik" }, { "family": "Mahajan", "given": "Yogesh" }, { "family": "Mishra", "given": "Rishitesh" }, { "family": "Bachhav", "given": "Kishor" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2016, 6, 26]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2016, 6, 26]
+      ]
+    },
+    "abstract": "In recent years, our customers have expressed frustration in the traditional approach of using a combination of disparate products to handle their streaming, transactional and analytical needs. The common practice of stitching heterogeneous environments in custom ways has caused enormous production woes by increasing development complexity and total cost of ownership. With SnappyData, an open source platform, we propose a unified engine for real-time operational analytics, delivering stream analytics, OLTP and OLAP in a single integrated solution. We realize this platform through a seamless integration of Apache Spark (as a big data computational engine) with GemFire (as an in-memory transactional store with scale-out SQL semantics). In this demonstration, after presenting a few use case scenarios, we exhibit SnappyData as our our in-memory solution for delivering truly interactive analytics (i.e., a couple of seconds), when faced with large data volumes or high velocity streams. We show that SnappyData can exploit state-of-the-art approximate query processing techniques and a variety of data synopses. Finally, we allow the audience to define various high-level accuracy contracts (HAC), to communicate their accuracy requirements with SnappyData in an intuitive fashion.",
+    "call-number": "10.1145/2882903.2899408",
+    "collection-title": "SIGMOD '16",
+    "container-title": "Proceedings of the 2016 International Conference on Management of Data",
+    "DOI": "10.1145/2882903.2899408",
+    "event-place": "San Francisco, California, USA",
+    "ISBN": "9781450335317",
+    "keyword": "in-memory database, spark, OLTP, stream processing, OLAP, spark streaming, stream analytics",
+    "number-of-pages": "4",
+    "page": "2153–2156",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "SnappyData: A Hybrid Transactional Analytical Store Built On Spark",
+    "URL": "https://doi.org/10.1145/2882903.2899408"
+  }
+}, {
+  "10.1145/3302509.3313326": {
+    "id": "10.1145/3302509.3313326",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Menon", "given": "Ramanunni P." }, { "family": "Amblard", "given": "Frederic" }, { "family": "Page", "given": "Jessen" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2019, 4, 16]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2019, 4, 16]
+      ]
+    },
+    "abstract": "There has been increased focus on improving the security and efficiency of the electricity grid resources. Many solutions have been proposed. Demand Response (DR) and Demand Side Management (DSM) are popular solutions in studies towards achieving these goals.This paper elucidates on the work being done within a Horizon 2020 (H2020) project, Sim4Blocks, funded by the EU, on the implementation of DR for a group of buildings with thermal and electric demands. The project tackles three issues that are of importance to realization of DR for end-users: (1) What hardware and communication protocols are required to ensure that existing devices (especially thermal devices) can participate in the electricity market? Would it be possible to future-proof the methodology developed? (2) How do we optimise the thermal and electric energy flows such that demand and comfort are satisfied while minimising stress in the electric grid and (3) How do we integrate the optimisation algorithms and associated software with the hardware so that the entire hardware-software framework works seamlessly.With these questions in mind, hardware, communication protocols, Domain Specific Languages (DSL) and optimisation frameworks are utilised and developed such that end-user buildings with thermal and electrical devices can participate in the electricity market.The entire framework developed is validated through demonstration on three pilot sites in three different countries with different sets of devices (Switzerland, Germany and Spain). These sites consisting of end-user buildings that have thermal and electrical devices which are conventionally found in today's market.Thus, through the development and demonstration of such a framework, Sim4Blocks is able to analyse the strengths, weaknesses and bottlenecks existing in today's devices, control methodologies and market constraints and suggest solutions to overcome them.",
+    "call-number": "10.1145/3302509.3313326",
+    "collection-title": "ICCPS '19",
+    "container-title": "Proceedings of the 10th ACM/IEEE International Conference on Cyber-Physical Systems",
+    "DOI": "10.1145/3302509.3313326",
+    "event-place": "Montreal, Quebec, Canada",
+    "ISBN": "9781450362856",
+    "keyword": "building blocks, aggregators, electricity market, demand response",
+    "number-of-pages": "2",
+    "page": "330–331",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Implementation of demand response for a block of buildings for active participation in the electricity market",
+    "URL": "https://doi.org/10.1145/3302509.3313326"
+  }
+}, {
+  "10.1145/3008167.3008169": {
+    "id": "10.1145/3008167.3008169",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Thoelen", "given": "Klaas" }, { "family": "Small", "given": "Nicolas" }, { "family": "Michiels", "given": "Sam" }, { "family": "Joosen", "given": "Wouter" }, { "family": "Hughes", "given": "Danny" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2016, 12, 12]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2016, 12, 12]
+      ]
+    },
+    "abstract": "Orchestration tools for Infrastructure-as-a-Service (IaaS) environments facilitate the deployment and management of cloud-based applications by automating the instantiation of virtual resources and configuration of software packages. While contemporary tools support the deployment of predefined applications, they lack internal support for taking care of changes in application designs. Dealing with this application dynamism in a timely manner requires new development and management techniques. This paper proposes a component-based approach that captures the entire design and runtime management cycle of IaaS applications. First, a component model is introduced that represents virtual computational resources as components and externalises control over their application logic. This model is then applied in a component framework that enables the rapid design of verified applications, and features additional support for the pre-provisioning of generic infrastructure and late configuration of application components. To showcase the capabilities of this approach, it is applied to an elastic media distribution use case.",
+    "call-number": "10.1145/3008167.3008169",
+    "collection-number": "2",
+    "collection-title": "ARM 2016",
+    "container-title": "Proceedings of the 15th International Workshop on Adaptive and Reflective Middleware",
+    "DOI": "10.1145/3008167.3008169",
+    "event-place": "Trento, Italy",
+    "ISBN": "9781450346627",
+    "number": "Article 2",
+    "number-of-pages": "6",
+    "page": "1–6",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Component-based Orchestration of Dynamic IaaS Applications",
+    "URL": "https://doi.org/10.1145/3008167.3008169"
+  }
+}, {
+  "10.1145/3088515.3088516": {
+    "id": "10.1145/3088515.3088516",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Park", "given": "Jihyeok" }, { "family": "Rival", "given": "Xavier" }, { "family": "Ryu", "given": "Sukyoung" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2017, 6, 18]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2017, 6, 18]
+      ]
+    },
+    "abstract": "JavaScript is one of the most widely used programming languages. To understand the behaviors of JavaScript programs and to detect possible errors in them, researchers have developed several static analyzers based on the abstract interpretation framework. However, JavaScript provides various language features that are difficult to analyze statically and precisely such as dynamic addition and removal of object properties, first-class property names, and higher-order functions. To alleviate the problem, JavaScript static analyzers often use recency abstraction, which refines address abstraction by distinguishing recent objects from summaries of old objects. We observed that while recency abstraction enables more precise analysis results by allowing strong updates on recent objects, it is not monotone in the sense that it does not preserve the precision relationship between the underlying address abstraction techniques: for an address abstraction A and a more precise abstraction B, recency abstraction on B may not be more precise than recency abstraction on A. Such an unintuitive semantics of recency abstraction makes its composition with various analysis sensitivity techniques also unintuitive. In this paper, we propose a new singleton abstraction technique, which distinguishes singleton objects to allow strong updates on them without changing a given address abstraction. We formally define recency and singleton abstractions, and explain the unintuitive behaviors of recency abstraction. Our preliminary experiments show promising results for singleton abstraction.",
+    "call-number": "10.1145/3088515.3088516",
+    "collection-title": "SOAP 2017",
+    "container-title": "Proceedings of the 6th ACM SIGPLAN International Workshop on State Of the Art in Program Analysis",
+    "DOI": "10.1145/3088515.3088516",
+    "event-place": "Barcelona, Spain",
+    "ISBN": "9781450350723",
+    "keyword": "address partition, recency abstraction, Address abstraction",
+    "number-of-pages": "6",
+    "page": "1–6",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Revisiting recency abstraction for JavaScript: towards an intuitive, compositional, and efficient heap abstraction",
+    "URL": "https://doi.org/10.1145/3088515.3088516"
+  }
+}, {
+  "10.1145/3328905.3332462": {
+    "id": "10.1145/3328905.3332462",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Tommasini", "given": "Riccardo" }, { "family": "Sakr", "given": "Sherif" }, { "family": "Balduini", "given": "Marco" }, { "family": "Valle", "given": "Emanuele Della" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2019, 6, 24]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2019, 6, 24]
+      ]
+    },
+    "abstract": "In the Big Data context, data streaming systems have been introduced to tame velocity and enable reactive decision making. However, approaching such systems is still too complex due to the paradigm shift they require, i.e., moving from scalable batch processing to continuous analysis and detection. Initially, modern big stream processing systems (e.g., Flink, Spark, Storm) have been lacking the support of declarative languages to express the streaming-based data processing tasks and have been mainly relying on providing low-level APIs for the end-users to implement their tasks. However, recently, this fact has been changing and most of them started to provide SQL-like languages for their end-users.In general, declarative Languages are playing a crucial role in fostering the adoption of Stream Processing. This tutorial focuses on introducing various approaches for declarative querying of the state-of-the-art big data streaming frameworks. In addition, we provide guidelines and practical examples on developing and deploying Stream Processing applications using a variety of SQL-like languages, such as Flink-SQL, KSQL and Spark Streaming SQL.",
+    "call-number": "10.1145/3328905.3332462",
+    "collection-title": "DEBS '19",
+    "container-title": "Proceedings of the 13th ACM International Conference on Distributed and Event-based Systems",
+    "DOI": "10.1145/3328905.3332462",
+    "event-place": "Darmstadt, Germany",
+    "ISBN": "9781450367943",
+    "keyword": "complex event processing, streaming sql, stream processing",
+    "number-of-pages": "4",
+    "page": "199–202",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "An Outlook to Declarative Languages for Big Steaming Data",
+    "URL": "https://doi.org/10.1145/3328905.3332462"
+  }
+}, {
+  "10.1145/2664551.2664573": {
+    "id": "10.1145/2664551.2664573",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "de Andrade Junior", "given": "Nailton Vieira" }, { "family": "Bastos", "given": "Daniel Borges" }, { "family": "Prazeres", "given": "Cassio Vinicius Serafim" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2014, 11, 18]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2014, 11, 18]
+      ]
+    },
+    "abstract": "The Web of Things proposes to make devices available by using Web standards and protocols. Several different devices, which can be connected to the Web of Things, demand efforts to implement specific services to deploy each of such devices. For that reason, this paper presents an approach to automatically publish and configure devices as Web of Things resources. Our approach presents models that implement device functionalities and uses such models to automatically generate Web Services for devices. This paper also presents: i) dynamic discovery and configuration of devices when connecting to a local network by using Zeroconf protocol; ii) automatic generation of applications for publishing devices on the Web of Things.",
+    "call-number": "10.1145/2664551.2664573",
+    "collection-title": "WebMedia '14",
+    "container-title": "Proceedings of the 20th Brazilian Symposium on Multimedia and the Web",
+    "DOI": "10.1145/2664551.2664573",
+    "event-place": "João Pessoa, Brazil",
+    "ISBN": "9781450332309",
+    "keyword": "publishing, discovery, device, configuration, web of things",
+    "number-of-pages": "8",
+    "page": "67–74",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Web of Things: Automatic Publishing and Configuration of Devices",
+    "URL": "https://doi.org/10.1145/2664551.2664573"
+  }
+}, {
+  "10.1145/3232693.3232706": {
+    "id": "10.1145/3232693.3232706",
+    "type": "ARTICLE",
+    "author": [{ "family": "Carrez", "given": "Stéphane" }],
+    "issued": {
+      "date-parts": [
+        [2018, 6, 13]
+      ]
+    },
+    "abstract": "This article presents Ada Embedded Network, a small network stack intended to be used by small embedded Ada applications running on ARM. It implements the standard ARP, IPv4, UDP, DNS and DHCP protocols on top of an Ethernet driver. Its memory efficient design allows it to run on the STM32F746 board. The article presents the components from the Ada implementation point of view. It highlights the Ada features that have been used and shows some benefits of the Ravenscar profile that have helped the project.",
+    "call-number": "10.1145/3232693.3232706",
+    "container-title": "Ada Lett.",
+    "DOI": "10.1145/3232693.3232706",
+    "ISSN": "1094-3641",
+    "issue": "2",
+    "keyword": "ethernet, ravenscar, protocols, IPv4, networking",
+    "number-of-pages": "8",
+    "page": "51–58",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "source": "December 2017",
+    "title": "IP Network Stack in Ada 2012 and the Ravenscar Profile",
+    "URL": "https://doi.org/10.1145/3232693.3232706",
+    "volume": "37"
+  }
+}, {
+  "10.1145/3399579.3399867": {
+    "id": "10.1145/3399579.3399867",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Chen", "given": "Andrew" }, { "family": "Chow", "given": "Andy" }, { "family": "Davidson", "given": "Aaron" }, { "family": "DCunha", "given": "Arjun" }, { "family": "Ghodsi", "given": "Ali" }, { "family": "Hong", "given": "Sue Ann" }, { "family": "Konwinski", "given": "Andy" }, { "family": "Mewald", "given": "Clemens" }, { "family": "Murching", "given": "Siddharth" }, { "family": "Nykodym", "given": "Tomas" }, { "family": "Ogilvie", "given": "Paul" }, { "family": "Parkhe", "given": "Mani" }, { "family": "Singh", "given": "Avesh" }, { "family": "Xie", "given": "Fen" }, { "family": "Zaharia", "given": "Matei" }, { "family": "Zang", "given": "Richard" }, { "family": "Zheng", "given": "Juntai" }, { "family": "Zumar", "given": "Corey" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2020, 6, 14]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2020, 6, 14]
+      ]
+    },
+    "abstract": "MLflow is a popular open source platform for managing ML development, including experiment tracking, reproducibility, and deployment. In this paper, we discuss user feedback collected since MLflow was launched in 2018, as well as three major features we have introduced in response to this feedback: a Model Registry for collaborative model management and review, tools for simplifying ML code instrumentation, and experiment analytics functions for extracting insights from millions of ML experiments.",
+    "call-number": "10.1145/3399579.3399867",
+    "collection-number": "5",
+    "collection-title": "DEEM'20",
+    "container-title": "Proceedings of the Fourth International Workshop on Data Management for End-to-End Machine Learning",
+    "DOI": "10.1145/3399579.3399867",
+    "event-place": "Portland, OR, USA",
+    "ISBN": "9781450380232",
+    "number": "Article 5",
+    "number-of-pages": "4",
+    "page": "1–4",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Developments in MLflow: A System to Accelerate the Machine Learning Lifecycle",
+    "URL": "https://doi.org/10.1145/3399579.3399867"
+  }
+}, {
+  "10.1145/2939502.2939516": {
+    "id": "10.1145/2939502.2939516",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Vartak", "given": "Manasi" }, { "family": "Subramanyam", "given": "Harihar" }, { "family": "Lee", "given": "Wei-En" }, { "family": "Viswanathan", "given": "Srinidhi" }, { "family": "Husnoo", "given": "Saadiyah" }, { "family": "Madden", "given": "Samuel" }, { "family": "Zaharia", "given": "Matei" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2016, 6, 26]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2016, 6, 26]
+      ]
+    },
+    "abstract": "Building a machine learning model is an iterative process. A data scientist will build many tens to hundreds of models before arriving at one that meets some acceptance criteria (e.g. AUC cutoff, accuracy threshold). However, the current style of model building is ad-hoc and there is no practical way for a data scientist to manage models that are built over time. As a result, the data scientist must attempt to \"remember\" previously constructed models and insights obtained from them. This task is challenging for more than a handful of models and can hamper the process of sensemaking. Without a means to manage models, there is no easy way for a data scientist to answer questions such as \"Which models were built using an incorrect feature?\", \"Which model performed best on American customers?\" or \"How did the two top models compare?\" In this paper, we describe our ongoing work on ModelDB, a novel end-to-end system for the management of machine learning models. ModelDB clients automatically track machine learning models in their native environments (e.g. scikit-learn, spark.ml), the ModelDB backend introduces a common layer of abstractions to represent models and pipelines, and the ModelDB frontend allows visual exploration and analyses of models via a web-based interface.",
+    "call-number": "10.1145/2939502.2939516",
+    "collection-number": "14",
+    "collection-title": "HILDA '16",
+    "container-title": "Proceedings of the Workshop on Human-In-the-Loop Data Analytics",
+    "DOI": "10.1145/2939502.2939516",
+    "event-place": "San Francisco, California",
+    "ISBN": "9781450342070",
+    "number": "Article 14",
+    "number-of-pages": "3",
+    "page": "1–3",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "M<span class=\"smallcaps smallerCapital\">odel</span>DB: a system for machine learning model management",
+    "URL": "https://doi.org/10.1145/2939502.2939516"
+  }
+}, {
+  "10.1145/3377644.3377653": {
+    "id": "10.1145/3377644.3377653",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Wei", "given": "Ding" }, { "family": "Zidong", "given": "Hua" }, { "family": "Panhui", "given": "Li" }, { "family": "Qiushi", "given": "Gong" }, { "family": "Yuxi", "given": "Cheng" }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2020, 1, 10]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2020, 1, 10]
+      ]
+    },
+    "abstract": "As a common means of communication, heartbeat is often used by the network applications. Hosts with the same heartbeat tend to have the same applications and thus share the homogenous vulnerabilities. Based on the detected heartbeat, the paper designs the heartbeat network, the heartbeat associated graph and an attribute propagation algorithm based on the heartbeat associated graph. The paper takes the distributed denial of service (DDoS) malicious host information provided by the intrusion detection system (IDS) deployed on the boundary of China education and research network (CERNET) Nanjing master node network as attribution, and constructs the associated graph based on the user datagram protocol (UDP) heartbeat detection result at the same location. The attribute propagation algorithm was tested for 17 days. And The result shows that the method can effectively detect DDoS malicious hosts that are not located by IDS.",
+    "call-number": "10.1145/3377644.3377653",
+    "collection-title": "ICCSP 2020",
+    "container-title": "Proceedings of the 2020 4th International Conference on Cryptography, Security and Privacy",
+    "DOI": "10.1145/3377644.3377653",
+    "event-place": "Nanjing, China",
+    "ISBN": "9781450377447",
+    "keyword": "heartbeat association, Heartbeat network, attribute propagation algorithm, botnet host",
+    "number-of-pages": "5",
+    "page": "42–46",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Botnet Host Detection Based on Heartbeat Association",
+    "URL": "https://doi.org/10.1145/3377644.3377653"
+  }
+}, {
+  "10.1145/3314058.3314065": {
+    "id": "10.1145/3314058.3314065",
+    "type": "PAPER_CONFERENCE",
+    "author": [{ "family": "Damodaran", "given": "Suresh K." }, { "family": "Rowe", "given": "Paul D." }],
+    "accessed": {
+      "date-parts": [
+        [2020, 12, 29]
+      ]
+    },
+    "issued": {
+      "date-parts": [
+        [2019, 4, 1]
+      ]
+    },
+    "original-date": {
+      "date-parts": [
+        [2019, 4, 1]
+      ]
+    },
+    "abstract": "Increased interconnectivity of Cyber-Physical Systems, by design or otherwise, increases the cyber attack surface and attack vectors. Observing the effects of these attacks is helpful in detecting them. In this paper, we show that many attacks on such systems result in a control loop effect we term Process Model Inconsistency (PMI). Our formal approach elucidates the relationships among incompleteness, incorrectness, safety, and inconsistency of process models. We show that incomplete process models lead to inconsistency. Surprisingly, inconsistency may arise even in complete and correct models. We illustrate our approach through an Automated Teller Machine (ATM) example, and describe the practical implications of the theoretical results.",
+    "call-number": "10.1145/3314058.3314065",
+    "collection-number": "2",
+    "collection-title": "HotSoS '19",
+    "container-title": "Proceedings of the 6th Annual Symposium on Hot Topics in the Science of Security",
+    "DOI": "10.1145/3314058.3314065",
+    "event-place": "Nashville, Tennessee, USA",
+    "ISBN": "9781450371476",
+    "keyword": "attack detection, cyber-physical systems, embedded systems, dynamic behavior modeling, cyber attacks",
+    "number": "Article 2",
+    "number-of-pages": "10",
+    "page": "1–10",
+    "publisher": "Association for Computing Machinery",
+    "publisher-place": "New York, NY, USA",
+    "title": "Limitations on observability of effects in cyber-physical systems",
+    "URL": "https://doi.org/10.1145/3314058.3314065"
+  }
+}]

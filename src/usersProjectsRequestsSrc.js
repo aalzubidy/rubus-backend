@@ -59,6 +59,7 @@ const newUserProjectRequest = async function newUserProjectRequest(userProjectRe
 
     return { message: 'User project request created successfully', id: insertQueryResults.rows[0]['id'] };
   } catch (error) {
+    console.log(error);
     if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
@@ -97,6 +98,7 @@ const deleteUserProjectRequest = async function deleteUserProjectRequest(userPro
 
     return { message: 'User project request deleted successfully by id' };
   } catch (error) {
+    console.log(error);
     if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
@@ -157,6 +159,7 @@ const modifyUserProjectRequest = async function modifyUserProjectRequest(userPro
 
     return { message: 'User project request modified successfully' };
   } catch (error) {
+    console.log(error);
     if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
@@ -199,6 +202,7 @@ const getUserProjectRequestById = async function getUserProjectRequestById(userP
       throw { code: 404, message: 'User project request not found using id' };
     }
   } catch (error) {
+    console.log(error);
     if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
@@ -240,6 +244,7 @@ const getUserProjectRequestByProjectId = async function getUserProjectRequestByP
       throw { code: 404, message: 'User project request not found using project id' };
     }
   } catch (error) {
+    console.log(error);
     if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
