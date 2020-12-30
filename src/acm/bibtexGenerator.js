@@ -281,20 +281,20 @@ const acmMisc = function acmMisc(item) {
  * @throws {object} errorDetails
  */
 const generateBibtex = function generateBibtex(item) {
-  if (!item.type) {
+  if (!item['type']) {
     return (acmMisc(item));
   }
 
-  switch (item.type.toLowerCase()) {
+  switch (item['type'].toLowerCase()) {
     case 'article':
       return (acmArticle(item));
     case 'book':
       return (acmBook(item));
     case 'thesis':
       return (acmPhdThesis(item));
-    case 'PAPER_CONFERENCE':
+    case 'paper_conference':
       return (acmInproceedings(item));
-    case 'REPORT':
+    case 'report':
       return (acmTechnicalReport(item));
     default:
       return (acmMisc(item));

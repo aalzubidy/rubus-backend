@@ -3,6 +3,7 @@ const Ajv = require('ajv');
 const { logger } = require('./logger');
 const publicationSchema = require('../schemas/publicationSchema.json');
 const db = require('../db/db');
+const tools = require('./tools');
 
 /**
  * @async
@@ -40,15 +41,16 @@ const newPublication = async function newPublication(publication, user) {
       publicationKeysCount.push(`$${i + 1}`);
       publicationValues.push(publication[k]);
     });
-    const queryLine = `insert into publications(${publicationKeys.toString()}) values(${publicationKeysCount.toString()}) returning id`;
+    const queryLine = `insert into publications(${publicationKeys.toString()}) values(${publicationKeysCount.toString()}) ON CONFLICT DO NOTHING returning id`;
 
     // Create a publication in the database
     const newPublicationQuery = await db.query(queryLine, publicationValues);
     logger.debug({ label: 'new publication query response', results: newPublicationQuery.rows });
 
-    return { message: 'Publication created successfully', id: newPublicationQuery.rows[0] };
+    return { message: 'Publication created successfully', id: newPublicationQuery.rows[0].id };
   } catch (error) {
-    if (error.code) {
+    console.log(error);
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -81,7 +83,7 @@ const deletePublicationByDOI = async function deletePublicationByDOI(dois, user)
 
     return { message: 'Publication deleted successfully by doi' };
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -114,7 +116,7 @@ const deletePublicationById = async function deletePublicationById(publicationId
 
     return { message: 'Publication deleted successfully by id' };
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -146,30 +148,34 @@ const addPublicationToProjectByDoi = async function addPublicationToProjectByDoi
       id
     } = user;
 
-    // Check the user permission to manipulate project's publication
-    const queryProjectUsers = await db.query('select user_id, project_id from projects_users where user_id=$1 and project_id=$2', [id, projectId]);
-    if (!queryProjectUsers || !queryProjectUsers.rows[0] || queryProjectUsers.rows[0]['user_id'] != id || queryProjectUsers.rows[0]['project_id'] != projectId) {
-      throw { code: 403, message: 'User does not have permissions to modify project\'s publications' };
-    }
+    // Check the user in project
+    await tools.checkUserInProject(id, projectId);
 
     const successItems = [];
     const failedItems = [];
 
     // Retreive publication by id and add it to a project
-    dois.forEach(async (doi) => {
-      let queryPublicationId = await db.query('select id from publications where doi=$1', [doi]);
-      if (queryPublicationId && queryPublicationId.rows[0]) {
-        queryPublicationId = queryPublicationId.rows[0];
-        await db.query('insert into publications_projects(publication_id, project_id, search_query_id) values($1, $2, $3)', [queryPublicationId, projectId, searchQueryId]);
-        successItems.push(doi);
-      } else {
+    for await (const doi of dois) {
+      try {
+        const queryLinkPublication = await db.query('insert into publications_projects(publication_id, project_id, search_query_id) values((select id from publications where doi=$1), $2, $3) ON CONFLICT DO NOTHING', [doi, projectId, searchQueryId]);
+        if (queryLinkPublication) {
+          successItems.push(doi);
+        } else {
+          failedItems.push(doi);
+        }
+      } catch (error) {
         failedItems.push(doi);
       }
-    });
+    }
 
-    return { message: 'Publication added to project successfully by doi', successItems, failedItems };
+    let returnMsg = 'All publications added to project successfully by doi';
+    if (failedItems.length > 0) {
+      returnMsg = 'Some publications added sccussefully by doi, and some pubications failed.';
+    }
+
+    return { message: returnMsg, successItems, failedItems };
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       console.log(error);
       throw error;
     }
@@ -201,28 +207,35 @@ const addPublicationToProjectById = async function addPublicationToProjectById(p
       id
     } = user;
 
-    // Check the user permission to manipulate project's publication
-    const queryProjectUsers = await db.query('select user_id, project_id from projects_users where user_id=$1 and project_id=$2', [id, projectId]);
-    if (!queryProjectUsers || !queryProjectUsers.rows[0] || queryProjectUsers.rows[0]['user_id'] != id || queryProjectUsers.rows[0]['project_id'] != projectId) {
-      throw { code: 403, message: 'User does not have permissions to modify project\'s publications' };
-    }
+    // Check the user in project
+    await tools.checkUserInProject(id, projectId);
 
     const successItems = [];
     const failedItems = [];
 
     // Retreive publication by id and add it to a project
-    publicationIds.forEach(async (publicationId) => {
-      const addPublicationQuery = await db.query('insert into publications_projects(publication_id, project_id, search_query_id) values($1, $2, $3) ON CONFLICT DO NOTHING', [publicationId, projectId, searchQueryId]);
-      if (addPublicationQuery) {
-        successItems.push(publicationId);
-      } else {
+    for await (const publicationId of publicationIds) {
+      try {
+        const queryLinkPublication = await db.query('insert into publications_projects(publication_id, project_id, search_query_id) values($1, $2, $3) ON CONFLICT DO NOTHING', [publicationId, projectId, searchQueryId]);
+        if (queryLinkPublication) {
+          successItems.push(publicationId);
+        } else {
+          failedItems.push(publicationId);
+        }
+      } catch (error) {
         failedItems.push(publicationId);
       }
-    });
+    }
 
-    return { message: 'Publication added to project successfully by id', successItems, failedItems };
+    let returnMsg = 'All publications added to project successfully by id';
+    if (failedItems.length > 0) {
+      returnMsg = 'Some publications added sccussefully by id, and some publications failed.';
+    }
+
+    return { message: returnMsg, successItems, failedItems };
   } catch (error) {
-    if (error.code) {
+    console.log(error);
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -253,30 +266,34 @@ const deletePublicationFromProjectByDoi = async function deletePublicationFromPr
       id
     } = user;
 
-    // Check the user permission to manipulate project's publication
-    const queryProjectUsers = await db.query('select user_id, project_id from projects_users where user_id=$1 and project_id=$2', [id, projectId]);
-    if (!queryProjectUsers || !queryProjectUsers.rows[0] || queryProjectUsers.rows[0]['user_id'] != id || queryProjectUsers.rows[0]['project_id'] != projectId) {
-      throw { code: 403, message: 'User does not have permissions to modify project\'s publications' };
-    }
+    // Check the user in project
+    await tools.checkUserInProject(id, projectId);
 
     const successItems = [];
     const failedItems = [];
 
-    // Retreive publication by id and delete it from a project
-    dois.forEach(async (doi) => {
-      let queryPublicationId = await db.query('select id from publications where doi=$1', [doi]);
-      if (queryPublicationId && queryPublicationId.rows[0]) {
-        queryPublicationId = queryPublicationId.rows[0];
-        await db.query('delete from publications_projects where publication_id=$1 and project_id=$2', [queryPublicationId, projectId]);
-        successItems.push(doi);
-      } else {
+    // Retreive publication by id and add it to a project
+    for await (const doi of dois) {
+      try {
+        const queryLinkPublication = await db.query('delete from publications_projects where publication_id=(select id from publications where doi=$1) and project_id=$2', [doi, projectId]);
+        if (queryLinkPublication) {
+          successItems.push(doi);
+        } else {
+          failedItems.push(doi);
+        }
+      } catch (error) {
         failedItems.push(doi);
       }
-    });
+    }
 
-    return { message: 'Publication deleted to project successfully by doi', successItems, failedItems };
+    let returnMsg = 'All publications deleted from project successfully by doi';
+    if (failedItems.length > 0) {
+      returnMsg = 'Some publications dleted sccussefully by doi, and some publications failed.';
+    }
+
+    return { message: returnMsg, successItems, failedItems };
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -307,28 +324,34 @@ const deletePublicationFromProjectById = async function deletePublicationFromPro
       id
     } = user;
 
-    // Check the user permission to manipulate project's publication
-    const queryProjectUsers = await db.query('select user_id, project_id from projects_users where user_id=$1 and project_id=$2', [id, projectId]);
-    if (!queryProjectUsers || !queryProjectUsers.rows[0] || queryProjectUsers.rows[0]['user_id'] != id || queryProjectUsers.rows[0]['project_id'] != projectId) {
-      throw { code: 403, message: 'User does not have permissions to modify project\'s publications' };
-    }
+    // Check the user in project
+    await tools.checkUserInProject(id, projectId);
 
     const successItems = [];
     const failedItems = [];
 
-    // Delete publication from project by id
-    publicationIds.forEach(async (publicationId) => {
-      const deletePublicationQuery = await db.query('delete from publications_projects where publication_id=$1 and project_id=$2', [publicationId, projectId]);
-      if (deletePublicationQuery) {
-        successItems.push(publicationId);
-      } else {
+    // Retreive publication by id and add it to a project
+    for await (const publicationId of publicationIds) {
+      try {
+        const queryLinkPublication = await db.query('delete from publications_projects where publication_id=$1 and project_id=$2', [publicationId, projectId]);
+        if (queryLinkPublication) {
+          successItems.push(publicationId);
+        } else {
+          failedItems.push(publicationId);
+        }
+      } catch (error) {
         failedItems.push(publicationId);
       }
-    });
+    }
 
-    return { message: 'Publication deleted to project successfully by id', successItems, failedItems };
+    let returnMsg = 'All publications deleted from project successfully by id';
+    if (failedItems.length > 0) {
+      returnMsg = 'Some publications deleted sccussefully by id, and some publications failed.';
+    }
+
+    return { message: returnMsg, successItems, failedItems };
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -358,11 +381,8 @@ const deleteAllPublicationsFromProject = async function deleteAllPublicationsFro
       id
     } = user;
 
-    // Check the user permission to manipulate project's publication
-    const queryProjectUsers = await db.query('select user_id, project_id from projects_users where user_id=$1 and project_id=$2', [id, projectId]);
-    if (!queryProjectUsers || !queryProjectUsers.rows[0] || queryProjectUsers.rows[0]['user_id'] != id || queryProjectUsers.rows[0]['project_id'] != projectId) {
-      throw { code: 403, message: 'User does not have permissions to modify project\'s publications' };
-    }
+    // Check the user in project
+    await tools.checkUserInProject(id, projectId);
 
     // Delete all publications from a project
     const deletePublicationQuery = await db.query('delete from publications_projects where project_id=$1', [projectId]);
@@ -372,7 +392,7 @@ const deleteAllPublicationsFromProject = async function deleteAllPublicationsFro
       throw { code: 500, message: 'Could not delete publications from a project' };
     }
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -408,7 +428,7 @@ const getPublicationById = async function getPublicationById(publicationId, user
       throw { code: 500, message: 'Could not find publication by id' };
     }
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -444,7 +464,7 @@ const getPublicationByDOI = async function getPublicationByDOI(publicationDoi, u
       return false;
     }
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -474,14 +494,11 @@ const getPublicationsByProjectId = async function getPublicationsByProjectId(pro
       id
     } = user;
 
-    // Check the user permission to manipulate project's publication
-    const queryProjectUsers = await db.query('select user_id, project_id from projects_users where user_id=$1 and project_id=$2', [id, projectId]);
-    if (!queryProjectUsers || !queryProjectUsers.rows[0] || queryProjectUsers.rows[0]['user_id'] != id || queryProjectUsers.rows[0]['project_id'] != projectId) {
-      throw { code: 403, message: 'User does not have permissions to modify project\'s publications' };
-    }
+    // Check the user in project
+    await tools.checkUserInProject(id, projectId);
 
     // Get publications by project id
-    const publicationQuery = await db.query('select * from publications_projects where project_id=$1', [projectId]);
+    const publicationQuery = await db.query('select * from publications, publications_projects where publications_projects.project_id=$1 and publications.id=publications_projects.publication_id', [projectId]);
     logger.debug({ label: 'get publications by project id query response', results: publicationQuery.rows });
 
     if (publicationQuery && publicationQuery.rows) {
@@ -490,7 +507,7 @@ const getPublicationsByProjectId = async function getPublicationsByProjectId(pro
       throw { code: 500, message: 'Could not find publications by project id' };
     }
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }

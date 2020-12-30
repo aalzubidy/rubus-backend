@@ -20,7 +20,7 @@
       "example": "some full name, some full name"
     },
     "editor": {
-      "type": "string",
+      "type": ["string", "null"],
       "example": "some full name, some full name"
     },
     "title": {
@@ -28,68 +28,67 @@
       "example": "some article title"
     },
     "book_title": {
-      "type": "string",
+      "type": ["string", "null"],
       "example": "some book title"
     },
     "year": {
-      "type": "string",
+      "type": ["string", "number", "null"],
       "example": "2020"
     },
     "publisher": {
-      "type": "string",
+      "type": ["string", "null"],
       "example": "some publisher"
     },
     "address": {
-      "type": "string",
+      "type": ["string", "null"],
       "example": "Seattle, WA"
     },
     "pages": {
-      "type": "string",
+      "type": ["string", "number", "null"],
       "example": "122-300"
     },
     "isbn": {
-      "type": "string",
+      "type": ["string", "number", "null"],
       "example": "978-3-16-148410-0"
     },
     "doi": {
-      "type": "string",
+      "type": ["string", "number"],
       "example": "10.1093/1234"
     },
     "url": {
-      "type": "string",
+      "type": ["string", "null"],
       "example": "https://example.com/doi/10.1093/1234"
     },
     "journal": {
-      "type": "string",
+      "type": ["string", "null"],
       "example": "some journal title"
     },
     "volume": {
-      "type": "string",
+      "type": ["string", "number", "null"],
       "example": "1"
     },
     "abstract": {
-      "type": "string",
+      "type": ["string", "null"],
       "example": "some abstract"
     },
     "issn": {
-      "type": "string",
+      "type": ["string", "number", "null"],
       "example": "2049-3630"
     },
     "location": {
-      "type": "string",
+      "type": ["string", "null"],
       "example": "WA"
     },
     "keywords": {
-      "type": "string",
+      "type": ["string", "object", "null"],
       "example": "some keywords"
     },
     "month": {
-      "type": "string",
+      "type": ["string", "number", "null"],
       "example": "Jan"
     },
     "obtained_bibtex": {
-      "type": "string",
-      "example": "@article{somebibtex}"
+      "type": ["string", "object", "array", "null"]
     },
     "generated_bibtex": {
       "type": "string",

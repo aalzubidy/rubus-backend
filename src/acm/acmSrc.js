@@ -7,6 +7,7 @@ const tools = require('../tools');
 const userProjectRequest = require('../usersProjectsRequestsSrc');
 const publication = require('../publicationSrc');
 const bibtexGenerator = require('./bibtexGenerator');
+const { logout } = require('../authorizationSrc');
 
 // Default values
 const acmBaseUrl = 'https://dl.acm.org/';
@@ -26,7 +27,7 @@ const getToken = async function getToken() {
     cookieString = cookieString['headers']['set-cookie'][0];
     return { token: cookieString };
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -62,7 +63,8 @@ const parseURLArticles = async function parseURLArticles(acmQueryUrl, token = nu
 
     const articles = [];
     const dois = [];
-    $('.issue-item-container').each((item) => {
+
+    $('.issue-item-container').each((i, item) => {
       // Convert item to parsable html
       const htmlItem = cheerio.load(item);
 
@@ -71,11 +73,12 @@ const parseURLArticles = async function parseURLArticles(acmQueryUrl, token = nu
       title = title ? title.trim().replace(/\s\s/g, '') : title;
 
       // Select doi
-      const doi = htmlItem('.issue-item__title a').attr('href');
+      let doi = htmlItem('.issue-item__title a').attr('href');
       if (doi && doi.indexOf('proceedings') > 0) {
         return;
       }
       if (doi) {
+        doi = doi.startsWith('/doi/') ? doi.substring(5) : doi;
         dois.push(doi);
       }
 
@@ -120,11 +123,12 @@ const parseURLArticles = async function parseURLArticles(acmQueryUrl, token = nu
       dois
     });
   } catch (error) {
-    if (error.code) {
+    console.log(error);
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
-    const errorMsg = 'Could not get parse articles from an ACM url';
+    const errorMsg = 'Could not get and parse articles from an ACM url';
     logger.error({ errorMsg, error });
     throw { code: 500, message: errorMsg };
   }
@@ -171,7 +175,7 @@ const getArticlesDetails = async function getArticlesDetails(dois, token = null,
       throw { code: 500, message: 'Could not get articles details from ACM', results };
     }
   } catch (error) {
-    if (error.code) {
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }
@@ -199,9 +203,9 @@ const parseType = function parseType(type) {
       return 'book';
     case 'thesis':
       return 'thesis';
-    case 'PAPER_CONFERENCE':
+    case 'paper_conference':
       return 'conference paper';
-    case 'REPORT':
+    case 'report':
       return 'technical report';
     default:
       return 'misc';
@@ -223,7 +227,7 @@ const parseAuthors = function paraseAuthors(author) {
   author.forEach((item) => {
     authors.push(`${item.given} ${item.family}`);
   });
-  return authors;
+  return authors.toString();
 };
 
 /**
@@ -242,7 +246,7 @@ const searchAndSave = async function searchAndSave(searchUrl, projectId, searchQ
     const { id } = user;
 
     // Check if the user is allowed to make requests on the project
-    await tools.checkUserProjectPermission(id, projectId);
+    await tools.checkUserInProject(id, projectId);
 
     // create a new request and get request id
     const initialUserProjectRequest = {
@@ -262,12 +266,25 @@ const searchAndSave = async function searchAndSave(searchUrl, projectId, searchQ
     // List of dois that are not in database yet
     const doisNeeded = [];
     let completed = 0;
+    let failed = 0;
+    let skipped = 0;
 
     // Search all pages and link anything already in the database to the project
     while (status === 'in-progress') {
+      // Update the url to parse 50 results in one parse
+      if (searchUrl.indexOf('&pageSize=50') <= 0) {
+        searchUrl = `${searchUrl}&pageSize=50`;
+      } else {
+        searchUrl = searchUrl.replace(/pageSize=\d+/gm, '&pageSize=50');
+      }
+
+      logger.debug({ label: 'searchUrl after chaning page size', searchUrl });
+
       // Go to a url and get all the DOIs
-      const { dois, info } = parseURLArticles(searchUrl, token, user);
+      const { dois, info } = await parseURLArticles(searchUrl, token, user);
       const { totalResults, showingResultsFrom, showingResultsTo, currentPage } = info;
+
+      logger.debug({ label: 'current info', info });
 
       if (!dois || dois.length <= 0) {
         status = 'failed';
@@ -276,31 +293,40 @@ const searchAndSave = async function searchAndSave(searchUrl, projectId, searchQ
 
       // Check if the doi in the database or the doi is needed
       // If it is in the db, then link it to the project
-      dois.forEach(async (doi) => {
-        const publicationInfo = await publication.getPublicationByDOI(doi, user);
-        if (publicationInfo) {
-          await publication.addPublicationToProjectById(publicationInfo.id, projectId, searchQueryId);
-          completed += 1;
-        } else {
-          doisNeeded.push(doi);
+      for await (const doi of dois) {
+        let publicationInfo = null;
+        try {
+          publicationInfo = await publication.getPublicationByDOI(doi, user);
+          if (publicationInfo && publicationInfo.id) {
+            await publication.addPublicationToProjectById(publicationInfo.id, projectId, searchQueryId);
+            completed += 1;
+          } else {
+            if (doisNeeded.indexOf(doi) < 0) {
+              doisNeeded.push(doi);
+            }
+          }
+        } catch (error) {
+          if (doisNeeded.indexOf(doi) < 0 && !publicationInfo && !publicationInfo.id) {
+            doisNeeded.push(doi);
+          } else {
+            skipped += 1;
+          }
         }
-      });
+      }
+
+      // logger.debug({ label: 'dois needed', 'doisNeeded length': doisNeeded.length, doisNeeded });
 
       // Update user project request information
       const userProjectRequestUpdate = {
-        total: totalResults,
-        completed
+        total: parseInt(totalResults, 10),
+        completed: parseInt(completed, 10),
+        failed: parseInt(failed, 10),
+        skipped: parseInt(skipped, 10),
       };
-      await userProjectRequest.modifyUserProjectRequest(requestId, userProjectRequestUpdate);
-
-      // Check if there is no more pages to parse
-      if (showingResultsFrom === showingResultsTo || completed + doisNeeded.length >= totalResults) {
-        status = 'completed-search';
-        return;
-      }
+      await userProjectRequest.modifyUserProjectRequest(requestId, userProjectRequestUpdate, projectId, user);
 
       // Get user project request status
-      status = await userProjectRequest.getUserProjectRequestById(requestId);
+      status = await userProjectRequest.getUserProjectRequestById(requestId, projectId, user);
       status = status['status'];
 
       // Update the url to go to the next page
@@ -309,9 +335,17 @@ const searchAndSave = async function searchAndSave(searchUrl, projectId, searchQ
       } else {
         let pageNumber = currentPage.match(/(?<=startPage=)(\d+)/gm)[0];
         pageNumber = parseInt(pageNumber, 10);
-        searchUrl = currentPage.replace(/startPage=\d+/gm, `&startPage=${pageNumber + 1}`);
+        searchUrl = currentPage.replace(/startPage=\d+/gm, `startPage=${pageNumber + 1}`);
+      }
+
+      // Check if there is no more pages to parse
+      if (showingResultsTo === totalResults || completed + doisNeeded.length >= totalResults) {
+        status = 'completed-search';
       }
     }
+
+    logger.debug({ label: 'completed after while is done', completed });
+    logger.debug({ label: 'dois needed after while is done', 'doisNeeded length': doisNeeded.length });
 
     // Check if there are no more dois needed
     if (doisNeeded.length <= 0) {
@@ -319,60 +353,78 @@ const searchAndSave = async function searchAndSave(searchUrl, projectId, searchQ
       status = 'completed';
       const userProjectRequestUpdate = {
         status,
-        completed,
+        completed: parseInt(completed, 10),
+        failed: parseInt(failed, 10),
+        skipped: parseInt(skipped, 10),
         completed_date: moment.format()
       };
-      await userProjectRequest.modifyUserProjectRequest(requestId, userProjectRequestUpdate);
+      await userProjectRequest.modifyUserProjectRequest(requestId, userProjectRequestUpdate, projectId, user);
       return { message: 'Search and save for ACM completed' };
     }
 
     // Request the dois that are not in the database
-    const newItems = getArticlesDetails(doisNeeded, null, user);
+    const newItems = await getArticlesDetails(doisNeeded, null, user);
+
+    logger.debug({ label: 'new items obtained', 'newItems length': newItems.length });
 
     // parse them, store them in the database and add them to the project
-    newItems.forEach(async (itemKey) => {
-      const item = newItems[itemKey];
-      const newPublication = {
-        'type': parseType(item.type),
-        'author': item.author ? parseAuthors(item.author) : parseAuthors(item.editor),
-        'editor': parseAuthors(item.editor) || null,
-        'title': item.title || null,
-        'book_title': item['container-title'] || null,
-        'year': item.issued && item.issued['date-parts'] && item.issued['date-parts'][0] ? item.issued['date-parts'][0].toString() : null,
-        'publisher': item.publisher || null,
-        'address': item['publisher-place'] || null,
-        'pages': item.page || null,
-        'isbn': item.ISBN || null,
-        'doi': itemKey || item.id,
-        'url': item.url || `https://dl.acm.org/doi/${itemKey}`,
-        'journal': item['container-title'] || null,
-        'volume': item.volume || null,
-        'abstract': item.abstract || null,
-        'issn': item.ISSN || null,
-        'location': item['publisher-place'] || null,
-        'keywords': item.keyword || null,
-        'month': item.month || null,
-        'obtained_bibtex': item,
-        'generated_bibtex': bibtexGenerator.generateBibtex(item),
-        'create_date': moment.format()
-      };
-      const newPublicationInfo = await publication.newPublication(newPublication, user);
-      await publication.addPublicationToProjectById(newPublicationInfo.id, projectId, searchQueryId);
-      completed += 1;
-    });
+    for await (const parentItem of newItems) {
+      try {
+        const itemKey = Object.keys(parentItem)[0];
+        const item = parentItem[itemKey];
+        // logger.debug({label: 'New item index and key', 'index': index, key: itemKey, item});
+        const newPublication = {
+          'type': parseType(item['type']),
+          'author': item.author ? parseAuthors(item.author) : parseAuthors(item.editor),
+          'editor': parseAuthors(item.editor) || null,
+          'title': item.title || null,
+          'book_title': item['container-title'] || null,
+          'year': item.issued && item.issued['date-parts'] && item.issued['date-parts'][0] && item.issued['date-parts'][0][0] ? item.issued['date-parts'][0][0].toString() : null,
+          'publisher': item.publisher || null,
+          'address': item['publisher-place'] || null,
+          'pages': item.page.toString() || null,
+          'isbn': item.ISBN || null,
+          'doi': itemKey || item.id,
+          'url': item.url || item.URL || `https://dl.acm.org/doi/${itemKey}`,
+          'journal': item['container-title'] || null,
+          'volume': item.volume || null,
+          'abstract': item.abstract || null,
+          'issn': item.ISSN || null,
+          'location': item['publisher-place'] || null,
+          'keywords': item.keyword || null,
+          'month': item.month || null,
+          'obtained_bibtex': item,
+          'generated_bibtex': bibtexGenerator.generateBibtex(item),
+          'create_date': moment().format()
+        };
+        // logger.debug({ label: 'New publication is ready for db', newPublication });
+        const newPublicationInfo = await publication.newPublication(newPublication, user);
+        if (newPublicationInfo.id) {
+          await publication.addPublicationToProjectById([newPublicationInfo.id], projectId, searchQueryId, user);
+          completed += 1;
+        } else {
+          skipped += 1;
+        }
+      } catch (error) {
+        failed += 1;
+      }
+    }
 
     // Update user project request
     status = 'completed';
     const userProjectRequestUpdate = {
       status,
-      completed,
-      completed_date: moment.format()
+      completed: parseInt(completed, 10),
+      failed: parseInt(failed, 10),
+      skipped: parseInt(skipped, 10),
+      completed_date: moment().format()
     };
-    await userProjectRequest.modifyUserProjectRequest(requestId, userProjectRequestUpdate);
+    await userProjectRequest.modifyUserProjectRequest(requestId, userProjectRequestUpdate, projectId, user);
 
     return { message: 'Search and save for ACM completed' };
   } catch (error) {
-    if (error.code) {
+    console.log(error);
+    if (error.code && tools.isHttpErrorCode(error.code)) {
       logger.error(error);
       throw error;
     }

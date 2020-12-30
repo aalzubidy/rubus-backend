@@ -129,4 +129,34 @@ router.delete('/publications/project/all', async (req, res) => {
   callSrcFile('deleteAllPublicationsFromProject', [projectId], req, res);
 });
 
+/**
+ * @summary Get a publication by id
+ */
+router.get('/publications/id/:publicationId', async (req, res) => {
+  const {
+    publicationId
+  } = req.params;
+  callSrcFile('getPublicationById', [publicationId], req, res);
+});
+
+/**
+ * @summary Get a publication by doi
+ */
+router.get('/publications/doi/:publicationDOI', async (req, res) => {
+  const {
+    publicationDOI
+  } = req.params;
+  callSrcFile('getPublicationByDOI', [publicationDOI], req, res);
+});
+
+/**
+ * @summary Get all publications in a project
+ */
+router.get('/publications/project/:projectId', async (req, res) => {
+  const {
+    projectId
+  } = req.params;
+  callSrcFile('getPublicationsByProjectId', [projectId], req, res);
+});
+
 module.exports = router;

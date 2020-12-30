@@ -56,23 +56,23 @@ router.post('/userProjectRequest', async (req, res) => {
 /**
  * @summary Delete a user project request
  */
-router.delete('/userProjectRequest', async (req, res) => {
+router.delete('/userProjectRequest/:projectId/:userProjectRequestId', async (req, res) => {
   const {
     userProjectRequestId,
     projectId
-  } = req.body;
+  } = req.params;
   callSrcFile('deleteUserProjectRequest', [userProjectRequestId, projectId], req, res);
 });
 
 /**
  * @summary Modify a user project request
  */
-router.put('/userProjectRequest', async (req, res) => {
+router.put('/userProjectRequest/:projectId/:userProjectRequestId', async (req, res) => {
   const {
     userProjectRequestId,
-    userProjectRequest,
     projectId
-  } = req.body;
+  } = req.params;
+  const { userProjectRequest } = req.body;
   callSrcFile('modifyUserProjectRequest', [userProjectRequestId, userProjectRequest, projectId], req, res);
 });
 

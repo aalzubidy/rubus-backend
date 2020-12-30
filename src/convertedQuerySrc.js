@@ -24,7 +24,7 @@ const storeConvertedQuery = async function storeConvertedQuery(inputQuery, outpu
     const insertConvertedQuery = await db.query('INSERT INTO convert_queries(input_query, output_query, user_id, create_date) VALUES($1, $2, $3, $4) returning id', [inputQuery.trim(), outputQuery.trim(), user.id, createDate]);
     logger.debug({ label: 'new converted query response', results: insertConvertedQuery.rows });
 
-    return { message: 'Query stored successfully', id: insertConvertedQuery.rows[0] };
+    return { message: 'Query stored successfully', id: insertConvertedQuery.rows[0].id };
   } catch (error) {
     if (error.code) {
       logger.error(error);

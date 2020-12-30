@@ -6,7 +6,8 @@
     "user_id",
     "project_id",
     "status",
-    "type"
+    "type",
+    "create_date"
   ],
   "additionalProperties": false,
   "properties": {
@@ -49,6 +50,11 @@
       "example": 80
     },
     "failed": {
+      "type": "number",
+      "minimum": 0,
+      "example": 10
+    },
+    "skipped": {
       "type": "number",
       "minimum": 0,
       "example": 10
