@@ -18,6 +18,13 @@ const callSrcFile = async function callSrc(functionName, parameters, req, res, s
     }
     userCheckPass = true;
     const data = await authorizationSrc[functionName].apply(this, [...parameters, user]);
+    if (data.refreshToken) {
+      res.cookie('refresh_token', data.refreshToken, {
+        maxAge: 120 * 60 * 1000,
+        httpOnly: true,
+        secure: false
+      });
+    }
     res.status(200).json({
       data
     });
@@ -69,8 +76,15 @@ router.delete('/logout', async (req, res) => {
 /**
  * @summary Get a new access token using existing refresh token
  */
-router.post('/token', async (req, res) => {
+router.post('/renewToken', async (req, res) => {
   callSrcFile('renewToken', [req], req, res);
+});
+
+/**
+ * @summary Get a new access token using existing refresh token cookie
+ */
+router.post('/renewTokenByCookie', async (req, res) => {
+  callSrcFile('renewTokenByCookie', [req], req, res);
 });
 
 module.exports = router;

@@ -361,6 +361,7 @@ describe('authorizationSrc.js', function () {
 
       const stub2 = sinon.stub(jwt, 'sign');
       stub2.onCall(0).returns('new test token');
+      stub2.onCall(1).returns('new test token');
       try {
         const results = await authorizationSrc.renewToken({
           headers: {
