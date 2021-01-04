@@ -1,6 +1,6 @@
 {
   "name": "rubus",
-  "version": "0.32.7",
+  "version": "0.32.8",
   "description": "Rubus SLR Tool - Nodejs backend code",
   "main": "app.js",
   "scripts": {
