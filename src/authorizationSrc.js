@@ -215,6 +215,7 @@ const renewToken = async function renewToken(req) {
  */
 const renewTokenByCookie = async function renewTokenByCookie(req) {
   try {
+    console.log(req.cookies);
     // Extract refresh token from cookie
     const refreshToken = req.cookies['refresh_token'];
 
@@ -246,6 +247,7 @@ const renewTokenByCookie = async function renewTokenByCookie(req) {
       throw { code: 401, message: dbMsg };
     }
   } catch (error) {
+    console.log(error);
     if (error.code) {
       logger.error(error);
       throw error;
