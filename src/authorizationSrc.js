@@ -117,7 +117,7 @@ const logout = async function logout(req) {
   try {
     // Extract token and refresh token
     const { token } = req.headers;
-    const { refreshToken } = req.body;
+    const refreshToken = req.cookies['refresh_token'];
 
     if (!token || !refreshToken) {
       throw { code: 400, message: 'Please provide token and refresh token' };
@@ -215,7 +215,6 @@ const renewToken = async function renewToken(req) {
  */
 const renewTokenByCookie = async function renewTokenByCookie(req) {
   try {
-    console.log(req.cookies);
     // Extract refresh token from cookie
     const refreshToken = req.cookies['refresh_token'];
 
