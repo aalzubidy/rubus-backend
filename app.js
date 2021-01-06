@@ -28,7 +28,7 @@ const serverPort = 3030;
 const serverUrl = 'localhost';
 
 // App Configurations
-app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({
