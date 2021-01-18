@@ -12,7 +12,7 @@ const db = require('../db/db');
 const getUser = async function getUser(user) {
   try {
     if (user) {
-      return { user };
+      return { id: user.id, name: user.name, email: user.email };
     } else {
       throw {
         code: 404,
