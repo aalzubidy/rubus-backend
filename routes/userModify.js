@@ -38,6 +38,13 @@ const callSrcFile = async function callSrc(functionName, parameters, req, res) {
 };
 
 /**
+ * @summary Get user information by token
+ */
+router.get('/user', async (req, res) => {
+  callSrcFile('getUser', [], req, res);
+});
+
+/**
  * @summary Updating users
  */
 router.put('/users', async (req, res) => {

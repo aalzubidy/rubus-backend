@@ -3,12 +3,42 @@ const { logger } = require('./logger');
 const db = require('../db/db');
 
 /**
- *Update user information
- *@param {string} name Updating user name
- *@param {string} email  Updating user email
- *@param {string} organization Updating user organization
- *@returns {object} Updated user information
- *@throws {object} errorCodeAndMsg
+ * @function getUser
+ * @summary Get user information by token
+ * @param {object} user User information
+ * @returns {object} User information
+ * @throws {object} errorCodeAndMsg
+ */
+const getUser = async function getUser(user) {
+  try {
+    if (user) {
+      return { user };
+    } else {
+      throw {
+        code: 404,
+        message: 'Could not find user information'
+      };
+    }
+  } catch (error) {
+    if (error.code) {
+      logger.error(error);
+      throw error;
+    }
+    const userMsg = 'Could not get user information';
+    logger.error({ userMsg, error });
+    throw { code: 500, message: userMsg };
+  }
+};
+
+/**
+ * @function updateUser
+ * @summary Update user information
+ * @param {string} name Updating user name
+ * @param {string} email  Updating user email
+ * @param {string} organization Updating user organization
+ * @param {object} user User information
+ * @returns {object} Updated user information
+ * @throws {object} errorCodeAndMsg
  */
 const updateUser = async function updateUser(name, email, organization, user) {
   try {
@@ -49,10 +79,12 @@ const updateUser = async function updateUser(name, email, organization, user) {
 };
 
 /**
- * update user password
+ * @function changeUserPassword
+ * @summary update user password
  * @param {string} oldPassword user current password
  * @param {string} newPassword user new password
  * @param {object} user user object contains Id
+ * @param {object} user User information
  * @returns {object} updatePasswordResult
  * @throws {object} errorDetails
  */
@@ -112,6 +144,7 @@ const changeUserPassword = async function changeUserPassword(oldPassword, newPas
 };
 
 module.exports = {
+  getUser,
   updateUser,
   changeUserPassword
 };
