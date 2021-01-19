@@ -31,6 +31,45 @@ const getUser = async function getUser(user) {
 };
 
 /**
+ * @function getUserByKey
+ * @summary Get user information by id or email
+ * @param {string} searchKey Key to search based on (id or email)
+ * @param {string} searchValue Key value to search based on i.e user id or email
+ * @param {object} user User information
+ * @returns {object} User information
+ * @throws {object} errorCodeAndMsg
+ */
+const getUserByKey = async function getUserByKey(searchKey, searchValue, user) {
+  try {
+    if (searchKey != 'id' && searchKey != 'email') {
+      throw { code: 400, message: 'Key must be id or email only' };
+    }
+
+    let userSearchQuery = null;
+    if (searchKey === 'id') {
+      userSearchQuery = await db.query('select id, name, email, organization from users where id=$1', [searchValue]);
+    } else {
+      userSearchQuery = await db.query('select id, name, email, organization from users where email=$1', [searchValue]);
+    }
+    logger.debug({ label: 'search user query response', results: userSearchQuery });
+
+    if (userSearchQuery && userSearchQuery.rows && userSearchQuery.rows[0]) {
+      return userSearchQuery.rows[0];
+    } else {
+      throw { code: 404, message: 'Could not find user by key' };
+    }
+  } catch (error) {
+    if (error.code) {
+      logger.error(error);
+      throw error;
+    }
+    const userMsg = 'Could not get user information by key';
+    logger.error({ userMsg, error });
+    throw { code: 500, message: userMsg };
+  }
+};
+
+/**
  * @function updateUser
  * @summary Update user information
  * @param {string} name Updating user name
@@ -145,6 +184,7 @@ const changeUserPassword = async function changeUserPassword(oldPassword, newPas
 
 module.exports = {
   getUser,
+  getUserByKey,
   updateUser,
   changeUserPassword
 };
