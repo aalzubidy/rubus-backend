@@ -45,6 +45,22 @@ router.get('/user', async (req, res) => {
 });
 
 /**
+ * @summary Get user details by id
+ */
+router.get('/user/id/:id', async (req, res) => {
+  const { id } = req.params;
+  callSrcFile('getUserByKey', ['id', id], req, res);
+});
+
+/**
+ * @summary Get user details by email
+ */
+router.get('/user/email/:email', async (req, res) => {
+  const { email } = req.params;
+  callSrcFile('getUserByKey', ['email', email], req, res);
+});
+
+/**
  * @summary Updating users
  */
 router.put('/users', async (req, res) => {
