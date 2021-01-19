@@ -45,6 +45,14 @@ const getUserByKey = async function getUserByKey(searchKey, searchValue, user) {
       throw { code: 400, message: 'Key must be id or email only' };
     }
 
+    if (!searchValue && searchKey === 'id') {
+      searchValue = user.id;
+    } else if (!searchValue && searchKey === 'email') {
+      searchValue = user.id;
+    } else if (!searchValue && searchKey != 'id' && searchKey != 'email') {
+      throw { code: 400, message: 'You must pass email or id' };
+    }
+
     let userSearchQuery = null;
     if (searchKey === 'id') {
       userSearchQuery = await db.query('select id, name, email, organization from users where id=$1', [searchValue]);
