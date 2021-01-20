@@ -174,10 +174,10 @@ const renewToken = async function renewToken(req) {
     // Check the email on both of the tokens
     if (tokenVerify.email === refreshTokenVerify.email) {
       // Check if this refresh token still active in the database
-      const queryResults = await db.query('select email, refresh_token from users where refresh_token=$1', [refreshToken]);
+      const queryResults = await db.query('select name, email, organization refresh_token from users where refresh_token=$1 and id=$2 and email=$3', [refreshToken, tokenVerify.id, tokenVerify.email]);
       if (queryResults && queryResults.rows[0] && (queryResults.rows[0].email === tokenVerify.email)) {
         // Generate a new access token
-        const user = { id: refreshTokenVerify.id, name: refreshTokenVerify.name, email: refreshTokenVerify.email, organization: refreshTokenVerify.organization };
+        const user = { id: refreshTokenVerify.id, name: queryResults.rows[0].name, email: queryResults.rows[0].email, organization: queryResults.rows[0].organization };
         const newAccessToken = await jwt.sign(user, accessTokenSecret, { expiresIn: '30m' });
 
         // Generate a new refresh token
@@ -224,11 +224,11 @@ const renewTokenByCookie = async function renewTokenByCookie(req) {
 
     // Verify refresh token
     const refreshTokenVerify = await jwt.verify(refreshToken, refreshTokenSecret);
-    const user = { id: refreshTokenVerify.id, name: refreshTokenVerify.name, email: refreshTokenVerify.email, organization: refreshTokenVerify.organization };
 
     // Check if this refresh token still active in the database
-    const queryResults = await db.query('select refresh_token from users where refresh_token=$1 and id=$2 and email=$3 and name=$4', [refreshToken, user.id, user.email, user.name]);
+    const queryResults = await db.query('select name, email, organization, refresh_token from users where refresh_token=$1 and id=$2 and email=$3', [refreshToken, refreshTokenVerify.id, refreshTokenVerify.email]);
     if (queryResults && queryResults.rows[0] && queryResults.rows[0]['refresh_token'] === refreshToken) {
+      const user = { id: refreshTokenVerify.id, name: queryResults.rows[0].name, email: queryResults.rows[0].email, organization: queryResults.rows[0].organization };
       // Generate a new access token
       const newAccessToken = await jwt.sign(user, accessTokenSecret, { expiresIn: '30m' });
 
