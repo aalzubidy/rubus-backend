@@ -135,6 +135,7 @@ describe('authorizationSrc.js', function () {
           id: 'test',
           email: 'test',
           name: 'test',
+          password: 'organization',
           password: 'test'
         }]
       });
@@ -158,6 +159,7 @@ describe('authorizationSrc.js', function () {
           id: 1,
           email: 'test@test.com',
           name: 'test',
+          organization: 'test',
           password: '$2b$12$r6vMkpEn/6nY.UvxrNLA.Ouu0jnCAm4PDNUBiDqUMeBstK/pyDsNm'
         }]
       });
@@ -346,12 +348,14 @@ describe('authorizationSrc.js', function () {
       stub1.onCall(0).returns({
         id: 'test',
         name: 'test',
-        email: 'test'
+        email: 'test',
+        organization: 'test'
       });
       stub1.onCall(1).returns({
         id: 'test',
         name: 'test',
-        email: 'test'
+        email: 'test',
+        organization: 'test'
       });
       td.when(db.query(anything, anything)).thenReturn({
         rows: [{

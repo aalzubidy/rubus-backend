@@ -45,13 +45,6 @@ router.get('/user', async (req, res) => {
 });
 
 /**
- * @summary Get user information details by token
- */
-router.get('/user/details', async (req, res) => {
-  callSrcFile('getUserByKey', ['id', null], req, res);
-});
-
-/**
  * @summary Get user details by id
  */
 router.get('/user/id/:id', async (req, res) => {
