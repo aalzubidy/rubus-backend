@@ -1,6 +1,7 @@
 const moment = require('moment');
 const Ajv = require('ajv');
-const { logger } = require('./logger');
+const { logger } = require('../utils/logger');
+const { srcFileErrorHandler } = require('../utils/srcFile');
 const usersProjectsRequestSchema = require('../schemas/usersProjectsRequestSchema.json');
 const usersProjectsRequestSchemaOptional = require('../schemas/usersProjectsRequestSchemaOptional.json');
 const db = require('../db/db');
@@ -60,13 +61,8 @@ const newUserProjectRequest = async function newUserProjectRequest(userProjectRe
     return { message: 'User project request created successfully', id: insertQueryResults.rows[0]['id'] };
   } catch (error) {
     console.log(error);
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not create user project request';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not create user project request';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -99,13 +95,8 @@ const deleteUserProjectRequest = async function deleteUserProjectRequest(userPro
     return { message: 'User project request deleted successfully by id' };
   } catch (error) {
     console.log(error);
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not delete user project request by id';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not delete user project request by id';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -160,13 +151,8 @@ const modifyUserProjectRequest = async function modifyUserProjectRequest(userPro
     return { message: 'User project request modified successfully' };
   } catch (error) {
     console.log(error);
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not modify user project request';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not modify user project request';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -203,13 +189,8 @@ const getUserProjectRequestById = async function getUserProjectRequestById(userP
     }
   } catch (error) {
     console.log(error);
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not retrieve user project request by id';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not retrieve user project request by id';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -245,13 +226,8 @@ const getUserProjectRequestByProjectId = async function getUserProjectRequestByP
     }
   } catch (error) {
     console.log(error);
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not retrieve user project request by id';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not retrieve user project request by id';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 

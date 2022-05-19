@@ -1,5 +1,6 @@
 const moment = require('moment');
-const { logger } = require('./logger');
+const { logger } = require('../utils/logger');
+const { srcFileErrorHandler } = require('../utils/srcFile');
 const db = require('../db/db');
 
 /**
@@ -26,13 +27,8 @@ const storeConvertedQuery = async function storeConvertedQuery(inputQuery, outpu
 
     return { message: 'Query stored successfully', id: insertConvertedQuery.rows[0].id };
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not store query';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not store query';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -58,13 +54,8 @@ const getConvertedQueries = async function getConvertedQueries(user) {
 
     return convertedQueries.rows;
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not get converted queries';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not get converted queries';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -91,13 +82,8 @@ const getConvertedQuery = async function getConvertedQuery(queryId, user) {
 
     return convertedQuery.rows;
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not get converted query';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not get converted query';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -124,13 +110,8 @@ const deleteConvertedQuery = async function deleteConvertedQuery(queryId, user) 
 
     return { 'message': 'Deleted succesfully' };
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not delete converted query';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not delete converted query';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 

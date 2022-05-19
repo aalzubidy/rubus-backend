@@ -10,7 +10,8 @@ const path = require('path');
 const cors = require('cors');
 const requestIp = require('request-ip');
 const cookieParser = require('cookie-parser');
-const { logger } = require('./src/logger');
+const { logger } = require('./utils/logger');
+const { routesLogger } = require('./utils/routesLogger');
 
 // Require routes
 const authorizationRoutes = require('./routes/authorization');
@@ -24,8 +25,8 @@ const dbRoutes = require('./routes/db');
 
 // Application Setup
 const app = express();
-const serverPort = 3030;
-const serverUrl = 'localhost';
+const serverUrl = process.env.RUBUS_SERVER_URL;
+const serverPort = process.env.RUBUS_SERVER_PORT;
 
 // App Configurations
 app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
@@ -39,6 +40,7 @@ app.use(methodOverride('_method'));
 app.use(express.json());
 app.use(requestIp.mw());
 app.use(cookieParser());
+app.use(routesLogger);
 
 // Multer Configurations to upload file
 const storage = multer.diskStorage({
@@ -65,7 +67,7 @@ const upload = multer({
 
 // Index Route
 app.get('/', async function (req, res) {
-  res.status(200).send('Hi from rubus-backend');
+  res.render('index');
 });
 
 // Authentication routes
@@ -115,4 +117,13 @@ app.get('*', function (req, res) {
 app.listen(serverPort, serverUrl, function () {
   logger.info('Application started successfully...');
   logger.info(`Server can be accessed on http://${serverUrl}:${serverPort}`);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error(reason);
+  logger.error(promise);
+});
+
+process.on('uncaughtException', (reason) => {
+  logger.error(reason);
 });

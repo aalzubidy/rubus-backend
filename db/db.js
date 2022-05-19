@@ -1,5 +1,5 @@
 const { Pool } = require('pg');
-const { logger } = require('../src/logger');
+const { logger } = require('../utils/logger');
 
 const connectionString = process.env.RUBUS_BACKEND_DB_URI;
 

@@ -2,12 +2,13 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 const FormData = require('form-data');
 const moment = require('moment');
-const { logger } = require('../logger');
+const { logger } = require('../../utils/logger');
 const tools = require('../tools');
 const userProjectRequest = require('../usersProjectsRequestsSrc');
 const publication = require('../publicationSrc');
 const bibtexGenerator = require('./bibtexGenerator');
 const { logout } = require('../authorizationSrc');
+const { srcFileErrorHandler } = require('../../utils/srcFile');
 
 // Default values
 const acmBaseUrl = 'https://dl.acm.org/';
@@ -27,13 +28,8 @@ const getToken = async function getToken() {
     cookieString = cookieString['headers']['set-cookie'][0];
     return { token: cookieString };
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
     const errorMsg = 'Could not get an ACM token';
-    logger.error({ errorMsg, error });
-    throw { code: 500, message: errorMsg };
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -124,13 +120,8 @@ const parseURLArticles = async function parseURLArticles(acmQueryUrl, token = nu
     });
   } catch (error) {
     console.log(error);
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
     const errorMsg = 'Could not get and parse articles from an ACM url';
-    logger.error({ errorMsg, error });
-    throw { code: 500, message: errorMsg };
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -175,13 +166,8 @@ const getArticlesDetails = async function getArticlesDetails(dois, token = null,
       throw { code: 500, message: 'Could not get articles details from ACM', results };
     }
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
     const errorMsg = 'Could not get ACM articles details';
-    logger.error({ errorMsg, error });
-    throw { code: 500, message: errorMsg };
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -424,13 +410,8 @@ const searchAndSave = async function searchAndSave(searchUrl, projectId, searchQ
     return { message: 'Search and save for ACM completed' };
   } catch (error) {
     console.log(error);
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
     const errorMsg = 'Could not search and save all results from ACM';
-    logger.error({ errorMsg, error });
-    throw { code: 500, message: errorMsg };
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 

@@ -1,5 +1,6 @@
 const moment = require('moment');
-const { logger } = require('./logger');
+const { logger } = require('../utils/logger');
+const { srcFileErrorHandler } = require('../utils/srcFile');
 const db = require('../db/db');
 const tools = require('./tools');
 
@@ -32,13 +33,8 @@ const storeSearchQuery = async function storeSearchQuery(inputQuery, dbName, tot
 
     return { message: 'Search query stored successfully', id: insertSearchQuery.rows[0].id };
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not store search query';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not store search query';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -64,13 +60,8 @@ const getSearchQueries = async function getSearchQueries(user) {
 
     return searchQueries.rows;
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not get search queries';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not get search queries';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -100,13 +91,8 @@ const getProjectSearchQueries = async function getProjectSearchQueries(projectId
 
     return searchQueries.rows;
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not get project search queries';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not get project search queries';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -134,13 +120,8 @@ const getSearchQuery = async function getSearchQuery(queryId, projectId, user) {
 
     return searchQuery.rows;
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not get search query';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not get search query';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -168,13 +149,8 @@ const deleteSearchQuery = async function deleteSearchQuery(queryId, projectId, u
 
     return { 'message': 'Deleted search query succesfully' };
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not delete search query';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not delete search query';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 

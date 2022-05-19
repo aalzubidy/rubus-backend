@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
-const { logger } = require('./logger');
+const { logger } = require('../utils/logger');
+const { srcFileErrorHandler } = require('../utils/srcFile');
 const db = require('../db/db');
 
 /**
@@ -20,13 +21,8 @@ const getUser = async function getUser(user) {
       };
     }
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not get user information';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not get user information';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -67,13 +63,8 @@ const getUserByKey = async function getUserByKey(searchKey, searchValue, user) {
       throw { code: 404, message: 'Could not find user by key' };
     }
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not get user information by key';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not get user information by key';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -115,13 +106,8 @@ const updateUser = async function updateUser(name, email, organization, user) {
       'message': 'Updated user successfully'
     };
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not update user';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not update user';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -180,13 +166,8 @@ const changeUserPassword = async function changeUserPassword(oldPassword, newPas
       'message': 'Updated password successfully'
     };
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not update password';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not update password';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 

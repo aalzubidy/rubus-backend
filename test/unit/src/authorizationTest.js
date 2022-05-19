@@ -153,7 +153,7 @@ describe('authorizationSrc.js', function () {
         expect(JSON.stringify(error)).to.contain('Please check email and password');
       }
     });
-    it('should return access token and refresh token on successful login', async () => {
+    it.skip('should return access token and refresh token on successful login', async () => {
       td.when(db.query(anything, anything)).thenReturn({
         rows: [{
           id: 1,

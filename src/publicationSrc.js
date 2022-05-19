@@ -1,6 +1,7 @@
 const moment = require('moment');
 const Ajv = require('ajv');
-const { logger } = require('./logger');
+const { logger } = require('../utils/logger');
+const { srcFileErrorHandler } = require('../utils/srcFile');
 const publicationSchema = require('../schemas/publicationSchema.json');
 const db = require('../db/db');
 const tools = require('./tools');
@@ -50,13 +51,8 @@ const newPublication = async function newPublication(publication, user) {
     return { message: 'Publication created successfully', id: newPublicationQuery.rows[0].id };
   } catch (error) {
     console.log(error);
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not create publication';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not create publication';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -83,13 +79,8 @@ const deletePublicationByDOI = async function deletePublicationByDOI(dois, user)
 
     return { message: 'Publication deleted successfully by doi' };
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not delete publication by doi';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not delete publication by doi';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -116,13 +107,8 @@ const deletePublicationById = async function deletePublicationById(publicationId
 
     return { message: 'Publication deleted successfully by id' };
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not delete publication by id';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not delete publication by id';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -175,13 +161,8 @@ const addPublicationToProjectByDoi = async function addPublicationToProjectByDoi
 
     return { message: returnMsg, successItems, failedItems };
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      console.log(error);
-      throw error;
-    }
-    const userMsg = 'Could not add publications to a project by doi';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not add publications to a project by doi';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -235,13 +216,8 @@ const addPublicationToProjectById = async function addPublicationToProjectById(p
     return { message: returnMsg, successItems, failedItems };
   } catch (error) {
     console.log(error);
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not add publications to a project by id';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not add publications to a project by id';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -293,13 +269,8 @@ const deletePublicationFromProjectByDoi = async function deletePublicationFromPr
 
     return { message: returnMsg, successItems, failedItems };
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not delete publications from a project by doi';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not delete publications from a project by doi';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -351,13 +322,8 @@ const deletePublicationFromProjectById = async function deletePublicationFromPro
 
     return { message: returnMsg, successItems, failedItems };
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not delete publications from a project by id';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not delete publications from a project by id';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -392,13 +358,8 @@ const deleteAllPublicationsFromProject = async function deleteAllPublicationsFro
       throw { code: 500, message: 'Could not delete publications from a project' };
     }
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not delete all publications from a project';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not delete all publications from a project';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -428,13 +389,8 @@ const getPublicationById = async function getPublicationById(publicationId, user
       throw { code: 500, message: 'Could not find publication by id' };
     }
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not get publication by id';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not get publication by id';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -464,13 +420,8 @@ const getPublicationByDOI = async function getPublicationByDOI(publicationDoi, u
       return false;
     }
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not get publication by doi';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not get publication by doi';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -507,13 +458,8 @@ const getPublicationsByProjectId = async function getPublicationsByProjectId(pro
       throw { code: 500, message: 'Could not find publications by project id' };
     }
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not get publications by project id';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not get publications by project id';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 

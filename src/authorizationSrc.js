@@ -1,11 +1,12 @@
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const bcrypt = require('bcrypt');
-const { logger } = require('./logger');
+const { logger } = require('../utils/logger');
+const { srcFileErrorHandler } = require('../utils/srcFile');
 const db = require('../db/db');
 
-const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
-const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
+const accessTokenSecret = process.env.RUBUS_ACCESS_TOKEN_SECRET;
+const refreshTokenSecret = process.env.RUBUS_REFRESH_TOKEN_SECRET;
 
 /**
  * @function register
@@ -40,13 +41,8 @@ const register = async function register(req) {
 
     return { message: 'User registered successfully', id: registrationQuery.rows[0].id };
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not register user';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not register user';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -96,13 +92,8 @@ const login = async function login(req) {
     // Return the access token and the refresh token
     return ({ accessToken, refreshToken });
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
     const errorMsg = 'Could not login';
-    logger.error({ errorMsg, error });
-    throw { code: 500, message: errorMsg };
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -140,13 +131,8 @@ const logout = async function logout(req) {
       throw { code: 500, message: 'Could not delete token' };
     }
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
     const errorMsg = 'Could not logout';
-    logger.error({ errorMsg, error });
-    throw { code: 500, message: errorMsg };
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -196,13 +182,8 @@ const renewToken = async function renewToken(req) {
       throw { code: 401, message: 'Could not verify tokens' };
     }
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
     const errorMsg = 'Could not generate a new token from existing refresh token';
-    logger.error({ errorMsg, error });
-    throw { code: 500, message: errorMsg };
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -246,14 +227,8 @@ const renewTokenByCookie = async function renewTokenByCookie(req) {
       throw { code: 401, message: dbMsg };
     }
   } catch (error) {
-    console.log(error);
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
     const errorMsg = 'Could not generate a new token from existing refresh token';
-    logger.error({ errorMsg, error });
-    throw { code: 500, message: errorMsg };
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -280,13 +255,8 @@ const verifyToken = async function verifyToken(req) {
 
     return (results);
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
     const errorMsg = 'Could not verify token';
-    logger.error({ errorMsg, error });
-    throw { code: 500, message: errorMsg };
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
