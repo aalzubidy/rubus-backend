@@ -1,5 +1,4 @@
-const { logger } = require('../utils/logger');
-const db = require('../db/db');
+const db = require('../utils/db');
 
 /**
  * @async
@@ -12,10 +11,9 @@ const db = require('../db/db');
  */
 const checkUserProjectPermission = async function checkUserProjectPermission(userId, projectId) {
   try {
-    const userProjectPermissionQuery = await db.query('select project_id from projects_users where user_id=$1', [userId]);
-    logger.debug({ label: 'user project permission query response', results: userProjectPermissionQuery.rows });
+    const [userProjectPermissionQuery] = await db.query('select project_id from projects_users where user_id=$1', [userId], 'user project permission');
 
-    if (!userProjectPermissionQuery || !userProjectPermissionQuery.rows || !userProjectPermissionQuery.rows[0] || !userProjectPermissionQuery.rows[0].project_id || !userProjectPermissionQuery['rows'][0]['project_id'].includes(projectId)) {
+    if (!userProjectPermissionQuery || !userProjectPermissionQuery.project_id || !userProjectPermissionQuery['project_id'].includes(projectId)) {
       throw { code: 403, message: 'User does not have requests permissions on selected project.' };
     } else {
       return { allowed: true };
@@ -36,18 +34,17 @@ const checkUserProjectPermission = async function checkUserProjectPermission(use
  */
 const checkUserInProject = async function checkUserInProject(userId, projectId) {
   try {
-    const userProjectQuery = await db.query('select project_id from projects_users where user_id=$1 and project_id=$2', [userId, projectId]);
-    const projectAdminQuery = await db.query('select user_id from projects where user_id=$1', [userId]);
-    logger.debug({ label: 'user in project query response', userProjectResults: userProjectQuery.rows, projectAdminResults: projectAdminQuery.rows });
+    const [userProjectQuery] = await db.query('select project_id from projects_users where user_id=$1 and project_id=$2', [userId, projectId], 'get user project');
+    const projectAdminQuery = await db.query('select user_id from projects where user_id=$1', [userId], 'get user projects admin');
 
     let userProjectCheck = true;
     let projectAdminCheck = true;
 
-    if (!userProjectQuery || !userProjectQuery.rows || !userProjectQuery.rows[0]) {
+    if (!userProjectQuery) {
       userProjectCheck = false;
     }
 
-    if (!projectAdminQuery || !projectAdminQuery.rows || !projectAdminQuery.rows[0]) {
+    if (!projectAdminQuery) {
       projectAdminCheck = false;
     }
 

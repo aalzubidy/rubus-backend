@@ -1,7 +1,6 @@
 const moment = require('moment');
-const { logger } = require('../utils/logger');
 const { srcFileErrorHandler } = require('../utils/srcFile');
-const db = require('../db/db');
+const db = require('../utils/db');
 
 /**
  * Store a new converted query
@@ -22,10 +21,9 @@ const storeConvertedQuery = async function storeConvertedQuery(inputQuery, outpu
     const createDate = moment().format('MM/DD/YYYY');
 
     // Insert a converted query in the database
-    const insertConvertedQuery = await db.query('INSERT INTO convert_queries(input_query, output_query, user_id, create_date) VALUES($1, $2, $3, $4) returning id', [inputQuery.trim(), outputQuery.trim(), user.id, createDate]);
-    logger.debug({ label: 'new converted query response', results: insertConvertedQuery.rows });
+    const [insertConvertedQuery] = await db.query('INSERT INTO convert_queries(input_query, output_query, user_id, create_date) VALUES($1, $2, $3, $4) returning id', [inputQuery.trim(), outputQuery.trim(), user.id, createDate], 'new converted query');
 
-    return { message: 'Query stored successfully', id: insertConvertedQuery.rows[0].id };
+    return { message: 'Query stored successfully', id: insertConvertedQuery.id };
   } catch (error) {
     const errorMsg = 'Could not store query';
     srcFileErrorHandler(error, errorMsg);
@@ -45,14 +43,13 @@ const getConvertedQueries = async function getConvertedQueries(user) {
     } = user;
 
     // Get converted queries from the database
-    const convertedQueries = await db.query('select * from convert_queries where user_id=$1', [id]);
-    logger.debug({ label: 'get converted queries response', results: convertedQueries.rows });
+    const convertedQueries = await db.query('select * from convert_queries where user_id=$1', [id], 'get converted queries');
 
-    if (!convertedQueries || !convertedQueries.rows || convertedQueries.rows.length <= 0) {
+    if (!convertedQueries || convertedQueries.length <= 0) {
       throw { code: 404, message: 'User does not have any stored converted queries' };
     }
 
-    return convertedQueries.rows;
+    return convertedQueries;
   } catch (error) {
     const errorMsg = 'Could not get converted queries';
     srcFileErrorHandler(error, errorMsg);
@@ -73,14 +70,13 @@ const getConvertedQuery = async function getConvertedQuery(queryId, user) {
     } = user;
 
     // Get converted query from the database
-    const convertedQuery = await db.query('select * from convert_queries where user_id=$1 and id=$2', [id, queryId]);
-    logger.debug({ label: 'get converted query response', results: convertedQuery.rows });
+    const [convertedQuery] = await db.query('select * from convert_queries where user_id=$1 and id=$2', [id, queryId], 'get converted query');
 
-    if (!convertedQuery || !convertedQuery.rows || convertedQuery.rows.length <= 0) {
+    if (!convertedQuery || convertedQuery.length <= 0) {
       throw { code: 404, message: 'Could not find user converted query' };
     }
 
-    return convertedQuery.rows;
+    return convertedQuery;
   } catch (error) {
     const errorMsg = 'Could not get converted query';
     srcFileErrorHandler(error, errorMsg);
@@ -101,12 +97,7 @@ const deleteConvertedQuery = async function deleteConvertedQuery(queryId, user) 
     } = user;
 
     // Delete converted query from the database
-    const convertedQuery = await db.query('delete from convert_queries where user_id=$1 and id=$2', [id, queryId]);
-    logger.debug({ label: 'delete converted query response', results: convertedQuery });
-
-    if (!convertedQuery) {
-      throw { code: 404, message: 'Could not delete user converted query' };
-    }
+    await db.query('delete from convert_queries where user_id=$1 and id=$2', [id, queryId], 'delete converted query');
 
     return { 'message': 'Deleted succesfully' };
   } catch (error) {

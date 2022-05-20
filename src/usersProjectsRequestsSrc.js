@@ -1,10 +1,9 @@
 const moment = require('moment');
 const Ajv = require('ajv');
-const { logger } = require('../utils/logger');
 const { srcFileErrorHandler } = require('../utils/srcFile');
 const usersProjectsRequestSchema = require('../schemas/usersProjectsRequestSchema.json');
 const usersProjectsRequestSchemaOptional = require('../schemas/usersProjectsRequestSchemaOptional.json');
-const db = require('../db/db');
+const db = require('../utils/db');
 const tools = require('./tools');
 
 /**
@@ -55,10 +54,9 @@ const newUserProjectRequest = async function newUserProjectRequest(userProjectRe
     const queryLine = `insert into users_projects_requests(${userProjectRequestKeys.toString()}) values(${userProjectRequestKeysCount.toString()}) returning id`;
 
     // Create a user project request in the database
-    const insertQueryResults = await db.query(queryLine, userProjectRequestValues);
-    logger.debug({ label: 'new user project query response', results: insertQueryResults.rows });
+    const [insertQueryResults] = await db.query(queryLine, userProjectRequestValues, 'new user project');
 
-    return { message: 'User project request created successfully', id: insertQueryResults.rows[0]['id'] };
+    return { message: 'User project request created successfully', id: insertQueryResults.id };
   } catch (error) {
     console.log(error);
     const errorMsg = 'Could not create user project request';
@@ -89,8 +87,7 @@ const deleteUserProjectRequest = async function deleteUserProjectRequest(userPro
     await tools.checkUserInProject(id, projectId);
 
     // Delete user project request by id
-    const deleteQuery = await db.query('delete from users_projects_requests where id=$1 and project_id=$2', [userProjectRequestId, projectId]);
-    logger.debug({ label: 'delete user project query response', results: deleteQuery });
+    await db.query('delete from users_projects_requests where id=$1 and project_id=$2', [userProjectRequestId, projectId], 'delete user project');
 
     return { message: 'User project request deleted successfully by id' };
   } catch (error) {
@@ -139,14 +136,13 @@ const modifyUserProjectRequest = async function modifyUserProjectRequest(userPro
       userProjectRequestKeysCount.push(`${k}=$${i + 2}`);
       userProjectRequestValues.push(userProjectRequest[k]);
     });
-    const queryLine = `update users_projects_requests set ${userProjectRequestKeysCount.toString()} where id=$1`;
+    const queryLine = `update users_projects_requests set ${userProjectRequestKeysCount.toString()} where id=$1 returning id`;
 
     // Add user project request id to the beignning of values
     userProjectRequestValues.unshift(userProjectRequestId);
 
     // Modify a user project request in the database
-    const modifyQuery = await db.query(queryLine, userProjectRequestValues);
-    logger.debug({ label: 'modify user project query response', results: modifyQuery });
+    await db.query(queryLine, userProjectRequestValues, 'modify user project');
 
     return { message: 'User project request modified successfully' };
   } catch (error) {
@@ -179,11 +175,10 @@ const getUserProjectRequestById = async function getUserProjectRequestById(userP
     await tools.checkUserInProject(id, projectId);
 
     // Get user project request by id
-    const item = await db.query('select * from users_projects_requests where id=$1', [userProjectRequestId]);
-    logger.debug({ label: 'get user project by id query response', results: item.rows });
+    const [item] = await db.query('select * from users_projects_requests where id=$1', [userProjectRequestId], 'get user project request by id');
 
-    if (item && item.rows && item.rows[0]) {
-      return item.rows[0];
+    if (item) {
+      return item;
     } else {
       throw { code: 404, message: 'User project request not found using id' };
     }
@@ -216,11 +211,10 @@ const getUserProjectRequestByProjectId = async function getUserProjectRequestByP
     await tools.checkUserInProject(id, projectId);
 
     // Get user project request by project id
-    const item = await db.query('select * from users_projects_requests where project_id=$1', [projectId]);
-    logger.debug({ label: 'get user project by project id query response', results: item.rows });
+    const items = await db.query('select * from users_projects_requests where project_id=$1', [projectId], 'get user project requests by project id');
 
-    if (item && item.rows && item.rows[0]) {
-      return item.rows;
+    if (items && items.length >= 0) {
+      return items;
     } else {
       throw { code: 404, message: 'User project request not found using project id' };
     }

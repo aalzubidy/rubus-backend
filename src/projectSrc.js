@@ -1,7 +1,6 @@
 const moment = require('moment');
-const { logger } = require('../utils/logger');
 const { srcFileErrorHandler } = require('../utils/srcFile');
-const db = require('../db/db');
+const db = require('../utils/db');
 const tools = require('./tools');
 
 /**
@@ -23,15 +22,13 @@ const newProject = async function newProject(title, description, user) {
     const createDate = moment().format('MM/DD/YYYY');
 
     // Create a project in the database
-    const projectQuery = await db.query('INSERT INTO projects(title, description, user_id, create_date) VALUES($1, $2, $3, $4) returning id', [title, description, user.id, createDate]);
-    logger.debug({ label: 'create new project query response', results: projectQuery.rows });
+    const [projectQuery] = await db.query('INSERT INTO projects(title, description, user_id, create_date) VALUES($1, $2, $3, $4) returning id', [title, description, user.id, createDate], 'create new project');
 
     // Create a new user for the project
     const projectUserCreateDate = moment().format();
-    const projectUserQuery = await db.query('insert into projects_users(user_id, project_id, added_by, create_date) values($1, $2, $3, $4) returning user_id', [user.id, projectQuery.rows[0].id, user.id, projectUserCreateDate]);
-    logger.debug({ label: 'create new user project query response', results: projectUserQuery.rows });
+    await db.query('insert into projects_users(user_id, project_id, added_by, create_date) values($1, $2, $3, $4) returning user_id', [user.id, projectQuery.id, user.id, projectUserCreateDate], 'create new user project');
 
-    return { message: 'Project created successfully', id: projectQuery.rows[0].id };
+    return { message: 'Project created successfully', id: projectQuery.id };
   } catch (error) {
     const errorMsg = 'Could not create project or could not add user to project';
     srcFileErrorHandler(error, errorMsg);
@@ -51,14 +48,11 @@ const getProjects = async function getProjects(user) {
     } = user;
 
     // Get projects from the database
-    let projectsQuery = await db.query('select project_id, added_by, projects_users.create_date, title, description from projects_users, projects where projects_users.user_id=$1 AND projects_users.project_id=projects.id', [id]);
-    logger.debug({ label: 'get projects query response', results: projectsQuery.rows });
+    const projectsQuery = await db.query('select project_id, added_by, projects_users.create_date, title, description from projects_users, projects where projects_users.user_id=$1 AND projects_users.project_id=projects.id', [id], 'get projects');
 
-    if (!projectsQuery || !projectsQuery.rows || projectsQuery.rows.length <= 0) {
+    if (!projectsQuery || projectsQuery.length <= 0) {
       throw { code: 404, message: 'User does not have any projects' };
     }
-
-    projectsQuery = projectsQuery.rows;
 
     const allProjects = projectsQuery.map((item) => {
       return {
@@ -69,6 +63,7 @@ const getProjects = async function getProjects(user) {
         admin: id === item.added_by ? true : false
       };
     });
+
     return allProjects;
   } catch (error) {
     const errorMsg = 'Could not get projects';
@@ -97,13 +92,11 @@ const getProject = async function getProject(projectId, user) {
     await tools.checkUserInProject(id, projectId);
 
     // Get project title, description and admin
-    let projectQuery = await db.query('select title, description, user_id, create_date from projects where id=$1', [projectId]);
-    logger.debug({ label: 'get project query response', results: projectQuery.rows });
+    const [projectQuery] = await db.query('select title, description, user_id, create_date from projects where id=$1', [projectId], 'get project');
 
-    if (!projectQuery || !projectQuery.rows || projectQuery.rows.length <= 0) {
+    if (!projectQuery) {
       throw { code: 404, message: 'Project is not found' };
     }
-    projectQuery = projectQuery.rows[0];
 
     const projectInfo = {
       projectId,
@@ -114,13 +107,12 @@ const getProject = async function getProject(projectId, user) {
     };
 
     // Get project's users
-    const usersQuery = await db.query('select id, name, email from projects_users, users where users.id=projects_users.user_id AND project_id=$1', [projectId]);
-    logger.debug({ label: 'get project users query response', results: usersQuery.rows });
+    const usersQuery = await db.query('select id, name, email from projects_users, users where users.id=projects_users.user_id AND project_id=$1', [projectId], 'get project users');
 
-    if (!usersQuery || !usersQuery.rows || usersQuery.rows.length <= 0) {
+    if (!usersQuery || usersQuery.length <= 0) {
       projectInfo.users = [];
     } else {
-      projectInfo.users = usersQuery.rows;
+      projectInfo.users = usersQuery;
     }
 
     return projectInfo;
@@ -148,13 +140,12 @@ const getProjectAdminId = async function getProjectAdminId(projectId, user) {
     await tools.checkUserInProject(id, projectId);
 
     // Get project admin
-    let projectQuery = await db.query('select user_id from projects where id=$1', [projectId]);
-    logger.debug({ label: 'get project admin query response', results: projectQuery.rows });
+    let [projectQuery] = await db.query('select user_id from projects where id=$1', [projectId], 'get project admin');
 
-    if (!projectQuery || !projectQuery.rows || projectQuery.rows.length <= 0) {
+    if (!projectQuery || projectQuery.length <= 0) {
       throw { code: 404, message: 'Project is not found' };
     }
-    projectQuery = projectQuery.rows[0].user_id;
+    projectQuery = projectQuery.user_id;
 
     return { adminId: projectQuery };
   } catch (error) {
@@ -187,21 +178,13 @@ const deleteProject = async function deleteProject(projectId, user) {
     }
 
     // Delete project and all accociated items (publications projects, search queries, users in projects)
-    const deletePublicationsProject = await db.query('delete from publications_projects where project_id=$1', [projectId]);
-    logger.debug({ label: 'delete project (publications projects) query response', results: deletePublicationsProject });
+    await db.query('delete from publications_projects where project_id=$1', [projectId], 'delete project (publications projects)');
 
-    const deleteSearchQueries = await db.query('delete from search_queries where project_id=$1', [projectId]);
-    logger.debug({ label: 'delete project (search queries) query response', results: deleteSearchQueries });
+    await db.query('delete from search_queries where project_id=$1', [projectId], 'delete project (search queries)');
 
-    const deleteProjectUsers = await db.query('delete from projects_users where project_id=$1', [projectId]);
-    logger.debug({ label: 'delete project (projects users) query response', results: deleteProjectUsers });
+    await db.query('delete from projects_users where project_id=$1', [projectId], 'delete project (projects users)');
 
-    const deleteQuery = await db.query('delete from projects where id=$1 AND user_id=$2', [projectId, id]);
-    logger.debug({ label: 'delete project query response', results: deleteQuery });
-
-    if (!deleteQuery) {
-      throw { code: 500, message: 'Could not delete project from database' };
-    }
+    await db.query('delete from projects where id=$1 AND user_id=$2', [projectId, id], 'delete project query response');
 
     return { 'message': 'Deleted project successfully' };
   } catch (error) {
@@ -236,8 +219,7 @@ const updateProject = async function updateProject(projectId, title, description
     }
 
     // Update project title and description
-    const updateQuery = await db.query('update projects set title=$1, description=$2 where id=$3', [title, description, projectId]);
-    logger.debug({ label: 'update project query response', results: updateQuery });
+    const [updateQuery] = await db.query('update projects set title=$1, description=$2 where id=$3 returning id', [title, description, projectId], 'update project');
 
     if (!updateQuery) {
       throw { code: 500, message: 'Could not update project in the database' };
@@ -280,8 +262,8 @@ const addProjectUsers = async function addProjectUsers(projectId, projectUsers, 
 
     // Add users to project
     await Promise.all(projectUsers.map(async (pUserEmail) => {
-      const insertQuery = await db.query('insert into projects_users values((select id from users where email=$1),$2,$3,$4) ON CONFLICT DO NOTHING', [pUserEmail, projectId, id, createDate]);
-      logger.debug({ label: 'add user to project query response', results: insertQuery });
+      const [insertQuery] = await db.query('insert into projects_users values((select id from users where email=$1),$2,$3,$4) ON CONFLICT DO NOTHING returning user_id', [pUserEmail, projectId, id, createDate], 'add user to project');
+
       if (insertQuery) {
         return pUserEmail;
       }
@@ -291,7 +273,7 @@ const addProjectUsers = async function addProjectUsers(projectId, projectUsers, 
 
     return { 'message': 'Added all users successfully', insertedUsers };
   } catch (error) {
-    const errorMsg = `Could not add one or more users ${JSON.stringify(insertedUsers)}`;
+    const errorMsg = `Could not add one or more users inserted users: ${JSON.stringify(insertedUsers)}`;
     srcFileErrorHandler(error, errorMsg);
   }
 };
@@ -318,25 +300,21 @@ const removeProjectUsers = async function removeProjectUsers(projectId, projectU
 
     const projectAdminId = await getProjectAdminId(projectId, user);
 
-    if (projectAdminId.adminId != id || !(email === projectUsers[0] && projectUsers.length === 1)) {
+    if (projectAdminId.adminId != id && !(email === projectUsers[0] || projectUsers.length === 1)) {
       throw { code: 403, message: 'Only admin and self user are authorized to remove user(s)' };
     }
 
     // Remove user(s) from project
     await Promise.all(projectUsers.map(async (pUserEmail) => {
-      const deleteQuery = await db.query('delete from projects_users where user_id=(select id from users where email=$1) AND project_id=$2', [pUserEmail, projectId]);
-      logger.debug({ label: 'remove users from project query response', results: deleteQuery });
-
-      if (deleteQuery) {
-        return pUserEmail;
-      }
+      await db.query('delete from projects_users where user_id=(select id from users where email=$1) AND project_id=$2', [pUserEmail, projectId], 'remove users from project');
+      return pUserEmail;
     })).then((values) => {
       deletedUsers = values;
     });
 
     return { 'message': 'Delete all requested users successfully', deletedUsers };
   } catch (error) {
-    const errorMsg = `Could not delete one or more users ${JSON.stringify(deletedUsers)}`;
+    const errorMsg = `Could not delete one or more users, successfully deleted users ${JSON.stringify(deletedUsers)}`;
     srcFileErrorHandler(error, errorMsg);
   }
 };

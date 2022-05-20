@@ -1,9 +1,8 @@
 const moment = require('moment');
 const Ajv = require('ajv');
-const { logger } = require('../utils/logger');
 const { srcFileErrorHandler } = require('../utils/srcFile');
 const publicationSchema = require('../schemas/publicationSchema.json');
-const db = require('../db/db');
+const db = require('../utils/db');
 const tools = require('./tools');
 
 /**
@@ -45,10 +44,9 @@ const newPublication = async function newPublication(publication, user) {
     const queryLine = `insert into publications(${publicationKeys.toString()}) values(${publicationKeysCount.toString()}) ON CONFLICT DO NOTHING returning id`;
 
     // Create a publication in the database
-    const newPublicationQuery = await db.query(queryLine, publicationValues);
-    logger.debug({ label: 'new publication query response', results: newPublicationQuery.rows });
+    const [newPublicationQuery] = await db.query(queryLine, publicationValues, 'new publication');
 
-    return { message: 'Publication created successfully', id: newPublicationQuery.rows[0].id };
+    return { message: 'Publication created successfully', id: newPublicationQuery.id };
   } catch (error) {
     console.log(error);
     const errorMsg = 'Could not create publication';
@@ -74,7 +72,7 @@ const deletePublicationByDOI = async function deletePublicationByDOI(dois, user)
 
     // Delete publication by DOI
     dois.forEach(async (doi) => {
-      await db.query('delete from publications where doi=$1', [doi]);
+      await db.query('delete from publications where doi=$1', [doi], 'delete publication by doi');
     });
 
     return { message: 'Publication deleted successfully by doi' };
@@ -102,7 +100,7 @@ const deletePublicationById = async function deletePublicationById(publicationId
 
     // Delete publication by DOI
     publicationIds.forEach(async (publicationId) => {
-      await db.query('delete from publications where id=$1', [publicationId]);
+      await db.query('delete from publications where id=$1', [publicationId], 'delete publication by id');
     });
 
     return { message: 'Publication deleted successfully by id' };
@@ -143,7 +141,7 @@ const addPublicationToProjectByDoi = async function addPublicationToProjectByDoi
     // Retreive publication by id and add it to a project
     for await (const doi of dois) {
       try {
-        const queryLinkPublication = await db.query('insert into publications_projects(publication_id, project_id, search_query_id) values((select id from publications where doi=$1), $2, $3) ON CONFLICT DO NOTHING', [doi, projectId, searchQueryId]);
+        const [queryLinkPublication] = await db.query('insert into publications_projects(publication_id, project_id, search_query_id) values((select id from publications where doi=$1), $2, $3) ON CONFLICT DO NOTHING returning publication_id', [doi, projectId, searchQueryId], 'insert publication to a project by doi');
         if (queryLinkPublication) {
           successItems.push(doi);
         } else {
@@ -197,7 +195,7 @@ const addPublicationToProjectById = async function addPublicationToProjectById(p
     // Retreive publication by id and add it to a project
     for await (const publicationId of publicationIds) {
       try {
-        const queryLinkPublication = await db.query('insert into publications_projects(publication_id, project_id, search_query_id) values($1, $2, $3) ON CONFLICT DO NOTHING', [publicationId, projectId, searchQueryId]);
+        const [queryLinkPublication] = await db.query('insert into publications_projects(publication_id, project_id, search_query_id) values($1, $2, $3) ON CONFLICT DO NOTHING returning publication_id', [publicationId, projectId, searchQueryId], 'insert publication to a project by id');
         if (queryLinkPublication) {
           successItems.push(publicationId);
         } else {
@@ -251,12 +249,8 @@ const deletePublicationFromProjectByDoi = async function deletePublicationFromPr
     // Retreive publication by id and add it to a project
     for await (const doi of dois) {
       try {
-        const queryLinkPublication = await db.query('delete from publications_projects where publication_id=(select id from publications where doi=$1) and project_id=$2', [doi, projectId]);
-        if (queryLinkPublication) {
-          successItems.push(doi);
-        } else {
-          failedItems.push(doi);
-        }
+        await db.query('delete from publications_projects where publication_id=(select id from publications where doi=$1) and project_id=$2', [doi, projectId], 'delete publication from project by doi');
+        successItems.push(doi);
       } catch (error) {
         failedItems.push(doi);
       }
@@ -304,12 +298,8 @@ const deletePublicationFromProjectById = async function deletePublicationFromPro
     // Retreive publication by id and add it to a project
     for await (const publicationId of publicationIds) {
       try {
-        const queryLinkPublication = await db.query('delete from publications_projects where publication_id=$1 and project_id=$2', [publicationId, projectId]);
-        if (queryLinkPublication) {
-          successItems.push(publicationId);
-        } else {
-          failedItems.push(publicationId);
-        }
+        await db.query('delete from publications_projects where publication_id=$1 and project_id=$2', [publicationId, projectId], 'delete publication from project by id');
+        successItems.push(publicationId);
       } catch (error) {
         failedItems.push(publicationId);
       }
@@ -351,12 +341,9 @@ const deleteAllPublicationsFromProject = async function deleteAllPublicationsFro
     await tools.checkUserInProject(id, projectId);
 
     // Delete all publications from a project
-    const deletePublicationQuery = await db.query('delete from publications_projects where project_id=$1', [projectId]);
-    if (deletePublicationQuery) {
-      return { message: 'All publication were deleted from a project successfully' };
-    } else {
-      throw { code: 500, message: 'Could not delete publications from a project' };
-    }
+    await db.query('delete from publications_projects where project_id=$1', [projectId], 'delete all publications from a project');
+
+    return { message: 'All publication were deleted from a project successfully' };
   } catch (error) {
     const errorMsg = 'Could not delete all publications from a project';
     srcFileErrorHandler(error, errorMsg);
@@ -380,11 +367,10 @@ const getPublicationById = async function getPublicationById(publicationId, user
     }
 
     // Get publication by id
-    const publicationQuery = await db.query('select * from publications where id=$1', [publicationId]);
-    logger.debug({ label: 'get publication by id query response', results: publicationQuery.rows });
+    const [publicationQuery] = await db.query('select * from publications where id=$1', [publicationId], 'get publication by id');
 
-    if (publicationQuery && publicationQuery.rows && publicationQuery.rows[0]) {
-      return publicationQuery.rows[0];
+    if (publicationQuery) {
+      return publicationQuery;
     } else {
       throw { code: 500, message: 'Could not find publication by id' };
     }
@@ -411,11 +397,10 @@ const getPublicationByDOI = async function getPublicationByDOI(publicationDoi, u
     }
 
     // Get publication by doi
-    const publicationQuery = await db.query('select * from publications where doi=$1', [publicationDoi]);
-    logger.debug({ label: 'get publication by doi query response', results: publicationQuery.rows });
+    const [publicationQuery] = await db.query('select * from publications where doi=$1', [publicationDoi], 'get publication by doi');
 
-    if (publicationQuery && publicationQuery.rows && publicationQuery.rows[0]) {
-      return publicationQuery.rows[0];
+    if (publicationQuery) {
+      return publicationQuery;
     } else {
       return false;
     }
@@ -449,11 +434,10 @@ const getPublicationsByProjectId = async function getPublicationsByProjectId(pro
     await tools.checkUserInProject(id, projectId);
 
     // Get publications by project id
-    const publicationQuery = await db.query('select * from publications, publications_projects where publications_projects.project_id=$1 and publications.id=publications_projects.publication_id', [projectId]);
-    logger.debug({ label: 'get publications by project id query response', results: publicationQuery.rows });
+    const publicationQuery = await db.query('select * from publications, publications_projects where publications_projects.project_id=$1 and publications.id=publications_projects.publication_id', [projectId], 'get publications by project id');
 
-    if (publicationQuery && publicationQuery.rows) {
-      return publicationQuery.rows;
+    if (publicationQuery && publicationQuery.length >= 0) {
+      return publicationQuery;
     } else {
       throw { code: 500, message: 'Could not find publications by project id' };
     }

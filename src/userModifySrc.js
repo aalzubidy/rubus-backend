@@ -1,7 +1,6 @@
 const bcrypt = require('bcrypt');
-const { logger } = require('../utils/logger');
 const { srcFileErrorHandler } = require('../utils/srcFile');
-const db = require('../db/db');
+const db = require('../utils/db');
 
 /**
  * @function getUser
@@ -51,14 +50,13 @@ const getUserByKey = async function getUserByKey(searchKey, searchValue, user) {
 
     let userSearchQuery = null;
     if (searchKey === 'id') {
-      userSearchQuery = await db.query('select id, name, email, organization from users where id=$1', [searchValue]);
+      [userSearchQuery] = await db.query('select id, name, email, organization from users where id=$1', [searchValue], 'get user by id');
     } else {
-      userSearchQuery = await db.query('select id, name, email, organization from users where email=$1', [searchValue]);
+      [userSearchQuery] = await db.query('select id, name, email, organization from users where email=$1', [searchValue], 'get user by email');
     }
-    logger.debug({ label: 'search user query response', results: userSearchQuery });
 
-    if (userSearchQuery && userSearchQuery.rows && userSearchQuery.rows[0]) {
-      return userSearchQuery.rows[0];
+    if (userSearchQuery) {
+      return userSearchQuery;
     } else {
       throw { code: 404, message: 'Could not find user by key' };
     }
@@ -92,8 +90,7 @@ const updateUser = async function updateUser(name, email, organization, user) {
     }
 
     // Updating user info
-    const updateQuery = await db.query('update users set name=$1, email=$2, organization=$3 where id=$4', [name, email, organization, id]);
-    logger.debug({ label: 'update user query response', results: updateQuery });
+    const updateQuery = await db.query('update users set name=$1, email=$2, organization=$3 where id=$4 returning id', [name, email, organization, id], 'update user');
 
     if (!updateQuery) {
       throw {
@@ -135,9 +132,9 @@ const changeUserPassword = async function changeUserPassword(oldPassword, newPas
     }
 
     // Get current password from database
-    let currentPassword = await db.query('select password from users where id=$1', [id]);
+    let [currentPassword] = await db.query('select password from users where id=$1', [id], 'get user from db p');
     if (currentPassword) {
-      currentPassword = currentPassword.rows[0].password;
+      currentPassword = currentPassword.password;
     }
 
     // Comparing password
@@ -154,7 +151,7 @@ const changeUserPassword = async function changeUserPassword(oldPassword, newPas
     const newPasswordHash = await bcrypt.hash(newPassword, 12);
 
     // Update password
-    const updateQuery = await db.query('update users set password=$1 where id=$2', [newPasswordHash, id]);
+    const [updateQuery] = await db.query('update users set password=$1 where id=$2 returning id', [newPasswordHash, id], 'update user p');
     if (!updateQuery) {
       throw {
         code: 500,

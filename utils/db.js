@@ -8,7 +8,7 @@ const pool = new Pool({
 });
 
 module.exports = {
-  async query(text, params, queryLabel) {
+  async query(text, params, queryLabel = '') {
     logger.debug({ label: `about to execute db query - ${queryLabel}`, text, params });
     const start = Date.now();
     const res = await pool.query(text, params);

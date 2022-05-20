@@ -10,7 +10,7 @@ const bcrypt = require('bcrypt');
 
 // Import files
 const projectSrc = require('../../../src/projectSrc');
-const db = require('../../../db/db');
+const db = require('../../../utils/db');
 const tools = require('../../../src/tools');
 
 describe('projectSrc.js', function () {
@@ -34,7 +34,7 @@ describe('projectSrc.js', function () {
       }
     });
     it('should return error on database error', async () => {
-      td.when(db.query(anything, anything)).thenReject('fake error');
+      td.when(db.query(anything, anything, anything)).thenReject('fake error');
       try {
         const results = await projectSrc.newProject('test', 'test test', {
           id: 'test'
@@ -46,7 +46,7 @@ describe('projectSrc.js', function () {
       }
     });
     it('should return new project id', async () => {
-      td.when(db.query(anything, anything)).thenResolve({ rows: [{ id: 1 }] });
+      td.when(db.query(anything, anything, anything)).thenResolve([{ id: 1 }]);
       try {
         const results = await projectSrc.newProject('test', 'test test', {
           id: 'test'
@@ -64,7 +64,7 @@ describe('projectSrc.js', function () {
 
   describe('getProjects', () => {
     it('should return error on database error', async () => {
-      td.when(db.query(anything, anything)).thenReject('fake error');
+      td.when(db.query(anything, anything, anything)).thenReject('fake error');
       try {
         const results = await projectSrc.getProjects({
           id: 'test'
@@ -76,7 +76,7 @@ describe('projectSrc.js', function () {
       }
     });
     it('should return error if there are no projects for the user', async () => {
-      td.when(db.query(anything, anything)).thenResolve({ rows: [] });
+      td.when(db.query(anything, anything, anything)).thenResolve([]);
       try {
         const results = await projectSrc.getProjects({
           id: 'test'
@@ -88,7 +88,7 @@ describe('projectSrc.js', function () {
       }
     });
     it('should return projects with admin true', async () => {
-      td.when(db.query(anything, anything)).thenResolve({ rows: [{ "project_id": 10, "added_by": 74, "create_date": "2020-12-27T08:00:00.000Z", "title": "test", "description": "test test" }] });
+      td.when(db.query(anything, anything, anything)).thenResolve([{ "project_id": 10, "added_by": 74, "create_date": "2020-12-27T08:00:00.000Z", "title": "test", "description": "test test" }]);
       try {
         const results = await projectSrc.getProjects({
           id: 74
@@ -106,7 +106,7 @@ describe('projectSrc.js', function () {
       }
     });
     it('should return projects with admin false', async () => {
-      td.when(db.query(anything, anything)).thenResolve({ rows: [{ "project_id": 10, "added_by": 74, "create_date": "2020-12-27T08:00:00.000Z", "title": "test", "description": "test test" }] });
+      td.when(db.query(anything, anything, anything)).thenResolve([{ "project_id": 10, "added_by": 74, "create_date": "2020-12-27T08:00:00.000Z", "title": "test", "description": "test test" }]);
       try {
         const results = await projectSrc.getProjects({
           id: 'test'
@@ -151,7 +151,7 @@ describe('projectSrc.js', function () {
     });
     it('should return error if project is not found', async () => {
       td.when(tools.checkUserInProject(anything, anything)).thenResolve({ allowed: true });
-      td.when(db.query('select title, description, user_id, create_date from projects where id=$1', anything)).thenResolve({ rows: [] });
+      td.when(db.query('select title, description, user_id, create_date from projects where id=$1', anything, anything)).thenResolve([]);
       try {
         const results = await projectSrc.getProject(10, {
           id: 'test'
@@ -164,7 +164,7 @@ describe('projectSrc.js', function () {
     });
     it('should return error on database error', async () => {
       td.when(tools.checkUserInProject(anything, anything)).thenResolve({ allowed: true });
-      td.when(db.query(anything, anything)).thenReject('fake error');
+      td.when(db.query(anything, anything, anything)).thenReject('fake error');
       try {
         const results = await projectSrc.getProject(10, {
           id: 'test'
@@ -177,8 +177,8 @@ describe('projectSrc.js', function () {
     });
     it('should return project with admin true', async () => {
       td.when(tools.checkUserInProject(anything, anything)).thenResolve({ allowed: true });
-      td.when(db.query('select title, description, user_id, create_date from projects where id=$1', anything)).thenResolve({ rows: [{ "title": "test", "description": "test test", "user_id": 74, "create_date": "2020-12-27T08:00:00.000Z" }] });
-      td.when(db.query('select id, name, email from projects_users, users where users.id=projects_users.user_id AND project_id=$1', anything)).thenResolve({ rows: [{ "id": 74, "name": "test user", "email": "a@a.com" }] });
+      td.when(db.query('select title, description, user_id, create_date from projects where id=$1', anything, anything)).thenResolve([{ "title": "test", "description": "test test", "user_id": 74, "create_date": "2020-12-27T08:00:00.000Z" }]);
+      td.when(db.query('select id, name, email from projects_users, users where users.id=projects_users.user_id AND project_id=$1', anything, anything)).thenResolve([{ "id": 74, "name": "test user", "email": "a@a.com" }]);
       try {
         const results = await projectSrc.getProject(10, {
           id: 74
@@ -202,8 +202,8 @@ describe('projectSrc.js', function () {
     });
     it('should return project with admin false', async () => {
       td.when(tools.checkUserInProject(anything, anything)).thenResolve({ allowed: true });
-      td.when(db.query('select title, description, user_id, create_date from projects where id=$1', anything)).thenResolve({ rows: [{ "title": "test", "description": "test test", "user_id": 74, "create_date": "2020-12-27T08:00:00.000Z" }] });
-      td.when(db.query('select id, name, email from projects_users, users where users.id=projects_users.user_id AND project_id=$1', anything)).thenResolve({ rows: [{ "id": 74, "name": "test user", "email": "a@a.com" }] });
+      td.when(db.query('select title, description, user_id, create_date from projects where id=$1', anything, anything)).thenResolve([{ "title": "test", "description": "test test", "user_id": 74, "create_date": "2020-12-27T08:00:00.000Z" }]);
+      td.when(db.query('select id, name, email from projects_users, users where users.id=projects_users.user_id AND project_id=$1', anything, anything)).thenResolve([{ "id": 74, "name": "test user", "email": "a@a.com" }]);
       try {
         const results = await projectSrc.getProject(10, {
           id: 'test'
@@ -253,7 +253,7 @@ describe('projectSrc.js', function () {
     });
     it('should return error if project is not found', async () => {
       td.when(tools.checkUserInProject(anything, anything)).thenResolve({ allowed: true });
-      td.when(db.query(anything, anything)).thenResolve({ rows: [] });
+      td.when(db.query(anything, anything, anything)).thenResolve([]);
       try {
         const results = await projectSrc.getProjectAdminId(10, {
           id: 'test'
@@ -266,7 +266,7 @@ describe('projectSrc.js', function () {
     });
     it('should return error on database error', async () => {
       td.when(tools.checkUserInProject(anything, anything)).thenResolve({ allowed: true });
-      td.when(db.query(anything, anything)).thenReject('fake error');
+      td.when(db.query(anything, anything, anything)).thenReject('fake error');
       try {
         const results = await projectSrc.getProjectAdminId(10, {
           id: 'test'
@@ -279,7 +279,7 @@ describe('projectSrc.js', function () {
     });
     it('should return project admin id', async () => {
       td.when(tools.checkUserInProject(anything, anything)).thenResolve({ allowed: true });
-      td.when(db.query(anything, anything)).thenResolve({ rows: [{ "user_id": 1 }] });
+      td.when(db.query(anything, anything, anything)).thenResolve([{ "user_id": 1 }]);
       try {
         const results = await projectSrc.getProjectAdminId(10, {
           id: 74

@@ -10,7 +10,7 @@ const bcrypt = require('bcrypt');
 
 // Import files
 const authorizationSrc = require('../../../src/authorizationSrc');
-const db = require('../../../db/db');
+const db = require('../../../utils/db');
 
 describe('authorizationSrc.js', function () {
   beforeEach(function () {
@@ -23,11 +23,9 @@ describe('authorizationSrc.js', function () {
 
   describe('register', () => {
     it('should return new user id', async () => {
-      td.when(db.query(anything, anything)).thenReturn({
-        rows: [{
-          id: 1
-        }]
-      });
+      td.when(db.query(anything, anything, anything)).thenReturn([{
+        id: 1
+      }]);
       try {
         const input = {
           "name": "test user",
@@ -80,7 +78,7 @@ describe('authorizationSrc.js', function () {
       }
     });
     it('should return error on database error', async () => {
-      td.when(db.query(anything, anything)).thenReject('fake error');
+      td.when(db.query(anything, anything, anything)).thenReject('fake error');
       try {
         const input = {
           "name": "test user",
@@ -112,9 +110,7 @@ describe('authorizationSrc.js', function () {
       }
     });
     it('should return unauthorized if username not in database', async () => {
-      td.when(db.query(anything, anything)).thenReturn({
-        rows: []
-      });
+      td.when(db.query(anything, anything, anything)).thenReturn([]);
       try {
         const input = {
           "email": "test@test.com",
@@ -130,15 +126,13 @@ describe('authorizationSrc.js', function () {
       }
     });
     it('should return unauthorized if password does not match', async () => {
-      td.when(db.query(anything, anything)).thenReturn({
-        rows: [{
-          id: 'test',
-          email: 'test',
-          name: 'test',
-          password: 'organization',
-          password: 'test'
-        }]
-      });
+      td.when(db.query(anything, anything, anything)).thenReturn([{
+        id: 'test',
+        email: 'test',
+        name: 'test',
+        password: 'organization',
+        password: 'test'
+      }]);
       try {
         const input = {
           "email": "test@test.com",
@@ -154,15 +148,13 @@ describe('authorizationSrc.js', function () {
       }
     });
     it.skip('should return access token and refresh token on successful login', async () => {
-      td.when(db.query(anything, anything)).thenReturn({
-        rows: [{
-          id: 1,
-          email: 'test@test.com',
-          name: 'test',
-          organization: 'test',
-          password: '$2b$12$r6vMkpEn/6nY.UvxrNLA.Ouu0jnCAm4PDNUBiDqUMeBstK/pyDsNm'
-        }]
-      });
+      td.when(db.query(anything, anything, anything)).thenReturn([{
+        id: 1,
+        email: 'test@test.com',
+        name: 'test',
+        organization: 'test',
+        password: '$2b$12$r6vMkpEn/6nY.UvxrNLA.Ouu0jnCAm4PDNUBiDqUMeBstK/pyDsNm'
+      }]);
       try {
         const input = {
           "email": "test@test.com",
@@ -242,7 +234,7 @@ describe('authorizationSrc.js', function () {
       stub1.onCall(1).returns({
         id: 'test'
       });
-      td.when(db.query(anything, anything)).thenReject('fake error');
+      td.when(db.query(anything, anything, anything)).thenReject('fake error');
       try {
         const results = await authorizationSrc.logout({
           headers: {
@@ -267,7 +259,7 @@ describe('authorizationSrc.js', function () {
       stub1.onCall(1).returns({
         id: 'test'
       });
-      td.when(db.query(anything, anything)).thenReturn(true);
+      td.when(db.query(anything, anything, anything)).thenReturn(true);
       try {
         const results = await authorizationSrc.logout({
           headers: {
@@ -357,11 +349,9 @@ describe('authorizationSrc.js', function () {
         email: 'test',
         organization: 'test'
       });
-      td.when(db.query(anything, anything)).thenReturn({
-        rows: [{
-          email: 'test'
-        }]
-      });
+      td.when(db.query(anything, anything, anything)).thenReturn([{
+        email: 'test'
+      }]);
 
       const stub2 = sinon.stub(jwt, 'sign');
       stub2.onCall(0).returns('new test token');
