@@ -1,3 +1,4 @@
+const { verifySession } = require('supertokens-node/recipe/session/framework/express');
 const express = require('express');
 const router = express.Router();
 const publicationSrc = require('../src/publicationSrc');
@@ -6,7 +7,7 @@ const { callSrcFile } = require('../utils/srcFileAuthorization');
 /**
  * @summary Create new publication
  */
-router.post('/publications', async (req, res) => {
+router.post('/publications', verifySession(), async (req, res) => {
   const {
     publication
   } = req.body;
@@ -16,7 +17,7 @@ router.post('/publications', async (req, res) => {
 /**
  * @summary Delete publication(s) by DOI
  */
-router.delete('/publications/doi', async (req, res) => {
+router.delete('/publications/doi', verifySession(), async (req, res) => {
   const {
     dois
   } = req.body;
@@ -26,7 +27,7 @@ router.delete('/publications/doi', async (req, res) => {
 /**
  * @summary Delete publication(s) by Id
  */
-router.delete('/publications/id', async (req, res) => {
+router.delete('/publications/id', verifySession(), async (req, res) => {
   const {
     publicationIds
   } = req.body;
@@ -36,7 +37,7 @@ router.delete('/publications/id', async (req, res) => {
 /**
  * @summary Add publication(s) by DOI to a project
  */
-router.post('/publications/project/doi', async (req, res) => {
+router.post('/publications/project/doi', verifySession(), async (req, res) => {
   const {
     dois,
     projectId,
@@ -48,7 +49,7 @@ router.post('/publications/project/doi', async (req, res) => {
 /**
  * @summary Add publication(s) by Id to a project
  */
-router.post('/publications/project/id', async (req, res) => {
+router.post('/publications/project/id', verifySession(), async (req, res) => {
   const {
     publicationIds,
     projectId,
@@ -60,7 +61,7 @@ router.post('/publications/project/id', async (req, res) => {
 /**
  * @summary Delete publication(s) by DOI from a project
  */
-router.delete('/publications/project/doi', async (req, res) => {
+router.delete('/publications/project/doi', verifySession(), async (req, res) => {
   const {
     dois,
     projectId
@@ -71,7 +72,7 @@ router.delete('/publications/project/doi', async (req, res) => {
 /**
  * @summary Delete publication(s) by id from a project
  */
-router.delete('/publications/project/id', async (req, res) => {
+router.delete('/publications/project/id', verifySession(), async (req, res) => {
   const {
     publicationIds,
     projectId
@@ -82,7 +83,7 @@ router.delete('/publications/project/id', async (req, res) => {
 /**
  * @summary Delete all publication(s) from a project
  */
-router.delete('/publications/project/all', async (req, res) => {
+router.delete('/publications/project/all', verifySession(), async (req, res) => {
   const {
     projectId
   } = req.body;
@@ -92,7 +93,7 @@ router.delete('/publications/project/all', async (req, res) => {
 /**
  * @summary Get a publication by id
  */
-router.get('/publications/id/:publicationId', async (req, res) => {
+router.get('/publications/id/:publicationId', verifySession(), async (req, res) => {
   const {
     publicationId
   } = req.params;
@@ -102,7 +103,7 @@ router.get('/publications/id/:publicationId', async (req, res) => {
 /**
  * @summary Get a publication by doi
  */
-router.get('/publications/doi/:publicationDOI', async (req, res) => {
+router.get('/publications/doi/:publicationDOI', verifySession(), async (req, res) => {
   const {
     publicationDOI
   } = req.params;
@@ -112,7 +113,7 @@ router.get('/publications/doi/:publicationDOI', async (req, res) => {
 /**
  * @summary Get all publications in a project
  */
-router.get('/publications/project/:projectId', async (req, res) => {
+router.get('/publications/project/:projectId', verifySession(), async (req, res) => {
   const {
     projectId
   } = req.params;

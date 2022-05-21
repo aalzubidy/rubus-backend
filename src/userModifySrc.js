@@ -4,20 +4,19 @@ const db = require('../utils/db');
 
 /**
  * @function getUser
- * @summary Get user information by token
- * @param {object} user User information
- * @returns {object} User information
+ * @summary Get user information from database
+ * @param {object} user User containing id
+ * @returns {object} userInformation
  * @throws {object} errorCodeAndMsg
  */
 const getUser = async function getUser(user) {
   try {
-    if (user) {
-      return { id: user.id, name: user.name, email: user.email, organization: user.organization };
+    if (user.id) {
+      const [dbUser] = await db.query('select id, name, email, organization, avatar_url from users where id=$1', [user.id], 'get user from database');
+      if (dbUser.id === user.id) return dbUser;
+      else throw { code: 403, message: 'Could not get user information' };
     } else {
-      throw {
-        code: 404,
-        message: 'Could not find user information'
-      };
+      throw { code: 404, message: 'Could not find user information' };
     }
   } catch (error) {
     const errorMsg = 'Could not get user information';
@@ -50,9 +49,9 @@ const getUserByKey = async function getUserByKey(searchKey, searchValue, user) {
 
     let userSearchQuery = null;
     if (searchKey === 'id') {
-      [userSearchQuery] = await db.query('select id, name, email, organization from users where id=$1', [searchValue], 'get user by id');
+      [userSearchQuery] = await db.query('select id, name, email, organization, avatar_url from users where id=$1', [searchValue], 'get user by id');
     } else {
-      [userSearchQuery] = await db.query('select id, name, email, organization from users where email=$1', [searchValue], 'get user by email');
+      [userSearchQuery] = await db.query('select id, name, email, organization, avatar_url from users where email=$1', [searchValue], 'get user by email');
     }
 
     if (userSearchQuery) {

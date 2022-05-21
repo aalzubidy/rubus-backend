@@ -1,3 +1,4 @@
+const { verifySession } = require('supertokens-node/recipe/session/framework/express');
 const express = require('express');
 const router = express.Router();
 const userModifySrc = require('../src/userModifySrc');
@@ -6,14 +7,14 @@ const { callSrcFile } = require('../utils/srcFileAuthorization');
 /**
  * @summary Get user information by token
  */
-router.get('/user', async (req, res) => {
+router.get('/user', verifySession(), async (req, res) => {
   callSrcFile(userModifySrc, 'getUser', [], req, res);
 });
 
 /**
  * @summary Get user details by id
  */
-router.get('/user/id/:id', async (req, res) => {
+router.get('/user/id/:id', verifySession(), async (req, res) => {
   const { id } = req.params;
   callSrcFile(userModifySrc, 'getUserByKey', ['id', id], req, res);
 });
@@ -21,7 +22,7 @@ router.get('/user/id/:id', async (req, res) => {
 /**
  * @summary Get user details by email
  */
-router.get('/user/email/:email', async (req, res) => {
+router.get('/user/email/:email', verifySession(), async (req, res) => {
   const { email } = req.params;
   callSrcFile(userModifySrc, 'getUserByKey', ['email', email], req, res);
 });
@@ -29,7 +30,7 @@ router.get('/user/email/:email', async (req, res) => {
 /**
  * @summary Updating users
  */
-router.put('/users', async (req, res) => {
+router.put('/users', verifySession(), async (req, res) => {
   const {
     name,
     email,
@@ -41,7 +42,7 @@ router.put('/users', async (req, res) => {
 /**
  * @summary Updating password
  */
-router.put('/users/password', async (req, res) => {
+router.put('/users/password', verifySession(), async (req, res) => {
   const {
     oldPassword,
     newPassword

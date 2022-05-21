@@ -1,3 +1,4 @@
+const { verifySession } = require('supertokens-node/recipe/session/framework/express');
 const express = require('express');
 const router = express.Router();
 const usersProjectsRequestsSrc = require('../src/usersProjectsRequestsSrc');
@@ -6,7 +7,7 @@ const { callSrcFile } = require('../utils/srcFileAuthorization');
 /**
  * @summary Create new user project request
  */
-router.post('/userProjectRequest', async (req, res) => {
+router.post('/userProjectRequest', verifySession(), async (req, res) => {
   const {
     userProjectRequest
   } = req.body;
@@ -16,7 +17,7 @@ router.post('/userProjectRequest', async (req, res) => {
 /**
  * @summary Delete a user project request
  */
-router.delete('/userProjectRequest/:projectId/:userProjectRequestId', async (req, res) => {
+router.delete('/userProjectRequest/:projectId/:userProjectRequestId', verifySession(), async (req, res) => {
   const {
     userProjectRequestId,
     projectId
@@ -27,7 +28,7 @@ router.delete('/userProjectRequest/:projectId/:userProjectRequestId', async (req
 /**
  * @summary Modify a user project request
  */
-router.put('/userProjectRequest/:projectId/:userProjectRequestId', async (req, res) => {
+router.put('/userProjectRequest/:projectId/:userProjectRequestId', verifySession(), async (req, res) => {
   const {
     userProjectRequestId,
     projectId
@@ -39,7 +40,7 @@ router.put('/userProjectRequest/:projectId/:userProjectRequestId', async (req, r
 /**
  * @summary Get a user project request by id
  */
-router.get('/userProjectRequest/:projectId/:userProjectRequestId', async (req, res) => {
+router.get('/userProjectRequest/:projectId/:userProjectRequestId', verifySession(), async (req, res) => {
   const {
     userProjectRequestId,
     projectId
@@ -50,7 +51,7 @@ router.get('/userProjectRequest/:projectId/:userProjectRequestId', async (req, r
 /**
  * @summary Get a user project request by project id
  */
-router.get('/userProjectRequest/:projectId', async (req, res) => {
+router.get('/userProjectRequest/:projectId', verifySession(), async (req, res) => {
   const {
     projectId
   } = req.params;

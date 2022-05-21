@@ -1,3 +1,4 @@
+const { verifySession } = require('supertokens-node/recipe/session/framework/express');
 const express = require('express');
 const router = express.Router();
 const acmSrc = require('../src/acm/acmSrc');
@@ -6,7 +7,7 @@ const { callSrcFile } = require('../utils/srcFileAuthorization');
 /**
  * @summary Search database(s)
  */
-router.post('/db/search', async (req, res) => {
+router.post('/db/search', verifySession(), async (req, res) => {
   const {
     searchUrl,
     dbName
@@ -18,7 +19,7 @@ router.post('/db/search', async (req, res) => {
 /**
  * @summary Search and save results from a database(s) to a project
  */
-router.post('/db/searchAndSave', async (req, res) => {
+router.post('/db/searchAndSave', verifySession(), async (req, res) => {
   const {
     searchUrl,
     dbName,
