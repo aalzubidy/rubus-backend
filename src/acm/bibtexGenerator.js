@@ -1,4 +1,5 @@
-const { logger } = require('../logger');
+const { logger } = require('../../utils/logger');
+const { srcFileErrorHandler } = require('../../utils/srcFile');
 
 /**
  * @function titleCase

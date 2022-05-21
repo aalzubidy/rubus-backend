@@ -1,32 +1,26 @@
 const bcrypt = require('bcrypt');
-const { logger } = require('./logger');
-const db = require('../db/db');
+const { srcFileErrorHandler } = require('../utils/srcFile');
+const db = require('../utils/db');
 
 /**
  * @function getUser
- * @summary Get user information by token
- * @param {object} user User information
- * @returns {object} User information
+ * @summary Get user information from database
+ * @param {object} user User containing id
+ * @returns {object} userInformation
  * @throws {object} errorCodeAndMsg
  */
 const getUser = async function getUser(user) {
   try {
-    if (user) {
-      return { id: user.id, name: user.name, email: user.email, organization: user.organization };
+    if (user.id) {
+      const [dbUser] = await db.query('select id, name, email, organization, avatar_url from users where id=$1', [user.id], 'get user from database');
+      if (dbUser.id === user.id) return dbUser;
+      else throw { code: 403, message: 'Could not get user information' };
     } else {
-      throw {
-        code: 404,
-        message: 'Could not find user information'
-      };
+      throw { code: 404, message: 'Could not find user information' };
     }
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not get user information';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not get user information';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -55,25 +49,19 @@ const getUserByKey = async function getUserByKey(searchKey, searchValue, user) {
 
     let userSearchQuery = null;
     if (searchKey === 'id') {
-      userSearchQuery = await db.query('select id, name, email, organization from users where id=$1', [searchValue]);
+      [userSearchQuery] = await db.query('select id, name, email, organization, avatar_url from users where id=$1', [searchValue], 'get user by id');
     } else {
-      userSearchQuery = await db.query('select id, name, email, organization from users where email=$1', [searchValue]);
+      [userSearchQuery] = await db.query('select id, name, email, organization, avatar_url from users where email=$1', [searchValue], 'get user by email');
     }
-    logger.debug({ label: 'search user query response', results: userSearchQuery });
 
-    if (userSearchQuery && userSearchQuery.rows && userSearchQuery.rows[0]) {
-      return userSearchQuery.rows[0];
+    if (userSearchQuery) {
+      return userSearchQuery;
     } else {
       throw { code: 404, message: 'Could not find user by key' };
     }
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not get user information by key';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not get user information by key';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -101,8 +89,7 @@ const updateUser = async function updateUser(name, email, organization, user) {
     }
 
     // Updating user info
-    const updateQuery = await db.query('update users set name=$1, email=$2, organization=$3 where id=$4', [name, email, organization, id]);
-    logger.debug({ label: 'update user query response', results: updateQuery });
+    const updateQuery = await db.query('update users set name=$1, email=$2, organization=$3 where id=$4 returning id', [name, email, organization, id], 'update user');
 
     if (!updateQuery) {
       throw {
@@ -115,13 +102,8 @@ const updateUser = async function updateUser(name, email, organization, user) {
       'message': 'Updated user successfully'
     };
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not update user';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not update user';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -149,9 +131,9 @@ const changeUserPassword = async function changeUserPassword(oldPassword, newPas
     }
 
     // Get current password from database
-    let currentPassword = await db.query('select password from users where id=$1', [id]);
+    let [currentPassword] = await db.query('select password from users where id=$1', [id], 'get user from db p');
     if (currentPassword) {
-      currentPassword = currentPassword.rows[0].password;
+      currentPassword = currentPassword.password;
     }
 
     // Comparing password
@@ -168,7 +150,7 @@ const changeUserPassword = async function changeUserPassword(oldPassword, newPas
     const newPasswordHash = await bcrypt.hash(newPassword, 12);
 
     // Update password
-    const updateQuery = await db.query('update users set password=$1 where id=$2', [newPasswordHash, id]);
+    const [updateQuery] = await db.query('update users set password=$1 where id=$2 returning id', [newPasswordHash, id], 'update user p');
     if (!updateQuery) {
       throw {
         code: 500,
@@ -180,13 +162,8 @@ const changeUserPassword = async function changeUserPassword(oldPassword, newPas
       'message': 'Updated password successfully'
     };
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not update password';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not update password';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 

@@ -1,115 +1,76 @@
+const { verifySession } = require('supertokens-node/recipe/session/framework/express');
 const express = require('express');
 const router = express.Router();
-const { logger } = require('../src/logger');
-const authorizationSrc = require('../src/authorizationSrc');
 const projectSrc = require('../src/projectSrc');
-
-/**
- * Custom function to call src file
- * @param {string} srcFunctionName source file function name
- * @param {array} parameters Variables to send with the function
- * @returns {object} response
- */
-const callSrcFile = async function callSrc(functionName, parameters, req, res) {
-  let userCheckPass = false;
-  try {
-    const user = await authorizationSrc.verifyToken(req);
-    userCheckPass = true;
-    const data = await projectSrc[functionName].apply(this, [...parameters, user]);
-    res.status(200).json({
-      data
-    });
-  } catch (error) {
-    logger.error(error);
-    if (error && error.code) {
-      res.status(error.code).json({
-        error
-      });
-    } else if (error && !userCheckPass) {
-      res.status(401).json({
-        error: {
-          code: 401,
-          message: 'Not authorized'
-        }
-      });
-    } else {
-      res.status(500).json({
-        error: {
-          code: 500,
-          message: `Could not process ${req.originalUrl} request`
-        }
-      });
-    }
-  }
-};
+const { callSrcFile } = require('../utils/srcFileAuthorization');
 
 /**
  * @summary Create new project
  */
-router.post('/projects', async (req, res) => {
+router.post('/projects', verifySession(), async (req, res) => {
   const {
     title,
     description
   } = req.body;
-  callSrcFile('newProject', [title, description], req, res);
+  callSrcFile(projectSrc, 'newProject', [title, description], req, res);
 });
 
 /**
  * @summary Get user's projects
  */
-router.get('/projects', async (req, res) => {
-  callSrcFile('getProjects', [], req, res);
+router.get('/projects', verifySession(), async (req, res) => {
+  callSrcFile(projectSrc, 'getProjects', [], req, res);
 });
 
 /**
  * @summary Get a single project
  */
-router.get('/projects/:projectId', async (req, res) => {
+router.get('/projects/:projectId', verifySession(), async (req, res) => {
   const { projectId } = req.params;
-  callSrcFile('getProject', [projectId], req, res);
+  callSrcFile(projectSrc, 'getProject', [projectId], req, res);
 });
 
 /**
  * @summary Get project admin id
  */
-router.get('/projects/:projectId/admin', async (req, res) => {
+router.get('/projects/:projectId/admin', verifySession(), async (req, res) => {
   const { projectId } = req.params;
-  callSrcFile('getProjectAdminId', [projectId], req, res);
+  callSrcFile(projectSrc, 'getProjectAdminId', [projectId], req, res);
 });
 
 /**
  * @summary Delete a single project
  */
-router.delete('/projects/:projectId', async (req, res) => {
+router.delete('/projects/:projectId', verifySession(), async (req, res) => {
   const { projectId } = req.params;
-  callSrcFile('deleteProject', [projectId], req, res);
+  callSrcFile(projectSrc, 'deleteProject', [projectId], req, res);
 });
 
 /**
  * @summary Update project title and description
  */
-router.put('/projects/:projectId', async (req, res) => {
+router.put('/projects/:projectId', verifySession(), async (req, res) => {
   const { projectId } = req.params;
   const { title, description } = req.body;
-  callSrcFile('updateProject', [projectId, title, description], req, res);
+  callSrcFile(projectSrc, 'updateProject', [projectId, title, description], req, res);
 });
 
 /**
  * @summary Add project's user(s)
  */
-router.post('/projects/:projectId/addUsers', async (req, res) => {
+router.post('/projects/:projectId/addUsers', verifySession(), async (req, res) => {
   const { projectId } = req.params;
   const { projectUsers } = req.body;
-  callSrcFile('addProjectUsers', [projectId, projectUsers], req, res);
+  callSrcFile(projectSrc, 'addProjectUsers', [projectId, projectUsers], req, res);
 });
 
 /**
  * @summary Remove project's user(s)
  */
-router.delete('/projects/:projectId/removeUsers', async (req, res) => {
+router.delete('/projects/:projectId/removeUsers', verifySession(), async (req, res) => {
   const { projectId } = req.params;
   const { projectUsers } = req.body;
-  callSrcFile('removeProjectUsers', [projectId, projectUsers], req, res);
+  callSrcFile(projectSrc, 'removeProjectUsers', [projectId, projectUsers], req, res);
 });
 
 module.exports = router;

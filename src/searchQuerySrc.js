@@ -1,6 +1,6 @@
 const moment = require('moment');
-const { logger } = require('./logger');
-const db = require('../db/db');
+const { srcFileErrorHandler } = require('../utils/srcFile');
+const db = require('../utils/db');
 const tools = require('./tools');
 
 /**
@@ -27,18 +27,12 @@ const storeSearchQuery = async function storeSearchQuery(inputQuery, dbName, tot
     const createDate = moment().format();
 
     // Insert a search query in the database
-    const insertSearchQuery = await db.query('INSERT into search_queries(input_query, db, total_results, project_id, user_id, create_date) VALUES($1, $2, $3, $4, $5, $6) returning id', [inputQuery.trim(), dbName.trim(), totalResults, projectId, user.id, createDate]);
-    logger.debug({ label: 'insert search query response', results: insertSearchQuery.rows });
+    const [insertSearchQuery] = await db.query('INSERT into search_queries(input_query, db, total_results, project_id, user_id, create_date) VALUES($1, $2, $3, $4, $5, $6) returning id', [inputQuery.trim(), dbName.trim(), totalResults, projectId, user.id, createDate], 'insert search query');
 
-    return { message: 'Search query stored successfully', id: insertSearchQuery.rows[0].id };
+    return { message: 'Search query stored successfully', id: insertSearchQuery.id };
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not store search query';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not store search query';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -55,22 +49,16 @@ const getSearchQueries = async function getSearchQueries(user) {
     } = user;
 
     // Get search queries from the database
-    const searchQueries = await db.query('select * from search_queries where user_id=$1', [id]);
-    logger.debug({ label: 'get search queries response', results: searchQueries.rows });
+    const searchQueries = await db.query('select * from search_queries where user_id=$1', [id], 'get search queries');
 
-    if (!searchQueries || !searchQueries.rows || searchQueries.rows.length <= 0) {
+    if (!searchQueries || searchQueries.length <= 0) {
       throw { code: 404, message: 'User does not have any stored search queries' };
     }
 
-    return searchQueries.rows;
+    return searchQueries;
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not get search queries';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not get search queries';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -91,22 +79,16 @@ const getProjectSearchQueries = async function getProjectSearchQueries(projectId
     await tools.checkUserInProject(id, projectId);
 
     // Get project search queryies from the database
-    const searchQueries = await db.query('select * from search_queries where project_id=$1', [projectId]);
-    logger.debug({ label: 'get project search query response', results: searchQueries.rows });
+    const searchQueries = await db.query('select * from search_queries where project_id=$1', [projectId], 'get project search query');
 
-    if (!searchQueries || !searchQueries.rows || searchQueries.rows.length <= 0) {
+    if (!searchQueries || searchQueries.length <= 0) {
       throw { code: 404, message: 'Project does not have any stored search queries' };
     }
 
-    return searchQueries.rows;
+    return searchQueries;
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not get project search queries';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not get project search queries';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -125,22 +107,16 @@ const getSearchQuery = async function getSearchQuery(queryId, projectId, user) {
     } = user;
 
     // Get search query from the database
-    const searchQuery = await db.query('select * from search_queries where id=$1 and project_id=$2', [queryId, projectId]);
-    logger.debug({ label: 'get search query response', results: searchQuery.rows });
+    const [searchQuery] = await db.query('select * from search_queries where id=$1 and project_id=$2', [queryId, projectId], 'get search query');
 
-    if (!searchQuery || !searchQuery.rows || searchQuery.rows.length <= 0) {
+    if (!searchQuery || searchQuery.length <= 0) {
       throw { code: 404, message: 'Could not find user search query' };
     }
 
-    return searchQuery.rows;
+    return searchQuery;
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not get search query';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not get search query';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -159,22 +135,12 @@ const deleteSearchQuery = async function deleteSearchQuery(queryId, projectId, u
     } = user;
 
     // Delete search query from the database
-    const searchQuery = await db.query('delete from search_queries where id=$1 and project_id=$2', [queryId, projectId]);
-    logger.debug({ label: 'delete search query response', results: searchQuery });
-
-    if (!searchQuery) {
-      throw { code: 404, message: 'Could not delete search query' };
-    }
+    await db.query('delete from search_queries where id=$1 and project_id=$2', [queryId, projectId], 'delete search query');
 
     return { 'message': 'Deleted search query succesfully' };
   } catch (error) {
-    if (error.code && tools.isHttpErrorCode(error.code)) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not delete search query';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not delete search query';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 

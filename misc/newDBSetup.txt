@@ -22,264 +22,199 @@ GRANT TEMPORARY, CONNECT ON DATABASE rubus TO PUBLIC;
 
 -------------------------------------------------------------------------------------------------
 
--- Table: public.users
+-- public.users definition
+
+-- Drop table
 
 -- DROP TABLE public.users;
 
-CREATE TABLE public.users
-(
-    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-    email text COLLATE pg_catalog."default" NOT NULL,
-    password character varying(300) COLLATE pg_catalog."default" NOT NULL,
-    name character varying(500) COLLATE pg_catalog."default",
-    organization character varying(500) COLLATE pg_catalog."default",
-    register_ip inet,
-    refresh_token text COLLATE pg_catalog."default",
-    create_date date NOT NULL,
-    CONSTRAINT users_id_pk PRIMARY KEY (id),
-    CONSTRAINT users_email_unique UNIQUE (email)
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE public.users
-    OWNER to postgres;
+CREATE TABLE public.users (
+	id uuid NOT NULL DEFAULT uuid_generate_v4(),
+	email text NOT NULL,
+	"name" varchar(500) NOT NULL,
+	organization varchar(500) NOT NULL,
+	create_date date NOT NULL,
+	login_date date NULL,
+	avatar_url varchar NULL,
+	banned varchar(6) NOT NULL DEFAULT 'false',
+	CONSTRAINT users_email_unique UNIQUE (email),
+	CONSTRAINT users_id_pk PRIMARY KEY (id)
+);
 
 -------------------------------------------------------------------------------------------------
 
--- Table: public.convert_queries
+-- public.convert_queries definition
+
+-- Drop table
 
 -- DROP TABLE public.convert_queries;
 
-CREATE TABLE public.convert_queries
-(
-    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-    input_query text COLLATE pg_catalog."default" NOT NULL,
-    output_query text COLLATE pg_catalog."default" NOT NULL,
-    create_date date NOT NULL,
-    user_id integer NOT NULL,
-    CONSTRAINT "convertQueries_id_pk" PRIMARY KEY (id),
-    CONSTRAINT "convertQueries_userId_users_id_fk" FOREIGN KEY (user_id)
-        REFERENCES public.users (id) MATCH SIMPLE
-        ON UPDATE CASCADE
-        ON DELETE CASCADE
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE public.convert_queries
-    OWNER to postgres;
+CREATE TABLE public.convert_queries (
+	id uuid NOT NULL DEFAULT uuid_generate_v4(),
+	input_query text NOT NULL,
+	output_query text NOT NULL,
+	create_date date NOT NULL,
+	user_id uuid NOT NULL,
+	CONSTRAINT convert_queries_id_pk PRIMARY KEY (id),
+	CONSTRAINT convert_queries_user_id_users_id_fk FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
 -------------------------------------------------------------------------------------------------
 
--- Table: public.projects
+-- public.projects definition
+
+-- Drop table
 
 -- DROP TABLE public.projects;
 
-CREATE TABLE public.projects
-(
-    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-    title character varying(300) COLLATE pg_catalog."default" NOT NULL,
-    description text COLLATE pg_catalog."default",
-    create_date date NOT NULL,
-    user_id integer NOT NULL,
-    CONSTRAINT projects_id_pk PRIMARY KEY (id),
-    CONSTRAINT "projects_userId_users_id_fk" FOREIGN KEY (user_id)
-        REFERENCES public.users (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE public.projects
-    OWNER to postgres;
+CREATE TABLE public.projects (
+	id uuid NOT NULL DEFAULT uuid_generate_v4(),
+	title varchar(500) NOT NULL,
+	description text NULL,
+	create_date date NOT NULL,
+	user_id uuid NULL,
+	CONSTRAINT projects_id_pk PRIMARY KEY (id),
+	CONSTRAINT projects_user_id_users_id_fk FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE SET NULL ON UPDATE NO ACTION
+);
 
 -------------------------------------------------------------------------------------------------
 
--- Table: public.projects_users
+-- public.projects_users definition
+
+-- Drop table
 
 -- DROP TABLE public.projects_users;
 
-CREATE TABLE public.projects_users
-(
-    user_id integer NOT NULL,
-    project_id integer NOT NULL,
-    added_by integer NOT NULL,
-    create_date date NOT NULL,
-    CONSTRAINT "projects_users_userId_projectId_pk" PRIMARY KEY (user_id, project_id),
-    CONSTRAINT "projects_users_projectId_projects_id_fk" FOREIGN KEY (project_id)
-        REFERENCES public.projects (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT "projects_users_userId_users_id_fk" FOREIGN KEY (user_id)
-        REFERENCES public.users (id) MATCH SIMPLE
-        ON UPDATE CASCADE
-        ON DELETE CASCADE
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE public.projects_users
-    OWNER to postgres;
+CREATE TABLE public.projects_users (
+	user_id uuid NOT NULL,
+	project_id uuid NOT NULL,
+	added_by uuid NOT NULL,
+	create_date date NOT NULL,
+	CONSTRAINT projects_users_user_id_project_id_pk PRIMARY KEY (user_id, project_id),
+	CONSTRAINT projects_users_project_id_projects_id_fk FOREIGN KEY (project_id) REFERENCES public.projects(id) ON DELETE CASCADE,
+	CONSTRAINT projects_users_user_id_users_id_fk FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
 
 -------------------------------------------------------------------------------------------------
 
--- Table: public.users_projects_requests
+-- public.search_queries definition
 
--- DROP TABLE public.users_projects_requests;
-
-CREATE TABLE public.users_projects_requests
-(
-    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-    user_id integer NOT NULL,
-    project_id integer NOT NULL,
-    status character varying(30) COLLATE pg_catalog."default" NOT NULL,
-    create_date date NOT NULL,
-    completed_date date,
-    type character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    total bigint,
-    completed bigint,
-    failed bigint,
-    system_notes text COLLATE pg_catalog."default",
-    user_notes text COLLATE pg_catalog."default",
-    search_query_id integer,
-    CONSTRAINT users_projects_requests_id_pk PRIMARY KEY (id),
-    CONSTRAINT "usersProjectsRequests_projectId_projects_id_fk" FOREIGN KEY (project_id)
-        REFERENCES public.projects (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT "usersProjectsRequests_search_query_id_searchQueries_id_fk" FOREIGN KEY (search_query_id)
-        REFERENCES public.search_queries (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
-    CONSTRAINT "usersProjectsRequests_userId_users_id_fk" FOREIGN KEY (user_id)
-        REFERENCES public.users (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE public.users_projects_requests
-    OWNER to postgres;
-
--------------------------------------------------------------------------------------------------
-
--- Table: public.search_queries
+-- Drop table
 
 -- DROP TABLE public.search_queries;
 
-CREATE TABLE public.search_queries
-(
-    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-    input_query text COLLATE pg_catalog."default" NOT NULL,
-    db character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    total_results bigint NOT NULL,
-    create_date date NOT NULL,
-    user_id integer NOT NULL,
-    project_id integer NOT NULL,
-    CONSTRAINT "searchQueries_id_pk" PRIMARY KEY (id),
-    CONSTRAINT "searchQueries_projectId_projectss_id_fk" FOREIGN KEY (project_id)
-        REFERENCES public.projects (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT "searchQueries_userId_users_id_fk" FOREIGN KEY (user_id)
-        REFERENCES public.users (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE public.search_queries
-    OWNER to postgres;
+CREATE TABLE public.search_queries (
+	id uuid NOT NULL DEFAULT uuid_generate_v4(),
+	input_query text NOT NULL,
+	db varchar(100) NOT NULL,
+	total_results int8 NOT NULL,
+	create_date date NOT NULL,
+	user_id uuid NOT NULL,
+	project_id uuid NOT NULL,
+	CONSTRAINT search_queries_id_pk PRIMARY KEY (id),
+	CONSTRAINT search_queries_project_id_projects_id_fk FOREIGN KEY (project_id) REFERENCES public.projects(id) ON DELETE CASCADE,
+	CONSTRAINT search_queries_user_id_users_id_fk FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE
+);
 
 -------------------------------------------------------------------------------------------------
 
--- Table: public.publications
+-- public.users_projects_requests definition
+
+-- Drop table
+
+-- DROP TABLE public.users_projects_requests;
+
+CREATE TABLE public.users_projects_requests (
+	id uuid NOT NULL DEFAULT uuid_generate_v4(),
+	user_id uuid NOT NULL,
+	project_id uuid NOT NULL,
+	status varchar(50) NOT NULL,
+	create_date date NOT NULL,
+	completed_date date NULL,
+	"type" varchar(100) NOT NULL,
+	total int8 NULL,
+	completed int8 NULL,
+	failed int8 NULL,
+	system_notes text NULL,
+	user_notes text NULL,
+	search_query_id uuid NULL,
+	skipped int8 NULL,
+	CONSTRAINT users_projects_requests_id_pk PRIMARY KEY (id),
+	CONSTRAINT users_projects_requests_project_id_projects_id_fk FOREIGN KEY (project_id) REFERENCES public.projects(id) ON DELETE CASCADE,
+	CONSTRAINT users_projects_requests_search_query_id_search_queries_id_fk FOREIGN KEY (search_query_id) REFERENCES public.search_queries(id) ON DELETE CASCADE,
+	CONSTRAINT users_projects_requests_user_id_users_id_fk FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE
+);
+
+-------------------------------------------------------------------------------------------------
+
+-- public.publications definition
+
+-- Drop table
 
 -- DROP TABLE public.publications;
 
-CREATE TABLE public.publications
-(
-    id integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-    type character varying(300) COLLATE pg_catalog."default",
-    author text COLLATE pg_catalog."default",
-    editor text COLLATE pg_catalog."default",
-    title text COLLATE pg_catalog."default",
-    book_title text COLLATE pg_catalog."default",
-    year character varying(50) COLLATE pg_catalog."default",
-    publisher text COLLATE pg_catalog."default",
-    address text COLLATE pg_catalog."default",
-    pages character varying(50) COLLATE pg_catalog."default",
-    isbn text COLLATE pg_catalog."default",
-    doi text COLLATE pg_catalog."default",
-    url text COLLATE pg_catalog."default",
-    journal text COLLATE pg_catalog."default",
-    volume text COLLATE pg_catalog."default",
-    abstract text COLLATE pg_catalog."default",
-    issn text COLLATE pg_catalog."default",
-    location text COLLATE pg_catalog."default",
-    keywords text COLLATE pg_catalog."default",
-    month character varying(50) COLLATE pg_catalog."default",
-    obtained_bibtex text COLLATE pg_catalog."default",
-    generated_bibtex text COLLATE pg_catalog."default",
-    create_date date NOT NULL,
-    CONSTRAINT publications_id_pk PRIMARY KEY (id)
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE public.publications
-    OWNER to postgres;
+CREATE TABLE public.publications (
+	id uuid NOT NULL DEFAULT uuid_generate_v4(),
+	"type" text NOT NULL,
+	author text NULL,
+	editor text NULL,
+	title text NULL,
+	book_title text NULL,
+	"year" text NULL,
+	publisher text NULL,
+	address text NULL,
+	pages text NULL,
+	isbn text NULL,
+	doi text NOT NULL,
+	url text NULL,
+	journal text NULL,
+	volume text NULL,
+	abstract text NULL,
+	issn text NULL,
+	"location" text NULL,
+	keywords text NULL,
+	"month" text NULL,
+	obtained_bibtex text NULL,
+	generated_bibtex text NULL,
+	create_date date NOT NULL,
+	CONSTRAINT publications_doi_uq UNIQUE (doi),
+	CONSTRAINT publications_id_pk PRIMARY KEY (id)
+);
 
 -------------------------------------------------------------------------------------------------
 
--- Table: public.publications_projects
+-- public.publications_projects definition
+
+-- Drop table
 
 -- DROP TABLE public.publications_projects;
 
-CREATE TABLE public.publications_projects
-(
-    publication_id integer NOT NULL,
-    project_id integer NOT NULL,
-    search_query_id integer,
-    CONSTRAINT publications_projects_publicationid_projectid PRIMARY KEY (publication_id, project_id),
-    CONSTRAINT "publicationsProjects_projectId_projects_id_fk" FOREIGN KEY (project_id)
-        REFERENCES public.projects (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT "publicationsProjects_publicationId_publications_id_fk" FOREIGN KEY (publication_id)
-        REFERENCES public.publications (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION,
-    CONSTRAINT "publicationsProjects_searchQueryId_searchQueries_id_fk" FOREIGN KEY (search_query_id)
-        REFERENCES public.search_queries (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE public.publications_projects
-    OWNER to postgres;
+CREATE TABLE public.publications_projects (
+	publication_id uuid NOT NULL,
+	project_id uuid NOT NULL,
+	search_query_id uuid NULL,
+	CONSTRAINT publications_projects_publication_id_project_id PRIMARY KEY (publication_id, project_id),
+	CONSTRAINT publications_projects_project_id_projects_id_fk FOREIGN KEY (project_id) REFERENCES public.projects(id) ON DELETE CASCADE,
+	CONSTRAINT publications_projects_publication_id_publications_id_fk FOREIGN KEY (publication_id) REFERENCES public.publications(id) ON DELETE CASCADE,
+	CONSTRAINT publications_projects_search_query_id_search_queries_id_fk FOREIGN KEY (search_query_id) REFERENCES public.search_queries(id) ON DELETE CASCADE
+);
 
 -------------------------------------------------------------------------------------------------
 
--- Table: public.testtable
+-- public.notifications definition
 
--- DROP TABLE public.testtable;
+-- Drop table
 
-CREATE TABLE public.testtable
-(
-    name character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    email text[] COLLATE pg_catalog."default",
-    CONSTRAINT "testTable_pkey" PRIMARY KEY (name)
-)
+-- DROP TABLE public.notifications;
 
-TABLESPACE pg_default;
-
-ALTER TABLE public.testtable
-    OWNER to postgres;
+CREATE TABLE public.notifications (
+	id uuid NOT NULL DEFAULT uuid_generate_v4(),
+	user_id_from uuid NOT NULL,
+	user_id_to uuid NOT NULL,
+	body text NOT NULL,
+	"type" varchar NOT NULL,
+	create_date date NOT NULL,
+	CONSTRAINT notifications_id_pk PRIMARY KEY (id),
+	CONSTRAINT notifications_user_id_from_users_id_fk FOREIGN KEY (user_id_from) REFERENCES public.users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+	CONSTRAINT notifications_user_id_to_users_id_fk FOREIGN KEY (user_id_to) REFERENCES public.users(id) ON DELETE CASCADE
+);

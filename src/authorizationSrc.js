@@ -1,11 +1,12 @@
 const jwt = require('jsonwebtoken');
 const moment = require('moment');
 const bcrypt = require('bcrypt');
-const { logger } = require('./logger');
-const db = require('../db/db');
+const { logger } = require('../utils/logger');
+const { srcFileErrorHandler } = require('../utils/srcFile');
+const db = require('../utils/db');
 
-const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
-const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
+const accessTokenSecret = process.env.RUBUS_ACCESS_TOKEN_SECRET;
+const refreshTokenSecret = process.env.RUBUS_REFRESH_TOKEN_SECRET;
 
 /**
  * @function register
@@ -35,18 +36,12 @@ const register = async function register(req) {
     const createDate = moment().format('MM/DD/YYYY');
 
     // Create a user in the database
-    const registrationQuery = await db.query('INSERT INTO users(email, password, name, organization, register_ip, create_date) VALUES($1, $2, $3, $4, $5, $6) returning id', [email, hash, name, organization, req.clientIp, createDate]);
-    logger.debug({ label: 'registration query response', results: registrationQuery.rows });
+    const [dbUser] = await db.query('INSERT INTO users(email, password, name, organization, register_ip, create_date) VALUES($1, $2, $3, $4, $5, $6) returning id', [email, hash, name, organization, req.clientIp, createDate], 'registration query');
 
-    return { message: 'User registered successfully', id: registrationQuery.rows[0].id };
+    return { message: 'User registered successfully', id: dbUser.id };
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
-    const userMsg = 'Could not register user';
-    logger.error({ userMsg, error });
-    throw { code: 500, message: userMsg };
+    const errorMsg = 'Could not register user';
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -68,41 +63,34 @@ const login = async function login(req) {
     }
 
     // Query the database to get user information using the email
-    let queryResults = await db.query('select id, name, email, organization, password from users where email=$1', [email]);
+    const [dbUser] = await db.query('select id, name, email, organization, password from users where email=$1', [email], 'Get user from db by emial for login');
 
     // If there is such user, extract the information
-    if (queryResults && queryResults.rows[0]) {
-      queryResults = queryResults.rows[0];
-    } else {
+    if (!dbUser) {
       throw { code: 401, message: 'Please check email and password' };
     }
 
     // Check the password against the hash
-    const passwordCheck = await bcrypt.compare(password, queryResults.password);
+    const passwordCheck = await bcrypt.compare(password, dbUser.password);
 
     if (!passwordCheck) {
       throw { code: 401, message: 'Please check email and password' };
     }
 
     // Generate access token and refresh token
-    const user = { id: queryResults.id, name: queryResults.name, email, organization: queryResults.organization };
+    const user = { id: dbUser.id, name: dbUser.name, email, organization: dbUser.organization };
 
     const accessToken = await jwt.sign(user, accessTokenSecret, { expiresIn: '30m' });
     const refreshToken = await jwt.sign(user, refreshTokenSecret);
 
     // Update the database with the new refresh token
-    await db.query('update users set refresh_token=$1 where id=$2', [refreshToken, queryResults.id]);
+    await db.query('update users set refresh_token=$1 where id=$2', [refreshToken, dbUser.id]);
 
     // Return the access token and the refresh token
     return ({ accessToken, refreshToken });
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
     const errorMsg = 'Could not login';
-    logger.error({ errorMsg, error });
-    throw { code: 500, message: errorMsg };
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -132,21 +120,16 @@ const logout = async function logout(req) {
     }
 
     // Delete refresh token from database
-    const dbResults = await db.query('update users set refresh_token=$1 where refresh_token=$2', [null, refreshToken]);
+    const [dbUser] = await db.query('update users set refresh_token=$1 where refresh_token=$2 returning id', [null, refreshToken], 'Delete refresh token from database');
 
-    if (dbResults) {
+    if (dbUser) {
       return ({ 'results': 'Logged out successful' });
     } else {
       throw { code: 500, message: 'Could not delete token' };
     }
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
     const errorMsg = 'Could not logout';
-    logger.error({ errorMsg, error });
-    throw { code: 500, message: errorMsg };
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -174,35 +157,30 @@ const renewToken = async function renewToken(req) {
     // Check the email on both of the tokens
     if (tokenVerify.email === refreshTokenVerify.email) {
       // Check if this refresh token still active in the database
-      const queryResults = await db.query('select name, email, organization refresh_token from users where refresh_token=$1 and id=$2 and email=$3', [refreshToken, tokenVerify.id, tokenVerify.email]);
-      if (queryResults && queryResults.rows[0] && (queryResults.rows[0].email === tokenVerify.email)) {
+      const [dbUser] = await db.query('select name, email, organization refresh_token from users where refresh_token=$1 and id=$2 and email=$3', [refreshToken, tokenVerify.id, tokenVerify.email], 'Check if this refresh token still active in the database');
+      if (dbUser && (dbUser.email === tokenVerify.email)) {
         // Generate a new access token
-        const user = { id: refreshTokenVerify.id, name: queryResults.rows[0].name, email: queryResults.rows[0].email, organization: queryResults.rows[0].organization };
+        const user = { id: refreshTokenVerify.id, name: dbUser.name, email: dbUser.email, organization: dbUser.organization };
         const newAccessToken = await jwt.sign(user, accessTokenSecret, { expiresIn: '30m' });
 
         // Generate a new refresh token
         const newRefreshToken = await jwt.sign(user, refreshTokenSecret);
         // Update the database with the new refresh token
-        await db.query('update users set refresh_token=$1 where id=$2', [newRefreshToken, user.id]);
+        await db.query('update users set refresh_token=$1 where id=$2 returning id', [newRefreshToken, user.id], 'Update the database with the new refresh token');
 
         // Return new access token and same refresh token
         return ({ 'accessToken': newAccessToken, 'refreshToken': newRefreshToken });
       } else {
         const dbMsg = 'Could not query and verify user';
-        logger.error({ dbMsg, queryResults });
+        logger.error({ dbMsg, dbUser });
         throw { code: 401, message: dbMsg };
       }
     } else {
       throw { code: 401, message: 'Could not verify tokens' };
     }
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
     const errorMsg = 'Could not generate a new token from existing refresh token';
-    logger.error({ errorMsg, error });
-    throw { code: 500, message: errorMsg };
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -226,9 +204,9 @@ const renewTokenByCookie = async function renewTokenByCookie(req) {
     const refreshTokenVerify = await jwt.verify(refreshToken, refreshTokenSecret);
 
     // Check if this refresh token still active in the database
-    const queryResults = await db.query('select name, email, organization, refresh_token from users where refresh_token=$1 and id=$2 and email=$3', [refreshToken, refreshTokenVerify.id, refreshTokenVerify.email]);
-    if (queryResults && queryResults.rows[0] && queryResults.rows[0]['refresh_token'] === refreshToken) {
-      const user = { id: refreshTokenVerify.id, name: queryResults.rows[0].name, email: queryResults.rows[0].email, organization: queryResults.rows[0].organization };
+    const [dbUser] = await db.query('select name, email, organization, refresh_token from users where refresh_token=$1 and id=$2 and email=$3', [refreshToken, refreshTokenVerify.id, refreshTokenVerify.email], 'Check if this refresh token still active in the database');
+    if (dbUser && dbUser['refresh_token'] === refreshToken) {
+      const user = { id: refreshTokenVerify.id, name: dbUser.name, email: dbUser.email, organization: dbUser.organization };
       // Generate a new access token
       const newAccessToken = await jwt.sign(user, accessTokenSecret, { expiresIn: '30m' });
 
@@ -236,24 +214,18 @@ const renewTokenByCookie = async function renewTokenByCookie(req) {
       const newRefreshToken = await jwt.sign(user, refreshTokenSecret);
 
       // Update the database with the new refresh token
-      await db.query('update users set refresh_token=$1 where id=$2', [newRefreshToken, user.id]);
+      await db.query('update users set refresh_token=$1 where id=$2 returning id', [newRefreshToken, user.id], 'Update the database with the new refresh token');
 
       // Return new access token and same refresh token
       return ({ 'accessToken': newAccessToken, 'refreshToken': newRefreshToken });
     } else {
       const dbMsg = 'Could not verify user token';
-      logger.error({ dbMsg, queryResults });
+      logger.error({ dbMsg, dbUser });
       throw { code: 401, message: dbMsg };
     }
   } catch (error) {
-    console.log(error);
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
     const errorMsg = 'Could not generate a new token from existing refresh token';
-    logger.error({ errorMsg, error });
-    throw { code: 500, message: errorMsg };
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 
@@ -280,13 +252,8 @@ const verifyToken = async function verifyToken(req) {
 
     return (results);
   } catch (error) {
-    if (error.code) {
-      logger.error(error);
-      throw error;
-    }
     const errorMsg = 'Could not verify token';
-    logger.error({ errorMsg, error });
-    throw { code: 500, message: errorMsg };
+    srcFileErrorHandler(error, errorMsg);
   }
 };
 

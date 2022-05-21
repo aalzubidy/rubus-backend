@@ -1,162 +1,123 @@
+const { verifySession } = require('supertokens-node/recipe/session/framework/express');
 const express = require('express');
 const router = express.Router();
-const { logger } = require('../src/logger');
-const authorizationSrc = require('../src/authorizationSrc');
 const publicationSrc = require('../src/publicationSrc');
-
-/**
- * Custom function to call src file
- * @param {string} srcFunctionName source file function name
- * @param {array} parameters Variables to send with the function
- * @returns {object} response
- */
-const callSrcFile = async function callSrc(functionName, parameters, req, res) {
-  let userCheckPass = false;
-  try {
-    const user = await authorizationSrc.verifyToken(req);
-    userCheckPass = true;
-    const data = await publicationSrc[functionName].apply(this, [...parameters, user]);
-    res.status(200).json({
-      data
-    });
-  } catch (error) {
-    logger.error(error);
-    if (error && error.code) {
-      res.status(error.code).json({
-        error
-      });
-    } else if (error && !userCheckPass) {
-      res.status(401).json({
-        error: {
-          code: 401,
-          message: 'Not authorized'
-        }
-      });
-    } else {
-      res.status(500).json({
-        error: {
-          code: 500,
-          message: `Could not process ${req.originalUrl} request`
-        }
-      });
-    }
-  }
-};
+const { callSrcFile } = require('../utils/srcFileAuthorization');
 
 /**
  * @summary Create new publication
  */
-router.post('/publications', async (req, res) => {
+router.post('/publications', verifySession(), async (req, res) => {
   const {
     publication
   } = req.body;
-  callSrcFile('newPublication', [publication], req, res);
+  callSrcFile(publicationSrc, 'newPublication', [publication], req, res);
 });
 
 /**
  * @summary Delete publication(s) by DOI
  */
-router.delete('/publications/doi', async (req, res) => {
+router.delete('/publications/doi', verifySession(), async (req, res) => {
   const {
     dois
   } = req.body;
-  callSrcFile('deletePublicationByDOI', [dois], req, res);
+  callSrcFile(publicationSrc, 'deletePublicationByDOI', [dois], req, res);
 });
 
 /**
  * @summary Delete publication(s) by Id
  */
-router.delete('/publications/id', async (req, res) => {
+router.delete('/publications/id', verifySession(), async (req, res) => {
   const {
     publicationIds
   } = req.body;
-  callSrcFile('deletePublicationById', [publicationIds], req, res);
+  callSrcFile(publicationSrc, 'deletePublicationById', [publicationIds], req, res);
 });
 
 /**
  * @summary Add publication(s) by DOI to a project
  */
-router.post('/publications/project/doi', async (req, res) => {
+router.post('/publications/project/doi', verifySession(), async (req, res) => {
   const {
     dois,
     projectId,
     searchQueryId
   } = req.body;
-  callSrcFile('addPublicationToProjectByDoi', [dois, projectId, searchQueryId], req, res);
+  callSrcFile(publicationSrc, 'addPublicationToProjectByDoi', [dois, projectId, searchQueryId], req, res);
 });
 
 /**
  * @summary Add publication(s) by Id to a project
  */
-router.post('/publications/project/id', async (req, res) => {
+router.post('/publications/project/id', verifySession(), async (req, res) => {
   const {
     publicationIds,
     projectId,
     searchQueryId
   } = req.body;
-  callSrcFile('addPublicationToProjectById', [publicationIds, projectId, searchQueryId], req, res);
+  callSrcFile(publicationSrc, 'addPublicationToProjectById', [publicationIds, projectId, searchQueryId], req, res);
 });
 
 /**
  * @summary Delete publication(s) by DOI from a project
  */
-router.delete('/publications/project/doi', async (req, res) => {
+router.delete('/publications/project/doi', verifySession(), async (req, res) => {
   const {
     dois,
     projectId
   } = req.body;
-  callSrcFile('deletePublicationFromProjectByDoi', [dois, projectId], req, res);
+  callSrcFile(publicationSrc, 'deletePublicationFromProjectByDoi', [dois, projectId], req, res);
 });
 
 /**
  * @summary Delete publication(s) by id from a project
  */
-router.delete('/publications/project/id', async (req, res) => {
+router.delete('/publications/project/id', verifySession(), async (req, res) => {
   const {
     publicationIds,
     projectId
   } = req.body;
-  callSrcFile('deletePublicationFromProjectById', [publicationIds, projectId], req, res);
+  callSrcFile(publicationSrc, 'deletePublicationFromProjectById', [publicationIds, projectId], req, res);
 });
 
 /**
  * @summary Delete all publication(s) from a project
  */
-router.delete('/publications/project/all', async (req, res) => {
+router.delete('/publications/project/all', verifySession(), async (req, res) => {
   const {
     projectId
   } = req.body;
-  callSrcFile('deleteAllPublicationsFromProject', [projectId], req, res);
+  callSrcFile(publicationSrc, 'deleteAllPublicationsFromProject', [projectId], req, res);
 });
 
 /**
  * @summary Get a publication by id
  */
-router.get('/publications/id/:publicationId', async (req, res) => {
+router.get('/publications/id/:publicationId', verifySession(), async (req, res) => {
   const {
     publicationId
   } = req.params;
-  callSrcFile('getPublicationById', [publicationId], req, res);
+  callSrcFile(publicationSrc, 'getPublicationById', [publicationId], req, res);
 });
 
 /**
  * @summary Get a publication by doi
  */
-router.get('/publications/doi/:publicationDOI', async (req, res) => {
+router.get('/publications/doi/:publicationDOI', verifySession(), async (req, res) => {
   const {
     publicationDOI
   } = req.params;
-  callSrcFile('getPublicationByDOI', [publicationDOI], req, res);
+  callSrcFile(publicationSrc, 'getPublicationByDOI', [publicationDOI], req, res);
 });
 
 /**
  * @summary Get all publications in a project
  */
-router.get('/publications/project/:projectId', async (req, res) => {
+router.get('/publications/project/:projectId', verifySession(), async (req, res) => {
   const {
     projectId
   } = req.params;
-  callSrcFile('getPublicationsByProjectId', [projectId], req, res);
+  callSrcFile(publicationSrc, 'getPublicationsByProjectId', [projectId], req, res);
 });
 
 module.exports = router;
