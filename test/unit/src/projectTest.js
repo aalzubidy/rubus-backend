@@ -178,7 +178,7 @@ describe('projectSrc.js', function () {
     it('should return project with admin true', async () => {
       td.when(tools.checkUserInProject(anything, anything)).thenResolve({ allowed: true });
       td.when(db.query('select title, description, user_id, create_date from projects where id=$1', anything, anything)).thenResolve([{ "title": "test", "description": "test test", "user_id": 74, "create_date": "2020-12-27T08:00:00.000Z" }]);
-      td.when(db.query('select id, name, email from projects_users, users where users.id=projects_users.user_id AND project_id=$1', anything, anything)).thenResolve([{ "id": 74, "name": "test user", "email": "a@a.com" }]);
+      td.when(db.query('select id, name, email, organization from projects_users, users where users.id=projects_users.user_id AND project_id=$1', anything, anything)).thenResolve([{ "id": 74, "name": "test user", "email": "a@a.com", "organization": "test" }]);
       try {
         const results = await projectSrc.getProject(10, {
           id: 74
@@ -193,7 +193,8 @@ describe('projectSrc.js', function () {
           "users": [{
             "id": 74,
             "name": "test user",
-            "email": "a@a.com"
+            "email": "a@a.com",
+            "organization": "test"
           }]
         });
       } catch (error) {
@@ -203,7 +204,7 @@ describe('projectSrc.js', function () {
     it('should return project with admin false', async () => {
       td.when(tools.checkUserInProject(anything, anything)).thenResolve({ allowed: true });
       td.when(db.query('select title, description, user_id, create_date from projects where id=$1', anything, anything)).thenResolve([{ "title": "test", "description": "test test", "user_id": 74, "create_date": "2020-12-27T08:00:00.000Z" }]);
-      td.when(db.query('select id, name, email from projects_users, users where users.id=projects_users.user_id AND project_id=$1', anything, anything)).thenResolve([{ "id": 74, "name": "test user", "email": "a@a.com" }]);
+      td.when(db.query('select id, name, email, organization from projects_users, users where users.id=projects_users.user_id AND project_id=$1', anything, anything)).thenResolve([{ "id": 74, "name": "test user", "email": "a@a.com", "organization": "test" }]);
       try {
         const results = await projectSrc.getProject(10, {
           id: 'test'
@@ -218,7 +219,8 @@ describe('projectSrc.js', function () {
           "users": [{
             "id": 74,
             "name": "test user",
-            "email": "a@a.com"
+            "email": "a@a.com",
+            "organization": "test"
           }]
         });
       } catch (error) {

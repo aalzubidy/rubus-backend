@@ -107,7 +107,7 @@ const getProject = async function getProject(projectId, user) {
     };
 
     // Get project's users
-    const usersQuery = await db.query('select id, name, email from projects_users, users where users.id=projects_users.user_id AND project_id=$1', [projectId], 'get project users');
+    const usersQuery = await db.query('select id, name, email, organization from projects_users, users where users.id=projects_users.user_id AND project_id=$1', [projectId], 'get project users');
 
     if (!usersQuery || usersQuery.length <= 0) {
       projectInfo.users = [];
